@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Synapse</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="title_activity_main">SynapseUI</string>
+
+    <string name="label_default_value">defaultValue</string>
+    <string name="label_seek_value">seekValue</string>
+    <string name="label_stored_value">storedValue</string>
+
+</resources>

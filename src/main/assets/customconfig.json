@@ -1,0 +1,136 @@
+{
+    sections: [
+        {
+            name:CPU,
+            elements:[
+                {
+                    type:SPane,
+                    title:"CPU controls and undervolting",
+                    description:"Here you can change your cpu controls and undervolting"
+                },
+                {
+                    type:SCheckBox,
+                    label:"Enable flux controller",
+                    action:"echo blubblebath"
+                },
+                {
+                    type:SCheckBox,
+                    action:"echo Cholera"
+                },
+                {
+                    type:SButton,
+                    label:"Initiate death ray",
+                    action:"echo cockburn"
+                },
+                {
+                    type:SSeekBar,
+                    min:-6,
+                    max:10,
+                    step:2,
+                    action:"echo blubb"
+                },
+                {
+                    type:SSeekBar,
+                    min:600000,
+                    max:1200000,
+                    step:6250,
+                    action:"echo blubb2"
+                },
+                {
+                    type:SSeekBar,
+                    min:600000,
+                    max:1200000,
+                    step:6250,
+                    action:"echo blubb3"
+                },
+                {
+                    type:SSeekBar,
+                    min:600000,
+                    max:1200000,
+                    step:6250,
+                    action:"echo blubb3"
+                }
+
+            ]
+        },
+        {
+            name:GPU,
+            elements:[
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                },
+                {
+                    type:STitleBar,
+                    title:"Standalone titlebar 1",
+                },
+                {
+                    type:STitleBar,
+                    title:"Standalone titlebar 2",
+                },
+                {
+                    type:SDescription,
+                    description:"Standalone 1 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SDescription,
+                    description:"Standalone 2 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+                {
+                    type:SPane,
+                    title:"GPU controls and undervolting",
+                    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                },
+             ]
+        },
+        {
+            name:Battery,
+            elements:[
+                {
+                    type:SPane,
+                    title:"Battery controls and undervolting",
+                    description:"Here you can change your Battery controls and undervolting"
+                }
+            ]
+        },
+    ]
+}

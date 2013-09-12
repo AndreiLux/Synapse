@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="2dp">
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SSeekBar_seekBar"
+        android:minWidth="260dp"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/SSeekBar_descriptionFrame" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;"
+        android:id="@+id/SSeekBar_minusButton"
+        android:layout_toLeftOf="@+id/SSeekBar_seekBar"
+        android:textSize="24dp"
+        android:singleLine="true"
+        android:textColor="@android:color/secondary_text_dark"
+        android:layout_alignTop="@+id/SSeekBar_seekBar"
+        android:layout_alignBottom="@+id/SSeekBar_plusButton"
+        android:background="@null" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&gt;"
+        android:id="@+id/SSeekBar_plusButton"
+        android:layout_toRightOf="@+id/SSeekBar_seekBar"
+        android:textSize="24dp"
+        android:textColor="@android:color/secondary_text_dark"
+        android:layout_alignTop="@+id/SSeekBar_seekBar"
+        android:layout_alignBottom="@+id/SSeekBar_seekBar"
+        android:background="@null" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_seek_value"
+        android:id="@+id/SSeekBar_seekLabel"
+        android:layout_below="@+id/SSeekBar_seekBar"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_default_value"
+        android:id="@+id/SSeekBar_defaultLabel"
+        android:visibility="gone"
+        android:layout_below="@+id/SSeekBar_seekBar"
+        android:layout_toRightOf="@+id/SSeekBar_minusButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_stored_value"
+        android:id="@+id/SSeekBar_storedLabel"
+        android:layout_below="@+id/SSeekBar_seekBar"
+        android:layout_toLeftOf="@+id/SSeekBar_plusButton"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentTop="true"
+        android:id="@+id/SSeekBar_descriptionFrame"
+        android:layout_alignParentRight="false"
+        android:paddingLeft="8dp"></LinearLayout>
+
+</RelativeLayout>
