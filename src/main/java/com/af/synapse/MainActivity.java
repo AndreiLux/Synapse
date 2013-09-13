@@ -54,6 +54,8 @@ public class MainActivity extends FragmentActivity {
     ViewPager mViewPager;
 
     private static JSONArray configSections;
+    private static Fragment[] fragments;
+    private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
     private void setupUtilities() {
@@ -67,11 +69,11 @@ public class MainActivity extends FragmentActivity {
 
         JSONObject resultsJSONObject = Utils.getJSON(getAssets());
         configSections = (JSONArray)resultsJSONObject.get("sections");
+        fragments =  new Fragment[configSections.size()];
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        L.d("Creating main activity");
         super.onCreate(savedInstanceState);
 
         startTime = System.nanoTime();
@@ -81,12 +83,23 @@ public class MainActivity extends FragmentActivity {
             setupUtilities();
 
         setContentView(R.layout.activity_main);
-        fragments =  new Fragment[configSections.size()];
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**
-         *  The UI building continues in buildFragment after fragment generation
+         *  The UI building continues in buildFragment after fragment generation.
+         *  or
+         *  If the fragments are already alive (Rotation, resume), continue immediately here.
          */
+        if (fragmentsDone.get() > 0)
+            continueCreate();
+    }
+
+    private void continueCreate() {
+        Utils.appStart = false;
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(configSections.size());
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
     }
 
     @Override
@@ -109,10 +122,6 @@ public class MainActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private static Fragment[] fragments;
-    private static AtomicInteger fragmentsDone = new AtomicInteger(0);
-    private static boolean generated = false;
 
     /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment
@@ -142,11 +151,7 @@ public class MainActivity extends FragmentActivity {
             Utils.mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Utils.appStart = false;
-                    mViewPager = (ViewPager) findViewById(R.id.pager);
-                    mViewPager.setOffscreenPageLimit(configSections.size());
-                    mViewPager.setAdapter(mSectionsPagerAdapter);
-                    L.d("Finish in " + (System.nanoTime() - startTime));
+                    continueCreate();
                 }
             });
         }
@@ -289,6 +294,7 @@ public class MainActivity extends FragmentActivity {
              *  added to the new one.
              */
 
+            L.d("Detaching from parent");
             ((ViewGroup)fragmentView.getParent()).removeView(fragmentView);
             super.onDetach();
         }
