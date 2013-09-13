@@ -54,6 +54,7 @@ public class MainActivity extends FragmentActivity {
     ViewPager mViewPager;
 
     private static JSONArray configSections;
+    long startTime;
 
     private void setupUtilities() {
         if (!Utils.isUciSupport()) {
@@ -62,6 +63,7 @@ public class MainActivity extends FragmentActivity {
 
         Utils.setPackageName(getPackageName());
         Utils.initiateDatabase(this);
+        Utils.mainActivity = this;
 
         JSONObject resultsJSONObject = Utils.getJSON(getAssets());
         configSections = (JSONArray)resultsJSONObject.get("sections");
@@ -72,7 +74,7 @@ public class MainActivity extends FragmentActivity {
         L.d("Creating main activity");
         super.onCreate(savedInstanceState);
 
-        long startTime = System.nanoTime();
+        startTime = System.nanoTime();
         Utils.appStart = true;
 
         if (savedInstanceState == null)
@@ -80,15 +82,11 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
         fragments =  new Fragment[configSections.size()];
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(configSections.size());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        Utils.appStart = false;
-        L.d("Finish in " + (System.nanoTime() - startTime));
+        /**
+         *  The UI building continues in buildFragment after fragment generation
+         */
     }
 
     @Override
@@ -121,9 +119,7 @@ public class MainActivity extends FragmentActivity {
      * corresponding to one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private Activity context;
-
-        private void createFragment(int position) {
+        private void buildFragment(int position) {
             if (fragments[position] != null)
                 return;
 
@@ -132,41 +128,51 @@ public class MainActivity extends FragmentActivity {
             Bundle args = new Bundle();
             args.putInt(tabSectionFragment.ARG_SECTION_NUMBER, position);
             fragment.setArguments(args);
-            fragment.prepareView(this.context);
+            fragment.prepareView(Utils.mainActivity);
             fragments[position] = fragment;
             fragmentsDone.incrementAndGet();
             L.d("Finished fragment " + position);
+
+            if (fragmentsDone.get() < configSections.size())
+                return;
+
+            /**
+             *  After all fragments are created, continue building the UI.
+             */
+            Utils.mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.appStart = false;
+                    mViewPager = (ViewPager) findViewById(R.id.pager);
+                    mViewPager.setOffscreenPageLimit(configSections.size());
+                    mViewPager.setAdapter(mSectionsPagerAdapter);
+                    L.d("Finish in " + (System.nanoTime() - startTime));
+                }
+            });
         }
 
-        public SectionsPagerAdapter(FragmentManager fm, Activity context) {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.context = context;
 
-            if (fragmentsDone.get() == 0) {
-                for (int i = 0; i < configSections.size(); i++) {
-                    final int position = i;
-                    Thread t = new Thread() {
-                        public void run() {
-                            createFragment(position);
-                        }
-                    };
-                    t.start();
-                }
+            if (fragmentsDone.get() > 0)
+                return;
 
-                while (fragmentsDone.get() < configSections.size()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+            for (int i = 0; i < configSections.size(); i++) {
+                /**
+                 *  Spawn a builder thread for each section/fragment
+                 */
+                final int position = i;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        buildFragment(position);
                     }
-                }
+                }).start();
             }
         }
 
         @Override
         public Fragment getItem(int position) {
-            L.d("Getting fragment "+position);
-            createFragment(position);
             return fragments[position];
         }
 
@@ -250,28 +256,28 @@ public class MainActivity extends FragmentActivity {
         public void onStart(){
             super.onStart();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onStart(); } catch (ClassCastException e) {}
+                try { ((ActivityListener) elm).onStart(); } catch (ClassCastException ignored) {}
         }
 
         @Override
         public void onResume(){
             super.onResume();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onResume(); } catch (ClassCastException e) {}
+                try { ((ActivityListener) elm).onResume(); } catch (ClassCastException ignored) {}
         }
 
         @Override
         public void onPause(){
             super.onPause();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onPause(); } catch (ClassCastException e) {}
+                try { ((ActivityListener) elm).onPause(); } catch (ClassCastException ignored) {}
         }
 
         @Override
         public void onStop(){
             super.onStop();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onStop(); } catch (ClassCastException e) {}
+                try { ((ActivityListener) elm).onStop(); } catch (ClassCastException ignored) {}
         }
 
         @Override
@@ -282,6 +288,7 @@ public class MainActivity extends FragmentActivity {
              *  instance. So we remove the child view from the old instance so that it can be
              *  added to the new one.
              */
+
             ((ViewGroup)fragmentView.getParent()).removeView(fragmentView);
             super.onDetach();
         }

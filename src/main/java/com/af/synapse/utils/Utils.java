@@ -9,6 +9,7 @@
 
 package com.af.synapse.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 
@@ -43,6 +44,7 @@ public class Utils {
     public static ActionValueDatabase db = null;
     public static String packageName = null;
     public static DecimalFormat df = new DecimalFormat("#.######");
+    public static Activity mainActivity;
 
     // TODO FIXME
     private static long total_time_shell = 0;

@@ -62,16 +62,21 @@ public class ActionValueUpdater {
     }
 
     private static void refreshButtons() {
-        if (applyButton == null || cancelButton == null)
+        if (applyButton == null || cancelButton == null || Utils.appStart)
             return;
 
-        if (registrees.isEmpty()) {
-            applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-            cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-        } else {
-            applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
+        Utils.mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (registrees.isEmpty()) {
+                    applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                    cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                } else {
+                    applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                }
+            }
+        });
     }
 
     public static void applyElements() {
