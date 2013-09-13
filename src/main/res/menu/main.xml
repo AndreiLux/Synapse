@@ -6,9 +6,11 @@
 
     <item android:id="@+id/action_apply"
         android:title="@string/action_apply"
+        android:icon="@drawable/navigation_accept"
         android:showAsAction="never" />
 
     <item android:id="@+id/action_cancel"
         android:title="@string/action_cancel"
+        android:icon="@drawable/navigation_cancel"
         android:showAsAction="never" />
 </menu>

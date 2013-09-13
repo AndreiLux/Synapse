@@ -72,8 +72,8 @@ public class ActionValueUpdater {
                     applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
                     cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
                 } else {
-                    applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
             }
         });
