@@ -12,7 +12,7 @@ package com.af.synapse.elements;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -36,8 +36,8 @@ public class SSeekBar extends BaseElement
 {
     private View elementView = null;
     private SeekBar seekBar;
-    private Button minusButton;
-    private Button plusButton;
+    private ImageButton minusButton;
+    private ImageButton plusButton;
 
     private TextView defaultLabel; //TODO method to reset to default
     private TextView seekLabel;
@@ -69,12 +69,12 @@ public class SSeekBar extends BaseElement
         if (element.containsKey("action"))
             this.command = element.get("action").toString();
         else
-            throw new IllegalArgumentException("SeekBar has no action defined");
+            throw new IllegalArgumentException("SSeekBar has no action defined");
 
         if (element.containsKey("max"))
             this.max = Integer.parseInt(element.get("max").toString());
         else
-            throw new IllegalArgumentException("SeekBar has no maximum defined");
+            throw new IllegalArgumentException("SSeekBar has no maximum defined");
 
         if (element.containsKey("min"))
             this.offset = Integer.parseInt(element.get("min").toString());
@@ -112,8 +112,8 @@ public class SSeekBar extends BaseElement
         elementView = v;
 
         seekBar     = (SeekBar) v.findViewById(R.id.SSeekBar_seekBar);
-        minusButton = (Button)  v.findViewById(R.id.SSeekBar_minusButton);
-        plusButton  = (Button)  v.findViewById(R.id.SSeekBar_plusButton);
+        minusButton = (ImageButton)  v.findViewById(R.id.SSeekBar_minusButton);
+        plusButton  = (ImageButton)  v.findViewById(R.id.SSeekBar_plusButton);
 
         defaultLabel    = (TextView) v.findViewById(R.id.SSeekBar_defaultLabel);
         seekLabel       = (TextView) v.findViewById(R.id.SSeekBar_seekLabel);
@@ -166,7 +166,6 @@ public class SSeekBar extends BaseElement
     }
 
     private void valueCheck() {
-        L.d("lastSeek:"+lastSeek + " lastLive:" + lastLive + " stored:" +stored);
         if (lastSeek == lastLive && lastSeek == stored) {
             elementView.setBackground(null);
             storedLabel.setVisibility(View.GONE);

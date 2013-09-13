@@ -13,32 +13,35 @@
         android:minWidth="260dp"
         android:layout_alignParentTop="false"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/SSeekBar_descriptionFrame" />
+        android:layout_below="@+id/SSeekBar_descriptionFrame"
+        android:layout_toLeftOf="@+id/SSeekBar_plusButton"
+        android:layout_toRightOf="@+id/SSeekBar_minusButton" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:text="&lt;"
         android:id="@+id/SSeekBar_minusButton"
-        android:layout_toLeftOf="@+id/SSeekBar_seekBar"
         android:textSize="24dp"
         android:singleLine="true"
         android:textColor="@android:color/secondary_text_dark"
         android:layout_alignTop="@+id/SSeekBar_seekBar"
         android:layout_alignBottom="@+id/SSeekBar_plusButton"
-        android:background="@null" />
+        android:background="@null"
+        android:src="@drawable/navigation_previous_item" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:text="&gt;"
         android:id="@+id/SSeekBar_plusButton"
-        android:layout_toRightOf="@+id/SSeekBar_seekBar"
         android:textSize="24dp"
         android:textColor="@android:color/secondary_text_dark"
         android:layout_alignTop="@+id/SSeekBar_seekBar"
         android:layout_alignBottom="@+id/SSeekBar_seekBar"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/navigation_next_item" />
 
     <TextView
         android:layout_width="wrap_content"
