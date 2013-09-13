@@ -53,7 +53,7 @@ public class SCheckBox extends BaseElement
         if (element.containsKey("action"))
             this.command = element.get("action").toString();
         else
-            L.w("Checkbox without action detected!");
+            throw new IllegalArgumentException("SCheckBox has no action defined");
 
         if (this.element.containsKey("label"))
             this.label = element.get("label").toString();
