@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SOptionList_descriptionFrame"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:paddingLeft="8dp">
+
+    </LinearLayout>
+
+    <ImageButton
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:text="&lt;"
+        android:id="@+id/SOptionList_previousButton"
+        android:layout_below="@+id/SOptionList_descriptionFrame"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/SOptionList_spinner"
+        android:background="@null"
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="24dp"
+        android:src="@drawable/navigation_previous_item" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SOptionList_spinner"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_below="@+id/SOptionList_descriptionFrame"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/SOptionList_previousButton"
+        android:layout_toLeftOf="@+id/SOptionList_nextButton" />
+
+    <ImageButton
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:text="&gt;"
+        android:id="@+id/SOptionList_nextButton"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/SOptionList_descriptionFrame"
+        android:layout_alignBottom="@+id/SOptionList_spinner"
+        android:background="@null"
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="24dp"
+        android:src="@drawable/navigation_next_item" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SOptionList_descriptionFrame"
+        android:layout_centerHorizontal="true">
+
+    </LinearLayout>
+
+</RelativeLayout>
