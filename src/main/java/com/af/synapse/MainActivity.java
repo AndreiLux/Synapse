@@ -82,7 +82,7 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null)
             setupUtilities();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_loading);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**
@@ -96,6 +96,7 @@ public class MainActivity extends FragmentActivity {
 
     private void continueCreate() {
         Utils.appStart = false;
+        setContentView(R.layout.activity_main);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
