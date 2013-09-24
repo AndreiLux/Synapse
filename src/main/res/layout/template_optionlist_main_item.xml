@@ -6,4 +6,5 @@
     android:text="Default item"
     android:id="@+id/SSOptionList_itemView"
     android:gravity="center"
-    android:textColor="@android:color/secondary_text_dark" />
+    android:textColor="@android:color/secondary_text_dark"
+    android:background="@null" />
