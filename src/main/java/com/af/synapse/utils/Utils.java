@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
@@ -46,8 +47,7 @@ public class Utils {
     public static DecimalFormat df = new DecimalFormat("#.######");
     public static Activity mainActivity;
 
-    // TODO FIXME
-    private static long total_time_shell = 0;
+    public static JSONArray configSections = null;
 
     private static void initialize() {
         if (!initialized) {
@@ -232,5 +232,12 @@ public class Utils {
 
     public static void setPackageName(String name) {
         packageName = name;
+    }
+
+    public static void loadSections() {
+        if (Utils.configSections == null) {
+            JSONObject resultsJSONObject = Utils.getJSON();
+            Utils.configSections = (JSONArray)resultsJSONObject.get("sections");
+        }
     }
 }

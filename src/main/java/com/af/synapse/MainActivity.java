@@ -53,8 +53,7 @@ public class MainActivity extends FragmentActivity {
      */
     ViewPager mViewPager;
 
-    private static JSONArray configSections;
-    private static Fragment[] fragments;
+    private static Fragment[] fragments = null;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
@@ -67,9 +66,8 @@ public class MainActivity extends FragmentActivity {
         Utils.initiateDatabase(this);
         Utils.mainActivity = this;
 
-        JSONObject resultsJSONObject = Utils.getJSON(getAssets());
-        configSections = (JSONArray)resultsJSONObject.get("sections");
-        fragments =  new Fragment[configSections.size()];
+        Utils.loadSections();
+        fragments =  new Fragment[Utils.configSections.size()];
     }
 
     @Override
@@ -96,9 +94,10 @@ public class MainActivity extends FragmentActivity {
 
     private void continueCreate() {
         Utils.appStart = false;
+        ActionValueUpdater.refreshButtons();
         setContentView(R.layout.activity_main);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(configSections.size());
+        mViewPager = (ViewPager) findViewById(R.id.mainPager);
+        mViewPager.setOffscreenPageLimit(Utils.configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
     }
@@ -143,7 +142,7 @@ public class MainActivity extends FragmentActivity {
             fragmentsDone.incrementAndGet();
             L.d("Finished fragment " + position);
 
-            if (fragmentsDone.get() < configSections.size())
+            if (fragmentsDone.get() < Utils.configSections.size())
                 return;
 
             /**
@@ -163,7 +162,7 @@ public class MainActivity extends FragmentActivity {
             if (fragmentsDone.get() > 0)
                 return;
 
-            for (int i = 0; i < configSections.size(); i++) {
+            for (int i = 0; i < Utils.configSections.size(); i++) {
                 /**
                  *  Spawn a builder thread for each section/fragment
                  */
@@ -184,12 +183,12 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return configSections.size();
+            return Utils.configSections.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            JSONObject section = (JSONObject)configSections.get(position);
+            JSONObject section = (JSONObject)Utils.configSections.get(position);
             return section.get("name").toString();
         }
     }
@@ -219,18 +218,16 @@ public class MainActivity extends FragmentActivity {
             LinearLayout tabContentLayout = (LinearLayout) tabSectionView.getChildAt(0);
             assert tabContentLayout != null;
 
-            JSONObject section = (JSONObject)configSections.get(sectionNumber);
+            JSONObject section = (JSONObject)Utils.configSections.get(sectionNumber);
             JSONArray sectionElements = (JSONArray)section.get("elements");
 
-            for (int i = 0; i < sectionElements.size(); i++) {
-                JSONObject elm = (JSONObject)sectionElements.get(i);
-                String type = elm.keySet().toString().replace("[","").replace("]","");
-                JSONObject parameters = (JSONObject)elm.get(type);
+            for (Object sectionElement : sectionElements) {
+                JSONObject elm = (JSONObject) sectionElement;
+                String type = elm.keySet().toString().replace("[", "").replace("]", "");
+                JSONObject parameters = (JSONObject) elm.get(type);
 
-                L.d("Building element " + i + " (" + type + ") out of section " + sectionNumber);
                 BaseElement elementObj = BaseElement.createObject(type, parameters,
-                                                                  context, tabContentLayout);
-
+                        context, tabContentLayout);
                 if (elementObj == null)
                     continue;
                 /**
@@ -243,8 +240,6 @@ public class MainActivity extends FragmentActivity {
                     tabContentLayout.addView(elementView);
 
                 fragmentElements.add(elementObj);
-
-                L.d("Added element " + i + " (" + type + ") out of section " + sectionNumber);
             }
 
             fragmentView = tabSectionView;
@@ -295,7 +290,6 @@ public class MainActivity extends FragmentActivity {
              *  added to the new one.
              */
 
-            L.d("Detaching from parent");
             ((ViewGroup)fragmentView.getParent()).removeView(fragmentView);
             super.onDetach();
         }
