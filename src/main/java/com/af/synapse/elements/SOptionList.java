@@ -49,7 +49,6 @@ public class SOptionList extends BaseElement
     private SDescription descriptionObj = null;
 
     private String command;
-    Object values;
     List<String> items = new ArrayList<String>();
     List<String> labels = new ArrayList<String>();
     private String unit = "";
@@ -72,9 +71,9 @@ public class SOptionList extends BaseElement
             this.unit = (String) element.get("unit");
 
         if (element.containsKey("values")) {
-            this.values = element.get("values");
+            Object values = element.get("values");
             if (values instanceof JSONArray)
-                for (Object value : (JSONArray)this.values) {
+                for (Object value : (JSONArray)values) {
                     items.add(value.toString());
                     labels.add(value.toString() + unit);
                 }
@@ -89,7 +88,7 @@ public class SOptionList extends BaseElement
             L.w("SOptionList without values detected!");
 
         if (element.containsKey("default"))
-            this.original = (String) element.get("default");
+            this.original = element.get("default").toString();
 
 
         /**
