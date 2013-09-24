@@ -179,32 +179,21 @@ public class Utils {
         return runCommand(command, false);
     }
 
-    public static JSONObject getJSON(AssetManager assets) {
+    public static JSONObject getJSON() {
         JSONObject result;
-        InputStream is = null;
 
-        if (false) {
-            try {
-                is = assets.open("customconfig2.json");
-            } catch (Exception e) {
-                L.e("Can't access asset customconfig: " + e.getMessage());
-            }
-            L.i("Parsing JSON");
-            result = (JSONObject) JSONValue.parse(is);
-            L.i("Parsed JSON");
-        } else {
-            String res = null;
-            try {
-                L.i("Requesting JSON");
-                res = Utils.runCommand("uci config", true);
-                L.i("Retrieved JSON");
-            } catch (Exception e) {
-                L.e("Can't access live customconfig: " + e.getMessage());
-            }
-            L.i("Parsing JSON");
-            result = (JSONObject) JSONValue.parse(res);
-            L.i("Parsed JSON");
+        String res = null;
+        try {
+            L.i("Requesting JSON");
+            res = Utils.runCommand("uci config", true);
+            L.i("Retrieved JSON");
+        } catch (Exception e) {
+            L.e("Can't access live customconfig: " + e.getMessage());
         }
+
+        L.i("Parsing JSON");
+        result = (JSONObject) JSONValue.parse(res);
+        L.i("Parsed JSON");
 
         return result;
     }
@@ -215,9 +204,7 @@ public class Utils {
     }
 
     public static void initiateDatabase(Context context) {
-        L.i("Creating database instance");
         db = new ActionValueDatabase(context);
-        L.i("Creating database");
         db.createDataBase();
     }
 
