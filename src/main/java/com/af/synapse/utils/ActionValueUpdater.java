@@ -61,7 +61,7 @@ public class ActionValueUpdater {
         refreshButtons();
     }
 
-    private static void refreshButtons() {
+    public static void refreshButtons() {
         if (applyButton == null || cancelButton == null || Utils.appStart)
             return;
 
