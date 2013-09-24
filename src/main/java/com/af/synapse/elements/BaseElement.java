@@ -43,7 +43,8 @@ public class BaseElement extends ElementSkeleton {
         try {
             c = Class.forName(Utils.packageName + ".elements." + type);
         } catch (Exception e) {
-            L.e("Failure to look up dynamic class element " + e.getMessage());
+            L.e("Failure to look up dynamic class element " + type + " due to " + e);
+            e.printStackTrace();
             return null;
         }
 
@@ -57,7 +58,9 @@ public class BaseElement extends ElementSkeleton {
             Constructor<?> constructor = c.getConstructor(types);
             newObject = (BaseElement)constructor.newInstance(element, activity, layout);
         } catch (Exception e) {
-            L.e("Failure to create dynamic class element " + e.getMessage());
+            L.e("Failure to create dynamic class element " + type + " due to " + e);
+            e.printStackTrace();
+
             return null;
         }
 
