@@ -72,19 +72,7 @@ public class Utils {
     }
 
     public static boolean isUciSupport() {
-        File file = new File("/res/uci.sh");
-
-        if (file.exists()) {
-            if(file.canExecute()) {
-                return true;
-            } else {
-                L.e("UCI interface cannot be read");
-            }
-        } else {
-            L.e("UCI interface not found");
-        }
-
-        return false;
+        return true; //TODO rewrite properly
     }
 
     private static boolean flushError()
