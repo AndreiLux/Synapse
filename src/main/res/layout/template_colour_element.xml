@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SColourPicker_descriptionFrame"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/frameLayout"
+        android:layout_alignBottom="@+id/frameLayout"
+        android:layout_marginLeft="@dimen/descriptionFrame_left_margin"
+        android:layout_marginTop="@dimen/descriptionFrame_left_margin" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:id="@+id/frameLayout"
+        android:paddingRight="@dimen/descriptionFrame_left_margin"
+        android:paddingTop="@dimen/descriptionFrame_left_margin">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:id="@+id/SColourPicker_colourButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="#ff0600"
+            android:layout_gravity="center" />
+    </FrameLayout>
+</RelativeLayout>

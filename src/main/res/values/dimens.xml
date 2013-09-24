@@ -6,4 +6,17 @@
     <dimen name="descriptionFrame_left_margin">8dp</dimen>
     <dimen name="stepButtons_width">32dp</dimen>
 
+    <!-- Standart dimens for the color wheel -->
+    <dimen name="color_wheel_radius">105dp</dimen>
+    <dimen name="color_wheel_thickness">16dp</dimen>
+    <dimen name="color_center_halo_radius">90dp</dimen>
+    <dimen name="color_center_radius">80dp</dimen>
+    <dimen name="color_pointer_halo_radius">20dp</dimen>
+    <dimen name="color_pointer_radius">16dp</dimen>
+
+    <!-- Standart dimens for the bars -->
+    <dimen name="bar_thickness">8dp</dimen>
+    <dimen name="bar_length">240dp</dimen>
+    <dimen name="bar_pointer_radius">10dp</dimen>
+    <dimen name="bar_pointer_halo_radius">14dp</dimen>
 </resources>

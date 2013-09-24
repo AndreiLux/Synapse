@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="16dp">
+
+    <RelativeLayout
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#e0101010"
+        android:padding="16dp"
+        android:layout_gravity="center"
+        android:focusable="false">
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.larswerkman.colorpicker.ColorPicker"
+            android:id="@+id/SColourPicker_picker"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/SColourPicker_hueMinus"
+            android:layout_toLeftOf="@+id/SColourPicker_huePlus"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/SColourPicker_hueDescription" />
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.larswerkman.colorpicker.SaturationBar"
+            android:id="@+id/SColourPicker_saturationBar"
+            android:layout_below="@+id/SColourPicker_saturationDescription"
+            android:layout_toRightOf="@+id/SColourPicker_valueMinus"
+            android:layout_toLeftOf="@+id/SColourPicker_valuePlus"
+            android:layout_centerHorizontal="true" />
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.larswerkman.colorpicker.ValueBar"
+            android:id="@+id/SColourPicker_valueBar"
+            android:layout_toRightOf="@+id/SColourPicker_saturationMinus"
+            android:layout_toLeftOf="@+id/SColourPicker_saturationPlus"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/SColourPicker_valueDescription" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_saturationPlus"
+            android:layout_alignBottom="@+id/SColourPicker_saturationBar"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/SColourPicker_saturationBar"
+            android:src="@drawable/navigation_next_item"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_saturationMinus"
+            android:src="@drawable/navigation_previous_item"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/SColourPicker_saturationBar"
+            android:layout_alignBottom="@+id/SColourPicker_saturationBar"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_valuePlus"
+            android:src="@drawable/navigation_next_item"
+            android:layout_alignBottom="@+id/SColourPicker_valueBar"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/SColourPicker_valueBar"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_valueMinus"
+            android:src="@drawable/navigation_previous_item"
+            android:layout_alignBottom="@+id/SColourPicker_valueBar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/SColourPicker_valueBar"
+            android:background="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="RGB representation"
+            android:id="@+id/SColourPicker_hexDescription"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/SColourPicker_valueBar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Saturation"
+            android:id="@+id/SColourPicker_saturationDescription"
+            android:gravity="center"
+            android:layout_below="@+id/SColourPicker_picker"
+            android:layout_toRightOf="@+id/SColourPicker_saturationMinus" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Value"
+            android:id="@+id/SColourPicker_valueDescription"
+            android:gravity="center"
+            android:layout_below="@+id/SColourPicker_saturationBar"
+            android:layout_toRightOf="@+id/SColourPicker_valueMinus" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_cancelButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:src="@drawable/navigation_cancel"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Hue"
+            android:id="@+id/SColourPicker_hueDescription"
+            android:gravity="center"
+            android:layout_below="@+id/SColourPicker_cancelButton"
+            android:layout_toRightOf="@+id/SColourPicker_hueMinus" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_huePlus"
+            android:src="@drawable/navigation_next_item"
+            android:background="@null"
+            android:layout_alignBottom="@+id/SColourPicker_picker"
+            android:layout_alignTop="@+id/SColourPicker_picker"
+            android:layout_alignParentRight="true" />
+
+        <ImageButton
+            android:layout_width="@dimen/stepButtons_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/SColourPicker_hueMinus"
+            android:src="@drawable/navigation_previous_item"
+            android:background="@null"
+            android:layout_alignTop="@+id/SColourPicker_picker"
+            android:layout_alignBottom="@+id/SColourPicker_picker"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="defaultHue°"
+            android:id="@+id/SColourPicker_hueValue"
+            android:layout_alignTop="@+id/SColourPicker_hueDescription"
+            android:layout_alignRight="@+id/SColourPicker_picker" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="defaultSat"
+            android:id="@+id/SColourPicker_saturationValue"
+            android:layout_below="@+id/SColourPicker_picker"
+            android:layout_alignRight="@+id/SColourPicker_picker" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="defaultValue"
+            android:id="@+id/SColourPicker_valueValue"
+            android:layout_below="@+id/SColourPicker_saturationBar"
+            android:layout_toLeftOf="@+id/SColourPicker_saturationPlus" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Colour label"
+            android:id="@+id/SColourPicker_controllerLabel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" />
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/SColourPicker_hexDescription"
+            android:layout_marginTop="8dp"
+            android:id="@+id/gridLayout">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_rPlus"
+                android:layout_alignTop="@+id/SColourPicker_gPlus"
+                android:layout_alignLeft="@+id/SColourPicker_hexR"
+                android:src="@drawable/navigation_collapse"
+                android:background="@null"
+                android:layout_alignRight="@+id/SColourPicker_hexR"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_gPlus"
+                android:layout_below="@+id/SColourPicker_hexDescription"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/navigation_collapse"
+                android:background="@null"
+                android:layout_alignLeft="@+id/SColourPicker_hexG"
+                android:layout_alignRight="@+id/SColourPicker_hexG"
+                android:layout_row="0"
+                android:layout_column="2"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+            <EditText
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_hexB"
+                android:editable="true"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="BB"
+                android:layout_alignTop="@+id/SColourPicker_hexG"
+                android:layout_toRightOf="@+id/SColourPicker_hexG"
+                android:digits="2"
+                android:layout_alignBottom="@+id/SColourPicker_hexG"
+                android:layout_alignParentRight="false"
+                android:layout_row="1"
+                android:layout_column="3" />
+
+            <EditText
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_hexG"
+                android:editable="true"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="GG"
+                android:digits="2"
+                android:layout_below="@+id/SColourPicker_gPlus"
+                android:layout_centerHorizontal="true"
+                android:layout_row="1"
+                android:layout_column="2" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_bPlus"
+                android:src="@drawable/navigation_collapse"
+                android:background="@null"
+                android:layout_alignTop="@+id/SColourPicker_gPlus"
+                android:layout_alignRight="@+id/SColourPicker_hexB"
+                android:layout_alignLeft="@+id/SColourPicker_hexB"
+                android:layout_row="0"
+                android:layout_column="3"
+                android:adjustViewBounds="false"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+            <EditText
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_hexR"
+                android:editable="true"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="RR"
+                android:layout_alignTop="@+id/SColourPicker_hexG"
+                android:layout_toLeftOf="@+id/SColourPicker_hexG"
+                android:digits="2"
+                android:layout_alignBottom="@+id/SColourPicker_hexG"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentLeft="false"
+                android:layout_row="1"
+                android:layout_column="0" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_bMinus"
+                android:layout_below="@+id/SColourPicker_hexB"
+                android:layout_alignRight="@+id/SColourPicker_hexB"
+                android:background="@null"
+                android:src="@drawable/navigation_expand"
+                android:layout_alignLeft="@+id/SColourPicker_hexB"
+                android:layout_row="2"
+                android:layout_column="3"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_rMinus"
+                android:layout_below="@+id/SColourPicker_hexR"
+                android:layout_alignLeft="@+id/SColourPicker_hexR"
+                android:background="@null"
+                android:src="@drawable/navigation_expand"
+                android:layout_alignRight="@+id/SColourPicker_hexR"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/SColourPicker_gMinus"
+                android:layout_below="@+id/SColourPicker_hexG"
+                android:background="@null"
+                android:src="@drawable/navigation_expand"
+                android:layout_alignLeft="@+id/SColourPicker_hexG"
+                android:layout_alignRight="@+id/SColourPicker_hexG"
+                android:layout_centerHorizontal="true"
+                android:layout_row="2"
+                android:layout_column="2"
+                android:layout_gravity="fill_horizontal|center_horizontal" />
+
+        </GridLayout>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(Load default)"
+            android:id="@+id/SColourPicker_defaultButton"
+            android:background="@null"
+            android:textColor="@android:color/secondary_text_dark"
+            android:layout_alignBottom="@+id/SColourPicker_controllerLabel"
+            android:layout_toRightOf="@+id/SColourPicker_controllerLabel"
+            android:layout_marginLeft="4dp"
+            android:paddingTop="2dp" />
+
+    </RelativeLayout>
+</FrameLayout>
