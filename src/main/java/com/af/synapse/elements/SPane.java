@@ -22,13 +22,13 @@ public class SPane extends BaseElement {
     public SPane(JSONObject elm, Activity activity, LinearLayout layout) {
         super(elm, activity, layout);
 
-        if (elm.containsKey("title") && !elm.get("title").toString().isEmpty()) {
+        if (elm.containsKey("title") && !((String)elm.get("title")).isEmpty()) {
             BaseElement titleBar = BaseElement.createObject("STitleBar", elm,
                                                             activity, layout);
             layout.addView(titleBar.getView());
         }
 
-        if (elm.containsKey("description") && !elm.get("description").toString().isEmpty()) {
+        if (elm.containsKey("description") && !((String)elm.get("description")).isEmpty()) {
             BaseElement descriptionText = BaseElement.createObject("SDescription", elm,
                                                                     activity, layout);
             layout.addView(descriptionText.getView());

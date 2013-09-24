@@ -31,7 +31,7 @@ public class SDescription extends BaseElement{
 
     @Override
     public View getView() {
-        String title = this.element.get("description").toString();
+        String title = (String) this.element.get("description");
         TextView v = (TextView) LayoutInflater.from(this.activity)
                                      .inflate(R.layout.template_description, this.layout, false);
         assert v != null;

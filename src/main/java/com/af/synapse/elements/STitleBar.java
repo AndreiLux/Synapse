@@ -34,7 +34,7 @@ public class STitleBar extends BaseElement {
                                         .inflate(R.layout.template_titlebar, this.layout, false);
         assert v != null;
 
-        String title = element.get("title").toString();
+        String title = (String) element.get("title");
         v.setText(title);
 
         return v;

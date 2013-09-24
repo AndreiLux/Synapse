@@ -64,12 +64,12 @@ public class SOptionList extends BaseElement
         super(element, activity, layout);
 
         if (element.containsKey("action"))
-            this.command = element.get("action").toString();
+            this.command = (String) element.get("action");
         else
             throw new IllegalArgumentException("SOptionList has no action defined");
 
         if (element.containsKey("unit"))
-            this.unit = element.get("unit").toString();
+            this.unit = (String) element.get("unit");
 
         if (element.containsKey("values")) {
             this.values = element.get("values");
@@ -89,7 +89,7 @@ public class SOptionList extends BaseElement
             L.w("SOptionList without values detected!");
 
         if (element.containsKey("default"))
-            this.original = element.get("default").toString();
+            this.original = (String) element.get("default");
 
 
         /**

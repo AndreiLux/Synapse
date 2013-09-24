@@ -67,29 +67,29 @@ public class SSeekBar extends BaseElement
         super(element, activity, layout);
 
         if (element.containsKey("action"))
-            this.command = element.get("action").toString();
+            this.command = (String) element.get("action");
         else
             throw new IllegalArgumentException("SSeekBar has no action defined");
 
         if (element.containsKey("max"))
-            this.max = Integer.parseInt(element.get("max").toString());
+            this.max = (Integer) element.get("max");
         else
             throw new IllegalArgumentException("SSeekBar has no maximum defined");
 
         if (element.containsKey("min"))
-            this.offset = Integer.parseInt(element.get("min").toString());
+            this.offset = (Integer) element.get("min");
 
         if (element.containsKey("step"))
-            this.step = Integer.parseInt(element.get("step").toString());
+            this.step = (Integer) element.get("step");
 
         if (element.containsKey("default"))
-            this.original = Integer.parseInt(element.get("default").toString());
+            this.original = (Integer) element.get("default");
 
         if (element.containsKey("unit"))
-            this.unit = element.get("unit").toString();
+            this.unit = (String) element.get("unit");
 
         if (element.containsKey("weight"))
-            this.weight = Double.valueOf(element.get("weight").toString());
+            this.weight = (Double) element.get("weight");
 
         /**
          *  Add a description element inside our own with the same JSON object
@@ -154,7 +154,6 @@ public class SSeekBar extends BaseElement
             stored = lastLive;
         }
 
-        lastSeek = lastLive;
         storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
 
         minusButton.setOnClickListener(this);
@@ -189,6 +188,7 @@ public class SSeekBar extends BaseElement
     }
 
     private void setSeek(String value) {
+        lastSeek = Integer.valueOf(value);
         int newProgress = (Integer.parseInt(value) - offset) / step;
         seekBar.setProgress(newProgress);
     }
@@ -279,11 +279,12 @@ public class SSeekBar extends BaseElement
         Utils.runCommand(command + " " + target);
         String result = getLiveValue();
 
-        if (!result.equals(getStoredValue()))
+        if (!result.equals(getStoredValue())) {
             Utils.db.setValue(command, result);
+            stored = Integer.parseInt(result);
+            storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
+        }
 
-        stored = Integer.parseInt(result);
-        storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
         setSeek(result);
         valueCheck();
 
