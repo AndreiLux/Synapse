@@ -11,16 +11,14 @@
         android:id="@+id/SOptionList_descriptionFrame"
         android:layout_gravity="center_horizontal|top"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:paddingLeft="8dp">
+        android:layout_marginLeft="@dimen/descriptionFrame_left_margin">
 
     </LinearLayout>
 
     <ImageButton
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="32dp"
+        android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
         android:text="&lt;"
         android:id="@+id/SOptionList_previousButton"
@@ -44,7 +42,7 @@
 
     <ImageButton
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="32dp"
+        android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
         android:text="&gt;"
         android:id="@+id/SOptionList_nextButton"
