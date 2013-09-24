@@ -131,7 +131,6 @@ public class Utils {
         String line;
         StringBuilder sb = null;
         String out = "";
-        long startTime = System.nanoTime();
 
         if (command == null || command.isEmpty())
             return null;
@@ -144,12 +143,9 @@ public class Utils {
         try {
             boolean finished = false;
 
-            long reponseTime = System.nanoTime();
             co.write(command + "\necho " + callback + "\n");
             co.flush();
-            L.d("Command send time:" + (System.nanoTime() - reponseTime));
 
-            reponseTime = System.nanoTime();
             while (!finished) {
                 if (ci.ready()) {
                     if ((line = ci.readLine()) == null)
@@ -168,17 +164,12 @@ public class Utils {
             }
 
             flushError();
-            L.d("Command response time:" + (System.nanoTime() - reponseTime));
         } catch (IOException ex) {
             L.e("Running command failed: " + command);
         }
 
         if (bigOutput)
             out = sb.toString();
-
-        long command_time = System.nanoTime() - startTime;
-        total_time_shell += command_time;
-        L.d("Shell time:\t" + total_time_shell + " / " + command_time);
 
         return out;
     }
