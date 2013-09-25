@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.af.synapse.utils.L;
 import com.af.synapse.R;
+import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
@@ -51,6 +53,7 @@ public class SButton extends BaseElement implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        L.i("Clicked checkbox with action: " + command);
+        String result = Utils.runCommand(command);
+        Toast.makeText(this.activity, result, Toast.LENGTH_LONG).show();
     }
 }
