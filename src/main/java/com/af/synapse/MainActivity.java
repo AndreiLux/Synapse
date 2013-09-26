@@ -53,8 +53,8 @@ public class MainActivity extends FragmentActivity {
      */
     ViewPager mViewPager;
 
-    private static Fragment[] fragments = null;
-    private static AtomicInteger fragmentsDone = new AtomicInteger(0);
+    private Fragment[] fragments = null;
+    private AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
     private void setupUtilities() {
@@ -62,8 +62,6 @@ public class MainActivity extends FragmentActivity {
             //TODO no support
         }
 
-        Utils.setPackageName(getPackageName());
-        Utils.initiateDatabase(this);
         Utils.mainActivity = this;
 
         Utils.loadSections();
@@ -80,16 +78,15 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null)
             setupUtilities();
 
+        Utils.setPackageName(getPackageName());
+        Utils.initiateDatabase(this);
+
         setContentView(R.layout.activity_loading);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**
          *  The UI building continues in buildFragment after fragment generation.
-         *  or
-         *  If the fragments are already alive (Rotation, resume), continue immediately here.
          */
-        if (fragmentsDone.get() > 0)
-            continueCreate();
     }
 
     private void continueCreate() {
@@ -249,7 +246,6 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState)
         {
-            L.d("");
             return fragmentView;
         }
 
