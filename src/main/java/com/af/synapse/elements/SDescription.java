@@ -9,14 +9,13 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
-import android.app.SearchManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.af.synapse.R;
+import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
@@ -25,14 +24,14 @@ import net.minidev.json.JSONObject;
  */
 public class SDescription extends BaseElement{
 
-    public SDescription(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SDescription(JSONObject element, LinearLayout layout) {
+        super(element, layout);
     }
 
     @Override
     public View getView() {
         String title = (String) this.element.get("description");
-        TextView v = (TextView) LayoutInflater.from(this.activity)
+        TextView v = (TextView) LayoutInflater.from(Utils.mainActivity)
                                      .inflate(R.layout.template_description, this.layout, false);
         assert v != null;
         v.setText(title);

@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -47,8 +46,8 @@ public class SCheckBox extends BaseElement
     private boolean lastCheck;
     private boolean lastLive;
 
-    public SCheckBox(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SCheckBox(JSONObject element, LinearLayout layout) {
+        super(element, layout);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -62,10 +61,10 @@ public class SCheckBox extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, activity, layout);
+            descriptionObj = new SDescription(element, layout);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, activity, layout);
+            titleObj = new STitleBar(element, layout);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class SCheckBox extends BaseElement
         if (elementView != null)
             return elementView;
 
-        View v = LayoutInflater.from(this.activity)
+        View v = LayoutInflater.from(Utils.mainActivity)
                                         .inflate(R.layout.template_checkbox, this.layout, false);
         assert v != null;
         elementView = v;
@@ -116,7 +115,7 @@ public class SCheckBox extends BaseElement
             if (ActionValueUpdater.isRegistered(this))
                 ActionValueUpdater.removeElement(this);
         } else {
-            elementView.setBackgroundColor(activity.getResources()
+            elementView.setBackgroundColor(Utils.mainActivity.getResources()
                     .getColor(R.color.element_value_changed));
 
             if (!ActionValueUpdater.isRegistered(this))

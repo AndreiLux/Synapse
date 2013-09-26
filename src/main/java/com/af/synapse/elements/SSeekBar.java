@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -63,8 +62,8 @@ public class SSeekBar extends BaseElement
 
     private boolean progressBlock = false;
 
-    public SSeekBar(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SSeekBar(JSONObject element, LinearLayout layout) {
+        super(element, layout);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -95,10 +94,10 @@ public class SSeekBar extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, activity, layout);
+            descriptionObj = new SDescription(element, layout);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, activity, layout);
+            titleObj = new STitleBar(element, layout);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class SSeekBar extends BaseElement
         if (elementView != null)
             return elementView;
 
-        View v = LayoutInflater.from(this.activity)
+        View v = LayoutInflater.from(Utils.mainActivity)
                                      .inflate(R.layout.template_seekbar, this.layout, false);
         assert v != null;
         elementView = v;
@@ -175,7 +174,7 @@ public class SSeekBar extends BaseElement
             if (ActionValueUpdater.isRegistered(this))
                 ActionValueUpdater.removeElement(this);
         } else {
-            elementView.setBackgroundColor(activity.getResources()
+            elementView.setBackgroundColor(Utils.mainActivity.getResources()
                                                         .getColor(R.color.element_value_changed));
             storedLabel.setVisibility(View.VISIBLE);
 

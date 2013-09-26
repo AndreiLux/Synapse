@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -20,7 +19,6 @@ import net.minidev.json.JSONObject;
  */
 abstract class ElementSkeleton {
     public JSONObject element;
-    public Activity activity;
     public LinearLayout layout;
 
     abstract public View getView();

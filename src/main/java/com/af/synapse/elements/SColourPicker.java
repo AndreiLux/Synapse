@@ -1,9 +1,7 @@
 package com.af.synapse.elements;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.af.synapse.R;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
-import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
@@ -52,8 +49,8 @@ public class SColourPicker extends BaseElement
     private int lastLive;
     private int lastChosen;
 
-    public SColourPicker(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SColourPicker(JSONObject element, LinearLayout layout) {
+        super(element, layout);
 
         if (element.containsKey("action"))
             this.command = element.get("action").toString();
@@ -68,10 +65,10 @@ public class SColourPicker extends BaseElement
          */
 
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, activity, layout);
+            descriptionObj = new SDescription(element, layout);
 
         if (element.containsKey("title")) {
-            titleObj = new STitleBar(element, activity, layout);
+            titleObj = new STitleBar(element, layout);
             title = (String) element.get("title");
         }
     }
@@ -84,19 +81,18 @@ public class SColourPicker extends BaseElement
         final CountDownLatch latch = new CountDownLatch(1);
 
         if (controller == null) {
-            final Activity thisActivity = this.activity;
             final LinearLayout thisLayout = this.layout;
             Utils.mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    controller = new ColourController(thisActivity, thisLayout);
+                    controller = new ColourController(Utils.mainActivity, thisLayout);
                     latch.countDown();
                 }
             });
         } else
             latch.countDown();
 
-        View v = LayoutInflater.from(this.activity)
+        View v = LayoutInflater.from(Utils.mainActivity)
                                         .inflate(R.layout.template_colour_element, this.layout, false);
         assert v != null;
         elementView = v;
@@ -141,7 +137,7 @@ public class SColourPicker extends BaseElement
             if (ActionValueUpdater.isRegistered(this))
                 ActionValueUpdater.removeElement(this);
         } else {
-            elementView.setBackgroundColor(activity.getResources()
+            elementView.setBackgroundColor(Utils.mainActivity.getResources()
                     .getColor(R.color.element_value_changed));
 
             if (!ActionValueUpdater.isRegistered(this))

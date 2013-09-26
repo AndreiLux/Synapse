@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,8 +28,8 @@ public class SButton extends BaseElement implements View.OnClickListener {
     private Button button;
     private String command;
 
-    public SButton(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SButton(JSONObject element, LinearLayout layout) {
+        super(element, layout);
 
         if (element.containsKey("action"))
             this.command = element.get("action").toString();
@@ -40,7 +39,7 @@ public class SButton extends BaseElement implements View.OnClickListener {
 
     @Override
     public View getView() {
-        this.button = (Button) LayoutInflater.from(this.activity)
+        this.button = (Button) LayoutInflater.from(Utils.mainActivity)
                                             .inflate(R.layout.template_button, this.layout, false);
 
         if (this.element.containsKey("label"))
@@ -54,6 +53,6 @@ public class SButton extends BaseElement implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         String result = Utils.runCommand(command);
-        Toast.makeText(this.activity, result, Toast.LENGTH_LONG).show();
+        Toast.makeText(Utils.mainActivity, result, Toast.LENGTH_LONG).show();
     }
 }

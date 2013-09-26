@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,8 +58,8 @@ public class SOptionList extends BaseElement
     private String lastSelect = null;
     private String lastLive = null;
 
-    public SOptionList(JSONObject element, Activity activity, LinearLayout layout) {
-        super(element, activity, layout);
+    public SOptionList(JSONObject element, LinearLayout layout) {
+        super(element, layout);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -95,14 +94,14 @@ public class SOptionList extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, activity, layout);
+            descriptionObj = new SDescription(element, layout);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, activity, layout);
+            titleObj = new STitleBar(element, layout);
     }
 
     private void prepareUI(){
-        elementView = LayoutInflater.from(this.activity)
+        elementView = LayoutInflater.from(Utils.mainActivity)
                             .inflate(R.layout.template_optionlist, this.layout, false);
     }
 
@@ -167,7 +166,7 @@ public class SOptionList extends BaseElement
 
         spinner = (Spinner) elementView.findViewById(R.id.SOptionList_spinner);
         spinner.setOnItemSelectedListener(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.activity,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Utils.mainActivity,
                                                 R.layout.template_optionlist_main_item, labels);
         adapter.setDropDownViewResource(R.layout.template_optionlist_list_item);
         spinner.setAdapter(adapter);
@@ -183,7 +182,7 @@ public class SOptionList extends BaseElement
             if (ActionValueUpdater.isRegistered(this))
                 ActionValueUpdater.removeElement(this);
         } else {
-            elementView.setBackgroundColor(activity.getResources()
+            elementView.setBackgroundColor(Utils.mainActivity.getResources()
                     .getColor(R.color.element_value_changed));
 
             if (!ActionValueUpdater.isRegistered(this))
@@ -214,7 +213,7 @@ public class SOptionList extends BaseElement
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        ((TextView)adapterView.getChildAt(0)).setTextColor(activity.getResources().getColor(android.R.color.secondary_text_light_nodisable));
+        ((TextView)adapterView.getChildAt(0)).setTextColor(Utils.mainActivity.getResources().getColor(android.R.color.secondary_text_light_nodisable));
         lastSelect = items.get(i);
         valueCheck();
     }

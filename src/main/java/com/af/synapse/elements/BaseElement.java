@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -24,14 +23,12 @@ import java.lang.reflect.Constructor;
  * Created by Andrei on 30/08/13.
  */
 public class BaseElement extends ElementSkeleton {
-    public BaseElement(JSONObject element, Activity activity, LinearLayout layout) {
+    public BaseElement(JSONObject element, LinearLayout layout) {
         this.element = element;
-        this.activity = activity;
         this.layout = layout;
     }
 
-    public static BaseElement createObject(String type, JSONObject element,
-                                           Activity activity, LinearLayout layout) {
+    public static BaseElement createObject(String type, JSONObject element, LinearLayout layout) {
         BaseElement newObject = null;
         Class<?> c;
 
@@ -53,10 +50,10 @@ public class BaseElement extends ElementSkeleton {
          *  the target class object. Initialize a new instance of the new object.
          */
 
-        Class<?>[] types = new Class[] { JSONObject.class, Activity.class , LinearLayout.class };
+        Class<?>[] types = new Class[] { JSONObject.class, LinearLayout.class };
         try {
             Constructor<?> constructor = c.getConstructor(types);
-            newObject = (BaseElement)constructor.newInstance(element, activity, layout);
+            newObject = (BaseElement)constructor.newInstance(element, layout);
         } catch (Exception e) {
             L.e("Failure to create dynamic class element " + type + " due to " + e);
             e.printStackTrace();

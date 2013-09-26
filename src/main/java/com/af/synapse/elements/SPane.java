@@ -9,7 +9,6 @@
 
 package com.af.synapse.elements;
 
-import android.app.Activity;
 import android.widget.LinearLayout;
 
 import net.minidev.json.JSONObject;
@@ -19,18 +18,16 @@ import net.minidev.json.JSONObject;
  */
 public class SPane extends BaseElement {
 
-    public SPane(JSONObject elm, Activity activity, LinearLayout layout) {
-        super(elm, activity, layout);
+    public SPane(JSONObject elm, LinearLayout layout) {
+        super(elm, layout);
 
         if (elm.containsKey("title") && !((String)elm.get("title")).isEmpty()) {
-            BaseElement titleBar = BaseElement.createObject("STitleBar", elm,
-                                                            activity, layout);
+            BaseElement titleBar = BaseElement.createObject("STitleBar", elm, layout);
             layout.addView(titleBar.getView());
         }
 
         if (elm.containsKey("description") && !((String)elm.get("description")).isEmpty()) {
-            BaseElement descriptionText = BaseElement.createObject("SDescription", elm,
-                                                                    activity, layout);
+            BaseElement descriptionText = BaseElement.createObject("SDescription", elm, layout);
             layout.addView(descriptionText.getView());
         }
     }
