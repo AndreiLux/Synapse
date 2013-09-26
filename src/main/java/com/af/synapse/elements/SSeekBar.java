@@ -60,7 +60,7 @@ public class SSeekBar extends BaseElement
     private int lastSeek;
     private int lastLive;
 
-    private boolean progressBlock = false;
+    private boolean progressBlock = true;
 
     public SSeekBar(JSONObject element, LinearLayout layout) {
         super(element, layout);
@@ -158,6 +158,7 @@ public class SSeekBar extends BaseElement
         minusButton.setOnClickListener(this);
         plusButton.setOnClickListener(this);
 
+        seekLabel.setText(Utils.df.format(Integer.valueOf(initialLive) * weight) + unit);
         setSeek(initialLive);
 
         return v;
@@ -302,9 +303,6 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onStart() {
-        if (Utils.appStart)
-            return;
-
         progressBlock = false;
         setSeek(getLiveValue());
     }
