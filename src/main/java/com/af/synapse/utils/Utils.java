@@ -11,7 +11,6 @@ package com.af.synapse.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.AssetManager;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -19,28 +18,19 @@ import net.minidev.json.JSONValue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Andrei on 27/08/13.
  */
 public class Utils {
-    private static Process rp = null;
-
-    private static BufferedWriter co = null;
-    private static BufferedReader ci = null;
-    private static BufferedReader ce = null;
-
     private static boolean initialized = false;
     public static boolean appStart = true;
-
-    public static final int MAX_ROOT_TIMEOUT_MS = 40000;
-    private static final String callback = "/shellCallback/";
 
     public static ActionValueDatabase db = null;
     public static String packageName = null;
@@ -49,133 +39,32 @@ public class Utils {
 
     public static JSONArray configSections = null;
 
-    private static void initialize() {
-        if (!initialized) {
-            try {
-                Utils.rp = Runtime.getRuntime().exec("su");
-
-                Utils.co = new BufferedWriter(new OutputStreamWriter(rp.getOutputStream()));
-                Utils.ci = new BufferedReader(new InputStreamReader(rp.getInputStream()));
-                Utils.ce = new BufferedReader(new InputStreamReader(rp.getErrorStream()));
-
-                initialized = isRoot();
-                initializeActionPath();
-            } catch (IOException e) {
-                Utils.rp = null;
-                Utils.ci = null;
-                Utils.co = null;
-                Utils.ce = null;
-
-                e.printStackTrace();
-            }
-        }
-    }
+    protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
 
     public static boolean isUciSupport() {
         return true; //TODO rewrite properly
     }
 
-    private static boolean flushError()
-    {
-        String lineErr;
-        boolean ret = false;
-
-        try {
-            while (ce.ready()) {
-                if (((lineErr = ce.readLine()) != null) && !lineErr.isEmpty()) {
-                    L.e(lineErr);
-                    ret |= true;
-                }
+    public static String runCommand(String command, boolean bigOutput) {
+        SuperShell shell = null;
+        for (SuperShell s : shells) {
+            if (s.lock.get() == 0) {
+                shell = s;
+                break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        if (shell == null)
+            shell = new SuperShell();
+
+        shell.lock.set(1);
+        String ret = shell.runCommand(command, bigOutput);
+        shell.lock.set(0);
 
         return ret;
     }
 
-    public synchronized static boolean isRoot() {
-        String line = "";
-
-        try {
-            boolean finished = false;
-            long timeStart = 0;
-
-            co.write("echo " + callback + "\n");
-            co.flush();
-
-            while (!finished) {
-                if (ci.ready()) {
-                    if ((line = ci.readLine()) != null && line.equalsIgnoreCase(callback))
-                        return true;
-                } else if (flushError())
-                    return false;
-                else {
-                    if (timeStart == 0) {
-                        timeStart = System.currentTimeMillis();
-                        try { Thread.sleep(10); } catch (InterruptedException e) {}
-                    } else if (System.currentTimeMillis() > timeStart + MAX_ROOT_TIMEOUT_MS) {
-                        L.e("Root test timeout");
-                        return false;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            L.e("Root test fail" + e.getMessage());
-        }
-
-        return false;
-    }
-
-    public synchronized static String runCommand(String command, boolean bigOutput) {
-        String line;
-        StringBuilder sb = null;
-        String out = "";
-
-        if (command == null || command.isEmpty())
-            return null;
-
-        if (bigOutput)
-            sb = new StringBuilder(out);
-
-        Utils.initialize();
-
-        try {
-            boolean finished = false;
-
-            co.write(command + "\necho " + callback + "\n");
-            co.flush();
-
-            while (!finished) {
-                if (ci.ready()) {
-                    if ((line = ci.readLine()) == null)
-                        finished = true;
-                    else {
-                        if (line.equals(callback)) {
-                            finished = true;
-                        } else
-                            if (bigOutput)
-                                sb.append(line);
-                            else
-                                out += line;
-                    }
-                } else if(flushError())
-                    break;
-            }
-
-            flushError();
-        } catch (IOException ex) {
-            L.e("Running command failed: " + command);
-        }
-
-        if (bigOutput)
-            out = sb.toString();
-
-        return out;
-    }
-
-
-    public synchronized static String runCommand(String command) {
+    public static String runCommand(String command) {
         return runCommand(command, false);
     }
 
@@ -198,11 +87,6 @@ public class Utils {
         return result;
     }
 
-    public static void initializeActionPath() {
-        String actionPath = Utils.runCommand("uci actionpath");
-        Utils.runCommand("export PATH=" + actionPath + ":$PATH");
-    }
-
     public static void initiateDatabase(Context context) {
         db = new ActionValueDatabase(context);
         db.createDataBase();
@@ -217,5 +101,170 @@ public class Utils {
             JSONObject resultsJSONObject = Utils.getJSON();
             Utils.configSections = (JSONArray)resultsJSONObject.get("sections");
         }
+    }
+
+    public static void destroy() {
+        for (SuperShell s : shells)
+            s.destroy();
+
+        shells.clear();
+        db.close();
+    }
+}
+
+class SuperShell {
+    private Process rp = null;
+
+    private BufferedWriter co = null;
+    private BufferedReader ci = null;
+    private BufferedReader ce = null;
+
+    private OutputStreamWriter os = null;
+    private InputStreamReader is = null;
+    private InputStreamReader es = null;
+
+    private static final int MAX_ROOT_TIMEOUT_MS = 40000;
+    private static final String callback = "/shellCallback/";
+
+    private static String actionPath = null;
+
+    public final AtomicInteger lock = new AtomicInteger(0);
+
+    public SuperShell() {
+        L.d("New SuperShell");
+        try {
+            this.rp = Runtime.getRuntime().exec("su");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        os = new OutputStreamWriter(rp.getOutputStream());
+        this.co = new BufferedWriter(os);
+
+        is = new InputStreamReader(rp.getInputStream());
+        this.ci = new BufferedReader(is);
+
+        es = new InputStreamReader(rp.getErrorStream());
+        this.ce = new BufferedReader(es);
+
+        Utils.shells.add(this);
+
+        if (actionPath == null)
+            actionPath = Utils.runCommand("uci actionpath");
+
+        this.runCommand("export PATH=" + actionPath + ":$PATH", false);
+        this.isRoot();
+    }
+
+    public boolean isRoot() {
+        String line = "";
+
+        try {
+            long timeStart = 0;
+
+            co.write("echo " + callback + "\n");
+            co.flush();
+
+            while (true) {
+                if (ci.ready()) {
+                    if ((line = ci.readLine()) != null && line.equalsIgnoreCase(callback))
+                        return true;
+                } else if (flushError())
+                    return false;
+                else {
+                    if (timeStart == 0) {
+                        timeStart = System.currentTimeMillis();
+                        try { Thread.sleep(10); } catch (InterruptedException e) {}
+                    } else if (System.currentTimeMillis() > timeStart + MAX_ROOT_TIMEOUT_MS) {
+                        L.e("Root test timeout");
+                        return false;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            L.e("Root test fail" + e.getMessage());
+        }
+
+        return false;
+    }
+
+    private boolean flushError()
+    {
+        String lineErr;
+        boolean ret = false;
+
+        try {
+            while (ce.ready()) {
+                if (((lineErr = ce.readLine()) != null) && !lineErr.isEmpty()) {
+                    L.e(lineErr);
+                    ret |= true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public synchronized String runCommand(String command, boolean bigOutput) {
+        String line;
+        StringBuilder sb = null;
+        String out = "";
+
+        if (command == null || command.isEmpty())
+            return null;
+
+        if (bigOutput)
+            sb = new StringBuilder(out);
+
+        try {
+            boolean finished = false;
+
+            co.write(command + "\necho " + callback + "\n");
+            co.flush();
+
+            while (!finished) {
+                if (ci.ready()) {
+                    if ((line = ci.readLine()) == null)
+                        finished = true;
+                    else {
+                        if (line.equals(callback)) {
+                            finished = true;
+                        } else
+                        if (bigOutput)
+                            sb.append(line);
+                        else
+                            out += line;
+                    }
+                } else if(flushError())
+                    break;
+            }
+
+            flushError();
+        } catch (IOException ex) {
+            L.e("Running command failed: " + command);
+        }
+
+        if (bigOutput)
+            out = sb.toString();
+
+        return out;
+    }
+
+    public void destroy() {
+        try {
+            if (rp != null) {
+                co.write("exit\n");
+                co.flush();
+                try {
+                    rp.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                L.d("Exited shell with " + rp.exitValue());
+            }
+        } catch (IOException ignored) {}
     }
 }

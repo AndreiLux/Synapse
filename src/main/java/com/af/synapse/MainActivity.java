@@ -190,6 +190,12 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void onDestroy(){
+        Utils.destroy();
+        super.onDestroy();
+    }
+
     public static class tabSectionFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this fragment.
