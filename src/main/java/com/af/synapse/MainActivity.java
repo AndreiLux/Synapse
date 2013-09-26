@@ -53,8 +53,8 @@ public class MainActivity extends FragmentActivity {
      */
     ViewPager mViewPager;
 
-    private Fragment[] fragments = null;
-    private AtomicInteger fragmentsDone = new AtomicInteger(0);
+    private static Fragment[] fragments = null;
+    private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
     private void setupUtilities() {
@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity {
         Utils.mainActivity = this;
 
         Utils.loadSections();
-        fragments =  new Fragment[Utils.configSections.size()];
+        fragments = new Fragment[Utils.configSections.size()];
     }
 
     @Override
@@ -85,8 +85,12 @@ public class MainActivity extends FragmentActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**
-         *  The UI building continues in buildFragment after fragment generation.
+         *  The UI building continues in buildFragment after fragment generation, or if
+         *  the fragments are already live, continue here.
          */
+
+        if (fragmentsDone.get() > 0)
+            continueCreate();
     }
 
     private void continueCreate() {
@@ -192,6 +196,10 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onDestroy(){
+        if (!isChangingConfigurations()) {
+            fragments = null;
+            fragmentsDone = new AtomicInteger(0);
+        }
         Utils.destroy();
         super.onDestroy();
     }
@@ -229,8 +237,7 @@ public class MainActivity extends FragmentActivity {
                 String type = elm.keySet().toString().replace("[", "").replace("]", "");
                 JSONObject parameters = (JSONObject) elm.get(type);
 
-                BaseElement elementObj = BaseElement.createObject(type, parameters,
-                        context, tabContentLayout);
+                BaseElement elementObj = BaseElement.createObject(type, parameters, tabContentLayout);
                 if (elementObj == null)
                     continue;
                 /**
