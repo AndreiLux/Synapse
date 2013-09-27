@@ -1,9 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="collapseActionView" />
-
     <item android:id="@+id/action_apply"
         android:title="@string/action_apply"
         android:icon="@drawable/navigation_accept"
@@ -13,4 +8,12 @@
         android:title="@string/action_cancel"
         android:icon="@drawable/navigation_cancel"
         android:showAsAction="never" />
+
+    <item android:id="@+id/action_section_default"
+        android:title="@string/action_section_default"
+        android:showAsAction="collapseActionView" />
+
+    <item android:id="@+id/action_global_default"
+        android:title="@string/action_global_default"
+        android:showAsAction="collapseActionView" />
 </menu>

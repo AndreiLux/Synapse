@@ -167,6 +167,11 @@ public class SCheckBox extends BaseElement
     }
 
     @Override
+    public void setDefaults() {
+
+    }
+
+    @Override
     public boolean commitValue() {
         String target = getSetValue();
         Utils.runCommand(command + " " + target);

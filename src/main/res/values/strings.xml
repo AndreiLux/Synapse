@@ -2,9 +2,10 @@
 <resources>
 
     <string name="app_name">Synapse</string>
-    <string name="action_settings">Settings</string>
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_section_default">Reset section</string>
+    <string name="action_global_default">Reset globally</string>
 
     <string name="title_activity_main">SynapseUI</string>
 

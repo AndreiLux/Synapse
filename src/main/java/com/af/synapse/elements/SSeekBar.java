@@ -274,6 +274,12 @@ public class SSeekBar extends BaseElement
     }
 
     @Override
+    public void setDefaults() {
+        if (original != Integer.MIN_VALUE)
+            setSeek(String.valueOf(original));
+    }
+
+    @Override
     public boolean commitValue() {
         String target = getSetValue();
         Utils.runCommand(command + " " + target);

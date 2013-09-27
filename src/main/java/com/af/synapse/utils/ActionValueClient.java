@@ -18,6 +18,7 @@ public interface ActionValueClient {
     public String getStoredValue();
 
     public void refreshValue();
+    public void setDefaults();
     public boolean commitValue();
     public void cancelValue();
 }

@@ -43,7 +43,7 @@ public class SColourPicker extends BaseElement
     private SDescription descriptionObj = null;
 
     private String title = "";
-    private int original;
+    private int original = Integer.MIN_VALUE;
 
     private int stored;
     private int lastLive;
@@ -196,6 +196,14 @@ public class SColourPicker extends BaseElement
 
     @Override
     public void refreshValue() {}
+
+    @Override
+    public void setDefaults() {
+        if (original != Integer.MIN_VALUE) {
+            lastChosen = original;
+            valueCheck();
+        }
+    }
 
     @Override
     public boolean commitValue() {

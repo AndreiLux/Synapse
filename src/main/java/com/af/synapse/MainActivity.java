@@ -28,6 +28,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONArray;
 
 import com.af.synapse.elements.*;
+import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.utils.L;
@@ -117,11 +118,19 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_apply:
                 ActionValueUpdater.applyElements();
+                break;
             case R.id.action_cancel:
                 ActionValueUpdater.cancelElements();
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
+            case R.id.action_section_default:
+                ActionValueUpdater.resetSectionDefault(mViewPager.getCurrentItem());
+                break;
+            case R.id.action_global_default:
+                for (int i=0; i < Utils.configSections.size(); i++)
+                    ActionValueUpdater.resetSectionDefault(i);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -240,6 +249,12 @@ public class MainActivity extends FragmentActivity {
                 BaseElement elementObj = BaseElement.createObject(type, parameters, tabContentLayout);
                 if (elementObj == null)
                     continue;
+
+                try {
+                    ActionValueClient perpetual = ((ActionValueClient) elementObj);
+                    ActionValueUpdater.registerPerpetual(perpetual, sectionNumber);
+                } catch (ClassCastException ignored) {}
+
                 /**
                  *  Simple standalone elements may not add themselves to the layout, if so, add
                  *  them here after their creation.

@@ -266,6 +266,14 @@ public class SOptionList extends BaseElement
     }
 
     @Override
+    public void setDefaults() {
+        if (original != null) {
+            spinner.setSelection(items.indexOf(original));
+            valueCheck();
+        }
+    }
+
+    @Override
     public boolean commitValue() {
         Utils.runCommand(command + " " + lastSelect);
         getLiveValue();
