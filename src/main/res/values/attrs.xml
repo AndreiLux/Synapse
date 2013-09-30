@@ -16,4 +16,11 @@
         <attr name="bar_pointer_halo_radius" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SmartSeeker">
+        <attr name="smartseeker_bar_back_thickness" format="dimension" />
+        <attr name="smartseeker_bar_fill_thickness" format="dimension" />
+        <attr name="smartseeker_bar_length" format="dimension" />
+    </declare-styleable>
+
+
 </resources>
