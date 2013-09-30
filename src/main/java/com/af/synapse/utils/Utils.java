@@ -81,7 +81,12 @@ public class Utils {
         }
 
         L.i("Parsing JSON");
-        result = (JSONObject) JSONValue.parse(res);
+        try {
+        	result = (JSONObject) JSONValue.parse(res);
+        } catch (ClassCastException e) {
+            L.e(e.getMessage());
+            return null;
+        }
         L.i("Parsed JSON");
 
         return result;
