@@ -19,12 +19,18 @@ import android.widget.TextView;
 
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
-import com.af.synapse.utils.L;
 import com.af.synapse.R;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.Utils;
+import com.af.synapse.view.SmartSeeker;
 
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Andrei on 31/08/13.
@@ -34,7 +40,7 @@ public class SSeekBar extends BaseElement
                                  ActionValueClient, ActivityListener
 {
     private View elementView = null;
-    private SeekBar seekBar;
+    private SmartSeeker seekBar;
     private ImageButton minusButton;
     private ImageButton plusButton;
 
@@ -48,9 +54,16 @@ public class SSeekBar extends BaseElement
     private final String command;
     private String unit = "";
     private double weight = 1;
+
     private int offset = 0;
     private int step = 1;
     private int max;
+
+    private boolean isListBound = false;
+    private ArrayList<Integer> values;
+    private boolean hasLabels = false;
+    private ArrayList<String> labels;
+
     private int original = Integer.MIN_VALUE;
     private int stored = Integer.MIN_VALUE;
 
@@ -70,16 +83,57 @@ public class SSeekBar extends BaseElement
         else
             throw new IllegalArgumentException("SSeekBar has no action defined");
 
-        if (element.containsKey("max"))
-            this.max = (Integer) element.get("max");
-        else
-            throw new IllegalArgumentException("SSeekBar has no maximum defined");
+        if (element.containsKey("values")) {
+            values = new ArrayList<Integer>();
+            Object jsonValues = element.get("values");
+            if (jsonValues instanceof JSONArray)
+                for (Object value : (JSONArray)jsonValues)
+                    values.add((Integer) value);
+            else if (jsonValues instanceof JSONObject) {
+                labels = new ArrayList<String>();
 
-        if (element.containsKey("min"))
-            this.offset = (Integer) element.get("min");
+                /**
+                 *  We expect integers as the map keys, but they're unsorted. Create a fancy
+                 *  TreeMap with custom comparator to add the values to so that they get sorted.
+                 */
+                Map<String, Object> sorted = new TreeMap<String, Object>(new Comparator<String>() {
+                    @Override
+                    public int compare(String o1, String o2) {
+                        int i1 = Integer.valueOf(o1);
+                        int i2 = Integer.valueOf(o2);
 
-        if (element.containsKey("step"))
-            this.step = (Integer) element.get("step");
+                        if (i1 > i2)
+                            return 1;
+
+                        if (i1 < i2)
+                            return -1;
+
+                        return 0;
+                    }
+                });
+
+                sorted.putAll((JSONObject) jsonValues);
+
+                for (Map.Entry<String, Object> set : sorted.entrySet()) {
+                    values.add(Integer.valueOf(set.getKey()));
+                    labels.add(set.getValue().toString());
+                }
+
+                hasLabels = true;
+            }
+            isListBound = true;
+        } else {
+            if (element.containsKey("max"))
+                this.max = (Integer) element.get("max");
+            else
+                throw new IllegalArgumentException("SSeekBar has no maximum defined");
+
+            if (element.containsKey("min"))
+                this.offset = (Integer) element.get("min");
+
+            if (element.containsKey("step"))
+                this.step = (Integer) element.get("step");
+        }
 
         if (element.containsKey("default"))
             this.original = (Integer) element.get("default");
@@ -110,7 +164,7 @@ public class SSeekBar extends BaseElement
         assert v != null;
         elementView = v;
 
-        seekBar     = (SeekBar) v.findViewById(R.id.SSeekBar_seekBar);
+        seekBar     = (SmartSeeker) v.findViewById(R.id.SSeekBar_seekBar);
         minusButton = (ImageButton)  v.findViewById(R.id.SSeekBar_minusButton);
         plusButton  = (ImageButton)  v.findViewById(R.id.SSeekBar_plusButton);
 
@@ -138,14 +192,14 @@ public class SSeekBar extends BaseElement
          */
 
         if (original != Integer.MIN_VALUE)
-            defaultLabel.setText("D:" + Utils.df.format(original * weight) + unit);
+            if (hasLabels)
+                defaultLabel.setText("D:" + labels.get(values.indexOf(original)));
+            else
+                defaultLabel.setText("D:" + Utils.df.format(original * weight) + unit);
         else
             defaultLabel.setVisibility(ImageView.INVISIBLE);
 
-        maxSeek = (max - offset) / step;
-
         seekBar.setOnSeekBarChangeListener(this);
-        seekBar.setMax(maxSeek);
 
         String initialLive = getLiveValue();
         if (getStoredValue() == null) {
@@ -153,12 +207,27 @@ public class SSeekBar extends BaseElement
             stored = lastLive;
         }
 
-        storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
+        if (isListBound) {
+            seekBar.setValues(values);
+            maxSeek = values.size() - 1;
+            seekBar.setSaved(values.indexOf(stored));
+        } else {
+            maxSeek = (max - offset) / step;
+            seekBar.setMax(maxSeek);
+            seekBar.setSaved((stored - offset) / step);
+        }
 
         minusButton.setOnClickListener(this);
         plusButton.setOnClickListener(this);
 
-        seekLabel.setText(Utils.df.format(Integer.valueOf(initialLive) * weight) + unit);
+        if (hasLabels) {
+            seekLabel.setText(labels.get(values.indexOf(Integer.valueOf(initialLive))));
+            storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
+        } else {
+            seekLabel.setText(Utils.df.format(Integer.valueOf(initialLive) * weight) + unit);
+            storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
+        }
+
         setSeek(initialLive);
 
         return v;
@@ -189,8 +258,11 @@ public class SSeekBar extends BaseElement
 
     private void setSeek(String value) {
         lastSeek = Integer.valueOf(value);
-        int newProgress = (Integer.parseInt(value) - offset) / step;
-        seekBar.setProgress(newProgress);
+
+        if (isListBound)
+            seekBar.setProgress(values.indexOf(lastSeek));
+        else
+            seekBar.setProgress((lastSeek - offset) / step);
     }
 
     /**
@@ -199,26 +271,18 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        /**
-         *  The progressBlock is there to avoid capturing the input from a (to me) unknown
-         *  entity which keeps on setting the progress to a value of 40 for all SeekBars and
-         *  derivatives during/after an Activity configuration change; this includes a layout
-         *  orientation change. This seem to be a quirk only affecting ProgressBar and none
-         *  of the other elements.
-         *
-         *  D/ProgressBar: setProgress = 40
-         *                                ^- Why??!! Where are you coming from? Fuck yourself.
-         *  D/ProgressBar: setProgress = 40, fromUser = false
-         *  D/ProgressBar: mProgress = 15mIndeterminate = false, mMin = 0, mMax = 19
-         *                             ^- Correct value!
-         */
-
         if (progressBlock)
             return;
 
         lastProgress = progress;
-        lastSeek = offset + (progress * step);
-        seekLabel.setText(Utils.df.format(lastSeek * weight) + unit);
+
+        lastSeek = isListBound ? values.get(lastProgress) : offset + (progress * step);
+
+        if (hasLabels)
+            seekLabel.setText(labels.get(values.indexOf(lastSeek)));
+        else
+            seekLabel.setText(Utils.df.format(lastSeek * weight) + unit);
+
         valueCheck();
     }
 
@@ -288,10 +352,16 @@ public class SSeekBar extends BaseElement
         if (!result.equals(getStoredValue())) {
             Utils.db.setValue(command, result);
             stored = Integer.parseInt(result);
-            storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
+
+            if (hasLabels)
+                storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
+            else
+                storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
         }
 
         setSeek(result);
+
+        seekBar.setSaved(isListBound ? lastProgress : (stored - offset) / step);
         valueCheck();
 
         return true;
