@@ -131,9 +131,9 @@ public class SmartSeeker extends View {
             seekerPointerPosition = valuePoints.get(indexNew);
             savedPointerPosition = valuePoints.get(indexOld);
         } else {
-            int jump = barLength / max;
-            seekerPointerPosition = jump * indexNew;
-            savedPointerPosition = jump * indexOld;
+            float jump = barLength / max;
+            seekerPointerPosition = Math.round(jump * indexNew);
+            savedPointerPosition = Math.round(jump * indexOld);
         }
 
         indexLast = indexNew;
@@ -198,28 +198,22 @@ public class SmartSeeker extends View {
                 } else
                     return false;
             case MotionEvent.ACTION_MOVE:
-                /**
-                 *  Normalize x coordinates to the bar dimensions
-                 */
-                if (x < thumbHalfWidth)
-                    x = thumbHalfWidth;
-
-                if (x > (barLength + thumbHalfWidth))
-                    x = barLength + thumbHalfWidth;
+                /*  Normalize x coordinates to the bar dimensions */
+                x -= thumbHalfWidth;
 
                 if (isListBound) {
-                    int rangeIndex = bounds.size() - 1;
+                    indexNew = 0;
 
-                    for (; rangeIndex >= 1; --rangeIndex)
-                        if ((x - thumbHalfWidth)  >= bounds.get(rangeIndex)) {
-                            --rangeIndex;
+                    for (int bound : bounds)
+                        if (x > bound)
+                            ++indexNew;
+                        else
                             break;
-                        }
 
-                    indexNew = rangeIndex;
+                    indexNew = Math.max(0, Math.min(values.size() - 1, indexNew));
                 } else {
-                    int jump = (barLength / max);
-                    indexNew = Math.round(((x - thumbHalfWidth) / jump));
+                    float jump = ((barLength + thumbHalfWidth) / max);
+                    indexNew = (int) Math.max(0, Math.min(max, Math.round((double)(x / jump))));
                 }
 
                 if (indexNew != indexLast) {
@@ -269,6 +263,7 @@ public class SmartSeeker extends View {
             bounds.add((valuePoints.get(i-1) + valuePoints.get(i)) / 2);
 
         bounds.add(barLength);
+        bounds.remove(0);
     }
 
     public void setValues(ArrayList<Integer> values) {
