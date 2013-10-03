@@ -94,6 +94,8 @@ public class Utils {
     }
 
     public static void initiateDatabase(Context context) {
+        if (db != null) return;
+
         db = new ActionValueDatabase(context);
         db.createDataBase();
     }
@@ -115,6 +117,7 @@ public class Utils {
 
         shells.clear();
         db.close();
+        db = null;
     }
 }
 
