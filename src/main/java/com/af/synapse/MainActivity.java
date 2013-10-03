@@ -105,6 +105,22 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onDestroy(){
+        if (!isChangingConfigurations()) {
+            fragments = null;
+            fragmentsDone = new AtomicInteger(0);
+            Utils.destroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onRestart(){
+        L.d("Restart");
+        super.onRestart();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -201,16 +217,6 @@ public class MainActivity extends FragmentActivity {
             JSONObject section = (JSONObject)Utils.configSections.get(position);
             return section.get("name").toString();
         }
-    }
-
-    @Override
-    public void onDestroy(){
-        if (!isChangingConfigurations()) {
-            fragments = null;
-            fragmentsDone = new AtomicInteger(0);
-        }
-        Utils.destroy();
-        super.onDestroy();
     }
 
     public static class tabSectionFragment extends Fragment {
