@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -134,6 +135,7 @@ class SuperShell {
     private static String actionPath = null;
 
     public final AtomicInteger lock = new AtomicInteger(0);
+    public final CountDownLatch rootLatch = new CountDownLatch(1);
 
     public SuperShell() {
         L.d("New SuperShell");
@@ -153,13 +155,14 @@ class SuperShell {
         es = new InputStreamReader(rp.getErrorStream());
         this.ce = new BufferedReader(es);
 
-        Utils.shells.add(this);
+        this.isRoot();
 
         if (actionPath == null)
-            actionPath = Utils.runCommand("uci actionpath");
+            actionPath = this.runCommand("uci actionpath", false);
 
         this.runCommand("export PATH=" + actionPath + ":$PATH", false);
-        this.isRoot();
+
+        Utils.shells.add(this);
     }
 
     public boolean isRoot() {
@@ -173,8 +176,10 @@ class SuperShell {
 
             while (true) {
                 if (ci.ready()) {
-                    if ((line = ci.readLine()) != null && line.equalsIgnoreCase(callback))
+                    if ((line = ci.readLine()) != null && line.equalsIgnoreCase(callback)) {
+                        rootLatch.countDown();
                         return true;
+                    }
                 } else if (flushError())
                     return false;
                 else {
@@ -220,6 +225,12 @@ class SuperShell {
 
         if (command == null || command.isEmpty())
             return null;
+
+        try {
+            rootLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         if (bigOutput)
             sb = new StringBuilder(out);
