@@ -38,7 +38,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class SOptionList extends BaseElement
                          implements AdapterView.OnItemSelectedListener,
-                         ActionValueClient, ActivityListener, View.OnClickListener {
+                         ActionValueClient, View.OnClickListener {
     private View elementView = null;
     private Spinner spinner;
     private ImageButton previousButton;
@@ -293,28 +293,5 @@ public class SOptionList extends BaseElement
     public void cancelValue() {
         lastSelect = lastLive = stored;
         commitValue();
-    }
-
-    /**
-     *  ActivityListener methods
-     */
-
-    @Override
-    public void onStart() {
-    }
-
-    @Override
-    public void onResume() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onStop() {
-
     }
 }

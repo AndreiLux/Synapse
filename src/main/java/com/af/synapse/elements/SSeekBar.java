@@ -37,7 +37,7 @@ import java.util.TreeMap;
  */
 public class SSeekBar extends BaseElement
                       implements SeekBar.OnSeekBarChangeListener, View.OnClickListener,
-                                 ActionValueClient, ActivityListener
+                                 ActionValueClient
 {
     private View elementView = null;
     private SmartSeeker seekBar;
@@ -72,8 +72,6 @@ public class SSeekBar extends BaseElement
 
     private int lastSeek;
     private int lastLive;
-
-    private boolean progressBlock = true;
 
     public SSeekBar(JSONObject element, LinearLayout layout) {
         super(element, layout);
@@ -271,9 +269,6 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (progressBlock)
-            return;
-
         lastProgress = progress;
 
         lastSeek = isListBound ? values.get(lastProgress) : offset + (progress * step);
@@ -371,26 +366,5 @@ public class SSeekBar extends BaseElement
     public void cancelValue() {
         lastSeek = lastLive = stored;
         commitValue();
-    }
-
-    /**
-     *  ActivityListener methods
-     */
-
-    @Override
-    public void onStart() {
-        progressBlock = false;
-        setSeek(getLiveValue());
-    }
-
-    @Override
-    public void onResume() {}
-
-    @Override
-    public void onPause() {}
-
-    @Override
-    public void onStop() {
-        progressBlock = true;
     }
 }

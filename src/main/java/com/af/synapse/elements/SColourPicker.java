@@ -231,7 +231,6 @@ public class SColourPicker extends BaseElement
         commitValue();
     }
 
-
     /**
      *  ActivityListener methods
      */
