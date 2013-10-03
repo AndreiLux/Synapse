@@ -37,7 +37,7 @@ import java.util.TreeMap;
  */
 public class SSeekBar extends BaseElement
                       implements SeekBar.OnSeekBarChangeListener, View.OnClickListener,
-                                 ActionValueClient
+                                 ActionValueClient, ActivityListener
 {
     private View elementView = null;
     private SmartSeeker seekBar;
@@ -367,4 +367,23 @@ public class SSeekBar extends BaseElement
         lastSeek = lastLive = stored;
         commitValue();
     }
+
+    /**
+     *  ActivityListener methods
+     */
+
+    @Override
+    public void onStart() {
+        if (!Utils.mainActivity.isChangingConfigurations())
+            setSeek(getLiveValue());
+    }
+
+    @Override
+    public void onResume() {}
+
+    @Override
+    public void onPause() {}
+
+    @Override
+    public void onStop() {}
 }
