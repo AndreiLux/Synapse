@@ -26,6 +26,9 @@ public class BootReceiver extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!Utils.isUciSupport())
+            return;
+
         Utils.initiateDatabase(context);
         Utils.loadSections();
 

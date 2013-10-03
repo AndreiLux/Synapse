@@ -8,8 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Loading..."
-        android:id="@+id/textView"
+        android:text="@string/initial_loading"
+        android:id="@+id/initialText"
         android:layout_gravity="center"
         android:gravity="center|bottom|top"
         android:layout_centerVertical="true"
@@ -18,9 +18,9 @@
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
+        android:id="@+id/initialProgressBar"
         android:indeterminate="true"
-        android:layout_above="@+id/textView"
+        android:layout_above="@+id/initialText"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

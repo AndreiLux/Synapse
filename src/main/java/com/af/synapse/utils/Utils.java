@@ -43,10 +43,26 @@ public class Utils {
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
 
     public static boolean isUciSupport() {
-        return true; //TODO rewrite properly
+        try {
+            runCommandWithException("uci", false);
+            return true;
+        } catch (RunCommandFailedException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static String runCommand(String command, boolean bigOutput) {
+        try {
+            return runCommandWithException(command, bigOutput);
+        } catch (RunCommandFailedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String runCommandWithException(String command, boolean bigOutput)
+        throws RunCommandFailedException {
         SuperShell shell = null;
         for (SuperShell s : shells) {
             if (s.lock.get() == 0) {
@@ -116,8 +132,16 @@ public class Utils {
             s.destroy();
 
         shells.clear();
-        db.close();
-        db = null;
+        if (db != null) {
+            db.close();
+            db = null;
+        }
+    }
+}
+
+class RunCommandFailedException extends Exception {
+    public RunCommandFailedException(String message) {
+        super(message);
     }
 }
 
@@ -160,12 +184,17 @@ class SuperShell {
 
         this.isRoot();
 
-        if (actionPath == null)
-            actionPath = this.runCommand("uci actionpath", false);
+        try {
+            if (actionPath == null)
+                actionPath = this.runCommand("uci actionpath", false);
 
-        this.runCommand("export PATH=" + actionPath + ":$PATH", false);
+            this.runCommand("export PATH=" + actionPath + ":$PATH", false);
 
-        Utils.shells.add(this);
+            Utils.shells.add(this);
+        } catch (RunCommandFailedException e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
     }
 
     public boolean isRoot() {
@@ -202,26 +231,28 @@ class SuperShell {
         return false;
     }
 
-    private boolean flushError()
+    private boolean flushError() throws RunCommandFailedException
     {
-        String lineErr;
+        String lineErr = "";
         boolean ret = false;
 
         try {
             while (ce.ready()) {
-                if (((lineErr = ce.readLine()) != null) && !lineErr.isEmpty()) {
-                    L.e(lineErr);
+                if (((lineErr += ce.readLine()) != null) && !lineErr.isEmpty())
                     ret |= true;
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return ret;
+        if (ret)
+            throw new RunCommandFailedException(lineErr);
+
+        return false;
     }
 
-    public synchronized String runCommand(String command, boolean bigOutput) {
+    public synchronized String runCommand(String command, boolean bigOutput)
+            throws RunCommandFailedException {
         String line;
         StringBuilder sb = null;
         String out = "";
@@ -263,7 +294,7 @@ class SuperShell {
 
             flushError();
         } catch (IOException ex) {
-            L.e("Running command failed: " + command);
+            throw new RunCommandFailedException(ex.getMessage());
         }
 
         if (bigOutput)

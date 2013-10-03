@@ -21,8 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONArray;
@@ -59,12 +61,7 @@ public class MainActivity extends FragmentActivity {
     long startTime;
 
     private void setupUtilities() {
-        if (!Utils.isUciSupport()) {
-            //TODO no support
-        }
-
         Utils.mainActivity = this;
-
         Utils.loadSections();
         fragments = new Fragment[Utils.configSections.size()];
     }
@@ -76,13 +73,20 @@ public class MainActivity extends FragmentActivity {
         startTime = System.nanoTime();
         Utils.appStart = true;
 
-        if (savedInstanceState == null)
+        setContentView(R.layout.activity_loading);
+
+        if (savedInstanceState == null) {
+            if (!Utils.isUciSupport()) {
+                findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
+                ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_uci);
+                return;
+            }
             setupUtilities();
+        }
 
         Utils.setPackageName(getPackageName());
         Utils.initiateDatabase(this);
 
-        setContentView(R.layout.activity_loading);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**

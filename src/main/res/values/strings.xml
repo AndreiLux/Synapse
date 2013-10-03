@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">Synapse</string>
+
+    <string name="initial_loading">Loading…</string>
+    <string name="initial_no_uci">No UCI support detected.</string>
+
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_section_default">Reset section</string>
