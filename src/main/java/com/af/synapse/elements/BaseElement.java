@@ -12,6 +12,7 @@ package com.af.synapse.elements;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.af.synapse.Synapse;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 
@@ -38,7 +39,7 @@ public class BaseElement extends ElementSkeleton {
          */
 
         try {
-            c = Class.forName(Utils.packageName + ".elements." + type);
+            c = Class.forName(Synapse.getAppContext().getPackageName() + ".elements." + type);
         } catch (Exception e) {
             L.e("Failure to look up dynamic class element " + type + " due to " + e);
             e.printStackTrace();

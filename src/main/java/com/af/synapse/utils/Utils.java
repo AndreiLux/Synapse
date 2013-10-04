@@ -30,16 +30,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Andrei on 27/08/13.
  */
 public class Utils {
-    private static boolean initialized = false;
     public static boolean appStarted = false;
-
     public static ActionValueDatabase db = null;
-    public static String packageName = null;
     public static DecimalFormat df = new DecimalFormat("#.######");
     public static Activity mainActivity;
-
+    public static final String CONFIG_CONTEXT = "CONFIGURATION";
     public static JSONArray configSections = null;
-
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
 
     public static boolean isUciSupport() {
@@ -109,15 +105,11 @@ public class Utils {
         return result;
     }
 
-    public static void initiateDatabase(Context context) {
+    public static void initiateDatabase() {
         if (db != null) return;
 
-        db = new ActionValueDatabase(context);
+        db = new ActionValueDatabase();
         db.createDataBase();
-    }
-
-    public static void setPackageName(String name) {
-        packageName = name;
     }
 
     public static void loadSections() {

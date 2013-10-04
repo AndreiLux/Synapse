@@ -82,9 +82,6 @@ public class MainActivity extends FragmentActivity {
             setupUtilities();
         }
 
-        Utils.setPackageName(getPackageName());
-        Utils.initiateDatabase(this);
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         /**
@@ -110,7 +107,6 @@ public class MainActivity extends FragmentActivity {
         if (!isChangingConfigurations()) {
             fragments = null;
             fragmentsDone = new AtomicInteger(0);
-            Utils.destroy();
         }
         super.onDestroy();
     }

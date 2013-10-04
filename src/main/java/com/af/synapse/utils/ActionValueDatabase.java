@@ -16,11 +16,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.af.synapse.Synapse;
+
 /**
  * Created by Andrei on 03/09/13.
  */
 public class ActionValueDatabase extends SQLiteOpenHelper {
-    private static final String DB_PATH = "/data/data/" + Utils.packageName + "/databases/";
+    private static final String DB_PATH = Synapse.getAppContext()
+                                                         .getFilesDir()
+                                                         .getParentFile()
+                                                         .getPath() + "/databases/";
     private static String DB_NAME = "actionValueStore";
 
     private static final String TABLE_NAME = "action_value";
@@ -30,8 +35,8 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
 
-    public ActionValueDatabase(Context context) {
-        super(context, DB_NAME, null, 1);
+    public ActionValueDatabase() {
+        super(Synapse.getAppContext(), DB_NAME, null, 1);
     }
 
     public void createDataBase() {
