@@ -90,10 +90,13 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
     /**
      *  Actual utility methods
      */
-
     public String getValue(String key) {
+        return getValue(ContextSwitcher.getContext(), key);
+    }
+
+    public String getValue(String context, String key) {
         Cursor c = db.query(TABLE_NAME, new String[] { COL_VALUE }, "context=? AND key=?",
-                    new String[] { ContextSwitcher.getContext(), key }, null, null, null);
+                    new String[] { context, key }, null, null, null);
 
         if (c.getCount() == 0)
             return null;
@@ -103,16 +106,20 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
     }
 
     public void setValue(String key, String value) {
+        setValue(ContextSwitcher.getContext(), key, value);
+    }
+
+    public void setValue(String context, String key, String value) {
         ContentValues cv = new ContentValues();
         cv.put(COL_VALUE, value);
 
-        if (getValue(key) == null) {
-            cv.put(COL_CONTEXT, ContextSwitcher.getContext());
+        if (getValue(context, key) == null) {
+            cv.put(COL_CONTEXT, context);
             cv.put(COL_KEY, key);
             db.insertOrThrow(TABLE_NAME, null, cv);
         } else {
             db.update(TABLE_NAME, cv, "context=? AND key=?",
-                      new String[] { ContextSwitcher.getContext(), key});
+                      new String[] { context, key});
         }
     }
 }
