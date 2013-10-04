@@ -12,13 +12,8 @@ package com.af.synapse;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.widget.Toast;
-
-import com.af.synapse.utils.Utils;
-
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
 /**
  * Created by Andrei on 23/09/13.
  */
@@ -26,26 +21,9 @@ public class BootReceiver extends BroadcastReceiver
 {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!Utils.isUciSupport())
-            return;
+        Intent service = new Intent(context, BootService.class);
+        context.startService(service);
 
-        Utils.initiateDatabase(context);
-        Utils.loadSections();
-
-        for (Object section : Utils.configSections) {
-            JSONArray sectionElements = (JSONArray)((JSONObject)section).get("elements");
-            for (Object sectionElement : sectionElements) {
-                JSONObject elm = (JSONObject) sectionElement;
-                String type = elm.keySet().toString().replace("[", "").replace("]", "");
-                JSONObject parameters = (JSONObject) elm.get(type);
-                if (parameters.containsKey("action")) {
-                    String command = (String) parameters.get("action");
-                    String value = Utils.db.getValue(command);
-                    Utils.runCommand(command + " \"" + value + "\"");
-                }
-            }
-        }
-
-        Toast.makeText(context, "Synapse boot completed", Toast.LENGTH_LONG).show();
+        Toast.makeText(Synapse.getAppContext(), "Synapse boot completed", Toast.LENGTH_LONG).show();
     }
 }

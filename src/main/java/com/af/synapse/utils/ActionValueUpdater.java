@@ -12,6 +12,8 @@ package com.af.synapse.utils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.af.synapse.BootReceiver;
+import com.af.synapse.BootService;
 import com.af.synapse.R;
 
 import java.util.ArrayList;
@@ -69,6 +71,8 @@ public class ActionValueUpdater {
         }
 
         registrees.clear();
+        BootService.setBootFlag(false);
+        BootService.setBootFlag(BootService.BOOT_FLAG_APPLY_DELAY);
         blocked = false;
 
         refreshButtons();
