@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
-import com.af.synapse.utils.L;
 import com.af.synapse.R;
 import com.af.synapse.utils.Utils;
 
@@ -102,6 +101,7 @@ public class SCheckBox extends BaseElement
 
         lastCheck = lastLive;
         checkBox.setOnClickListener(this);
+        checkBox.setChecked(lastLive);
 
         elementView = v;
 
@@ -161,7 +161,8 @@ public class SCheckBox extends BaseElement
 
     @Override
     public void refreshValue() {
-        getLiveValue();
+        if (Utils.appStarted)
+            getLiveValue();
         checkBox.setChecked(lastLive);
         lastCheck = lastLive;
     }

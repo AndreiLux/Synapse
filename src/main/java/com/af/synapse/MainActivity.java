@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,7 +70,6 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         startTime = System.nanoTime();
-        Utils.appStart = true;
 
         setContentView(R.layout.activity_loading);
 
@@ -99,12 +97,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void continueCreate() {
-        Utils.appStart = false;
-        ActionValueUpdater.refreshButtons();
         setContentView(R.layout.activity_main);
         mViewPager = (ViewPager) findViewById(R.id.mainPager);
         mViewPager.setOffscreenPageLimit(Utils.configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        ActionValueUpdater.refreshButtons(true);
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
     }
 
@@ -204,6 +201,8 @@ public class MainActivity extends FragmentActivity {
                     }
                 }).start();
             }
+
+            tabSectionFragment.startedFragments = 0;
         }
 
         @Override
@@ -229,6 +228,7 @@ public class MainActivity extends FragmentActivity {
          */
 
         public static final String ARG_SECTION_NUMBER = "section_number";
+        public static int startedFragments = 0;
 
         private View fragmentView;
         private ArrayList<BaseElement> fragmentElements = new ArrayList<BaseElement>();
@@ -292,6 +292,15 @@ public class MainActivity extends FragmentActivity {
             super.onStart();
             for (BaseElement elm : fragmentElements)
                 try { ((ActivityListener) elm).onStart(); } catch (ClassCastException ignored) {}
+
+            /**
+             *  Utils.appStarted serves as a flag to mark the completion of the *first*
+             *  post-onStart of *all* fragments.
+             */
+            if (startedFragments < Utils.configSections.size())
+                startedFragments++;
+            else
+                Utils.appStarted = true;
         }
 
         @Override

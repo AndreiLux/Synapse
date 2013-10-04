@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import com.af.synapse.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Andrei on 04/09/13.
@@ -26,6 +25,7 @@ public class ActionValueUpdater {
     private static MenuItem applyButton;
     private static MenuItem cancelButton;
     private static boolean blocked = false;
+    private static boolean showingButtons = false;
 
     public static void registerPerpetual(ActionValueClient element, int sectionNumber) {
         if (perpetuals == null) {
@@ -75,7 +75,14 @@ public class ActionValueUpdater {
     }
 
     public static void refreshButtons() {
-        if (applyButton == null || cancelButton == null || Utils.appStart)
+        refreshButtons(false);
+    }
+
+    public static void refreshButtons(boolean force) {
+        if (applyButton == null || cancelButton == null || force)
+            return;
+
+        if (registrees.isEmpty() ^ showingButtons)
             return;
 
         Utils.mainActivity.runOnUiThread(new Runnable() {
@@ -86,11 +93,13 @@ public class ActionValueUpdater {
                     cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
                     applyButton.setVisible(false);
                     cancelButton.setVisible(false);
+                    showingButtons = false;
                 } else {
                     applyButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
                     cancelButton.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_ALWAYS);
                     applyButton.setVisible(true);
                     cancelButton.setVisible(true);
+                    showingButtons = true;
                 }
             }
         });
@@ -112,6 +121,7 @@ public class ActionValueUpdater {
     public static void setMenu(Menu menu) {
         applyButton = menu.findItem(R.id.action_apply);
         cancelButton = menu.findItem(R.id.action_cancel);
+        showingButtons = false;
         refreshButtons();
     }
 }

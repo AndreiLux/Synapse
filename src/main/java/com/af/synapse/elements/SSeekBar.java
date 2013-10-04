@@ -374,7 +374,7 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onStart() {
-        if (!Utils.mainActivity.isChangingConfigurations())
+        if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             setSeek(getLiveValue());
     }
 

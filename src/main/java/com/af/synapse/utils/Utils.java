@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Utils {
     private static boolean initialized = false;
-    public static boolean appStart = true;
+    public static boolean appStarted = false;
 
     public static ActionValueDatabase db = null;
     public static String packageName = null;
@@ -136,6 +136,8 @@ public class Utils {
             db.close();
             db = null;
         }
+
+        appStarted = false;
     }
 }
 
