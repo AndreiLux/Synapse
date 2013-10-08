@@ -59,27 +59,24 @@ public class MainActivity extends FragmentActivity {
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
-    private void setupUtilities() {
-        Utils.mainActivity = this;
-        Utils.loadSections();
-        fragments = new Fragment[Utils.configSections.size()];
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        Utils.mainActivity = this;
         startTime = System.nanoTime();
-
         setContentView(R.layout.activity_loading);
 
-        if (savedInstanceState == null) {
+        super.onCreate(fragments == null ? null : savedInstanceState);
+
+        if(savedInstanceState != null)
+            L.d(savedInstanceState.toString());
+
+        Utils.mainActivity = this;
+        if (fragments == null) {
             if (!Utils.isUciSupport()) {
                 findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
                 ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_uci);
                 return;
             }
-            setupUtilities();
         }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -89,7 +86,7 @@ public class MainActivity extends FragmentActivity {
          *  the fragments are already live, continue here.
          */
 
-        if (fragmentsDone.get() > 0)
+        if (fragmentsDone.get() == Utils.configSections.size())
             continueCreate();
     }
 
@@ -109,12 +106,6 @@ public class MainActivity extends FragmentActivity {
             fragmentsDone = new AtomicInteger(0);
         }
         super.onDestroy();
-    }
-
-    @Override
-    public void onRestart(){
-        L.d("Restart");
-        super.onRestart();
     }
 
     @Override
@@ -155,15 +146,12 @@ public class MainActivity extends FragmentActivity {
             if (fragments[position] != null)
                 return;
 
-            L.d("Getting tabSectionFragment "+ position);
             tabSectionFragment fragment = new tabSectionFragment();
             Bundle args = new Bundle();
             args.putInt(tabSectionFragment.ARG_SECTION_NUMBER, position);
             fragment.setArguments(args);
-            fragment.prepareView(Utils.mainActivity);
             fragments[position] = fragment;
             fragmentsDone.incrementAndGet();
-            L.d("Finished fragment " + position);
 
             if (fragmentsDone.get() < Utils.configSections.size())
                 return;
@@ -184,6 +172,9 @@ public class MainActivity extends FragmentActivity {
 
             if (fragmentsDone.get() > 0)
                 return;
+
+            if (fragments == null)
+                fragments = new Fragment[Utils.configSections.size()];
 
             for (int i = 0; i < Utils.configSections.size(); i++) {
                 /**
@@ -226,19 +217,19 @@ public class MainActivity extends FragmentActivity {
         public static final String ARG_SECTION_NUMBER = "section_number";
         public static int startedFragments = 0;
 
-        private View fragmentView;
+        public View fragmentView = null;
         private ArrayList<BaseElement> fragmentElements = new ArrayList<BaseElement>();
 
         public tabSectionFragment() {
             this.setRetainInstance(true);
         }
 
-        public void prepareView(Activity context) {
+        public void prepareView() {
             if (fragmentView != null)
                 return;
 
             int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-            ScrollView tabSectionView = (ScrollView)LayoutInflater.from(context)
+            ScrollView tabSectionView = (ScrollView)LayoutInflater.from(Utils.mainActivity)
                                                         .inflate(R.layout.section_container, null);
             assert tabSectionView != null;
             LinearLayout tabContentLayout = (LinearLayout) tabSectionView.getChildAt(0);
@@ -274,6 +265,18 @@ public class MainActivity extends FragmentActivity {
             }
 
             fragmentView = tabSectionView;
+        }
+
+        @Override
+        public void setArguments(Bundle args) {
+            super.setArguments(args);
+            prepareView();
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            prepareView();
         }
 
         @Override
@@ -329,7 +332,11 @@ public class MainActivity extends FragmentActivity {
              *  added to the new one.
              */
 
-            ((ViewGroup)fragmentView.getParent()).removeView(fragmentView);
+            if (fragmentView != null) {
+                ViewGroup parent = (ViewGroup)fragmentView.getParent();
+                if (parent != null)
+                    parent.removeView(fragmentView);
+            }
             super.onDetach();
         }
     }

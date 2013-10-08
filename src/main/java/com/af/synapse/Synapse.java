@@ -28,6 +28,7 @@ public class Synapse extends Application {
         Synapse.context = getApplicationContext();
         Synapse.handler = new Handler();
         Utils.initiateDatabase();
+        Utils.loadSections();
     }
 
     public static Context getAppContext() {
