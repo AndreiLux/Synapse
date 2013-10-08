@@ -251,6 +251,18 @@ class SuperShell {
         StringBuilder sb = null;
         String out = "";
 
+        try {
+            /* Throws exception if not terminated */
+            int exitValue = rp.exitValue();
+
+            Utils.shells.remove(this);
+            SuperShell newShell = new SuperShell();
+            newShell.lock.set(1);
+            String result = newShell.runCommand(command, bigOutput);
+            newShell.lock.set(0);
+            return result;
+        } catch (IllegalThreadStateException ignored) {}
+
         if (command == null || command.isEmpty())
             return null;
 
