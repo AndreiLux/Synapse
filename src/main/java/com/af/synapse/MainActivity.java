@@ -67,12 +67,9 @@ public class MainActivity extends FragmentActivity {
 
         super.onCreate(fragments == null ? null : savedInstanceState);
 
-        if(savedInstanceState != null)
-            L.d(savedInstanceState.toString());
-
         Utils.mainActivity = this;
         if (fragments == null) {
-            if (!Utils.isUciSupport()) {
+            if (!Synapse.isValidEnvironment) {
                 findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
                 ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_uci);
                 return;

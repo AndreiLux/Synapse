@@ -38,17 +38,18 @@ public class Utils {
     public static JSONArray configSections = null;
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
 
-    public static boolean isUciSupport() {
+    public static boolean isUciSupport() throws RootFailureException {
         try {
             runCommandWithException("uci", false);
             return true;
         } catch (RunCommandFailedException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    public static String runCommand(String command, boolean bigOutput) {
+    public static String runCommand(String command, boolean bigOutput)
+        throws RootFailureException {
         try {
             return runCommandWithException(command, bigOutput);
         } catch (RunCommandFailedException e) {
@@ -58,7 +59,7 @@ public class Utils {
     }
 
     public static String runCommandWithException(String command, boolean bigOutput)
-        throws RunCommandFailedException {
+        throws RunCommandFailedException, RootFailureException {
         SuperShell shell = null;
         for (SuperShell s : shells) {
             if (s.lock.get() == 0) {
@@ -78,7 +79,12 @@ public class Utils {
     }
 
     public static String runCommand(String command) {
-        return runCommand(command, false);
+        try {
+            return runCommand(command, false);
+        } catch (RootFailureException ignored) {
+            /* Don't care if root fails at this point, it's the application's job to check before */
+            return null;
+        }
     }
 
     public static JSONObject getJSON() {
@@ -158,7 +164,7 @@ class SuperShell {
     public final AtomicInteger lock = new AtomicInteger(0);
     public final CountDownLatch rootLatch = new CountDownLatch(1);
 
-    public SuperShell() {
+    public SuperShell() throws RootFailureException {
         L.d("New SuperShell");
         try {
             this.rp = Runtime.getRuntime().exec("su");
@@ -191,7 +197,7 @@ class SuperShell {
         }
     }
 
-    public boolean isRoot() {
+    public boolean isRoot() throws RootFailureException {
         String line = "";
 
         try {
@@ -211,18 +217,15 @@ class SuperShell {
                 else {
                     if (timeStart == 0) {
                         timeStart = System.currentTimeMillis();
-                        try { Thread.sleep(10); } catch (InterruptedException e) {}
+                        try { Thread.sleep(10); } catch (InterruptedException ignored) {}
                     } else if (System.currentTimeMillis() > timeStart + MAX_ROOT_TIMEOUT_MS) {
-                        L.e("Root test timeout");
-                        return false;
+                        throw new RootFailureException("Root test timeout");
                     }
                 }
             }
         } catch (Exception e) {
-            L.e("Root test fail" + e.getMessage());
+            throw new RootFailureException("Root test fail" + e.getMessage());
         }
-
-        return false;
     }
 
     private boolean flushError() throws RunCommandFailedException
@@ -246,7 +249,7 @@ class SuperShell {
     }
 
     public synchronized String runCommand(String command, boolean bigOutput)
-            throws RunCommandFailedException {
+            throws RunCommandFailedException, RootFailureException {
         String line;
         StringBuilder sb = null;
         String out = "";

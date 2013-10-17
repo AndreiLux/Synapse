@@ -13,6 +13,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.af.synapse.utils.L;
+import com.af.synapse.utils.RootFailureException;
 import com.af.synapse.utils.Utils;
 
 /**
@@ -22,13 +24,19 @@ public class Synapse extends Application {
     private static Context context;
     public static Handler handler;
 
+    public static boolean isValidEnvironment = false;
+
     public void onCreate(){
         super.onCreate();
 
         Synapse.context = getApplicationContext();
         Synapse.handler = new Handler();
         Utils.initiateDatabase();
-        Utils.loadSections();
+
+        try { isValidEnvironment = Utils.isUciSupport(); } catch (RootFailureException ignored) {}
+
+        if (isValidEnvironment)
+            Utils.loadSections();
     }
 
     public static Context getAppContext() {

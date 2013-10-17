@@ -39,11 +39,8 @@ public class BootService extends Service {
 
     @Override
     public int onStartCommand (Intent intent, int flags, int startId) {
-        if (!Utils.isUciSupport())
+        if (!Synapse.isValidEnvironment)
             return START_NOT_STICKY;
-
-        Utils.initiateDatabase();
-        Utils.loadSections();
 
         if (!getBootFlag())
             return START_NOT_STICKY;
