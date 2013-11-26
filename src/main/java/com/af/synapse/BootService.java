@@ -52,6 +52,10 @@ public class BootService extends Service {
             for (Object sectionElement : sectionElements) {
                 JSONObject elm = (JSONObject) sectionElement;
                 String type = elm.keySet().toString().replace("[", "").replace("]", "");
+
+                if (type.equals("SButton"))
+                    continue;
+
                 JSONObject parameters = (JSONObject) elm.get(type);
                 if (parameters.containsKey("action")) {
                     String command = (String) parameters.get("action");
