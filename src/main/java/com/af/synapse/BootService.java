@@ -12,6 +12,7 @@ package com.af.synapse;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
@@ -24,8 +25,11 @@ import net.minidev.json.JSONObject;
  */
 public class BootService extends Service {
     public static final String BOOT_STABLE = "BOOT_IS_STABLE";
+    public static final String BOOT_PENDING = "BOOT_IS_PENDING";
     public static final int BOOT_STABILITY_DELAY = 120;
     public static final int BOOT_FLAG_APPLY_DELAY = 20;
+
+    private static Runnable stabilityFlagSetter;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -42,10 +46,14 @@ public class BootService extends Service {
         if (!Synapse.isValidEnvironment)
             return START_NOT_STICKY;
 
-        if (!getBootFlag())
+        if (!getBootFlag()) {
+            Toast.makeText(Synapse.getAppContext(), R.string.boot_service_cancel, Toast.LENGTH_LONG).show();
+            Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(false));
             return START_NOT_STICKY;
+        }
 
         setBootFlag(false);
+        Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(true));
 
         for (Object section : Utils.configSections) {
             JSONArray sectionElements = (JSONArray)((JSONObject)section).get("elements");
@@ -65,6 +73,7 @@ public class BootService extends Service {
             }
         }
 
+        Toast.makeText(Synapse.getAppContext(), R.string.boot_service_complete, Toast.LENGTH_LONG).show();
         setBootFlag(BOOT_STABILITY_DELAY, this);
         return START_NOT_STICKY;
     }
@@ -74,12 +83,17 @@ public class BootService extends Service {
     }
 
     public static void setBootFlag(int delaySeconds, final BootService callingService) {
-        Runnable stabilityFlagSetter = new Runnable() {
+        Synapse.handler.removeCallbacks(stabilityFlagSetter);
+
+        stabilityFlagSetter = new Runnable() {
             public void run() {
                 setBootFlag(true);
-                L.i("Synapse settings deemed stable");
-                if(callingService != null)
+                L.i("Synapse settings deemed stable.");
+
+                if (callingService != null) {
+                    Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(false));
                     callingService.stopSelf2();
+                }
             }
         };
 
@@ -90,9 +104,17 @@ public class BootService extends Service {
         Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_STABLE, String.valueOf(flag));
     }
 
-    public static boolean getBootFlag() {
-        String flag = Utils.db.getValue(Utils.CONFIG_CONTEXT, BOOT_STABLE);
+    private static boolean getFlag(String flag) {
+        flag = Utils.db.getValue(Utils.CONFIG_CONTEXT, flag);
 
         return (flag != null && Boolean.valueOf(flag));
+    }
+
+    public static boolean getBootFlag() {
+        return getFlag(BOOT_STABLE);
+    }
+
+    public static boolean getBootFlagPending() {
+        return getFlag(BOOT_PENDING);
     }
 }

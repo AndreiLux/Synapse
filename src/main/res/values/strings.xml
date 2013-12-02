@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Synapse</string>
+
+    <string name="title_activity_main">SynapseUI</string>
+
+    <string name="label_default_value">defaultValue</string>
+    <string name="label_seek_value">seekValue</string>
+    <string name="label_stored_value">storedValue</string>
 
     <string name="initial_loading">Loading…</string>
     <string name="initial_no_uci">No UCI support detected.</string>
@@ -11,10 +16,12 @@
     <string name="action_section_default">Reset section</string>
     <string name="action_global_default">Reset globally</string>
 
-    <string name="title_activity_main">SynapseUI</string>
+    <string name="boot_service_complete">Synapse boot completed</string>
+    <string name="boot_service_cancel">Synapse boot canceled</string>
 
-    <string name="label_default_value">defaultValue</string>
-    <string name="label_seek_value">seekValue</string>
-    <string name="label_stored_value">storedValue</string>
+    <string name="popup_failed_boot_title">Boot settings canceled</string>
+    <string name="popup_failed_boot_message">The last applied settings have not been deemed stable due to a possible crash or reboot of the device.\n\nSettings are deemed stable 2 minutes after they\'re applied at boot, or 20 seconds after applying them manually.\n\nPress cancel to reset to the last saved settings.</string>
+    <string name="popup_failed_boot_ack">Understood</string>
+
 
 </resources>

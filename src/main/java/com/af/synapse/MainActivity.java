@@ -9,7 +9,8 @@
 
 package com.af.synapse;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -94,6 +95,17 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         ActionValueUpdater.refreshButtons(true);
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
+
+        if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.popup_failed_boot_title)
+                .setMessage(R.string.popup_failed_boot_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.popup_failed_boot_ack, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .show();
+        }
     }
 
     @Override
