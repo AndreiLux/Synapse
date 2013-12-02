@@ -43,7 +43,7 @@ public class SButton extends BaseElement implements View.OnClickListener {
                                             .inflate(R.layout.template_button, this.layout, false);
 
         if (this.element.containsKey("label"))
-            this.button.setText(this.element.get("label").toString());
+            this.button.setText(Utils.localise(this.element.get("label")));
 
         this.button.setOnClickListener(this);
 

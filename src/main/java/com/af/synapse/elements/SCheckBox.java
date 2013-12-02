@@ -54,7 +54,7 @@ public class SCheckBox extends BaseElement
             throw new IllegalArgumentException("SCheckBox has no action defined");
 
         if (this.element.containsKey("label"))
-            this.label = (String) element.get("label");
+            this.label = Utils.localise(element.get("label"));
 
         /**
          *  Add a description element inside our own with the same JSON object
