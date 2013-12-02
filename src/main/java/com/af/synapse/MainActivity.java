@@ -214,7 +214,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             JSONObject section = (JSONObject)Utils.configSections.get(position);
-            return section.get("name").toString();
+            return Utils.localise(section.get("name"));
         }
     }
 

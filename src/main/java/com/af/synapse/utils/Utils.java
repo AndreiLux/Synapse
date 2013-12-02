@@ -37,6 +37,7 @@ public class Utils {
     public static final String CONFIG_CONTEXT = "CONFIGURATION";
     public static JSONArray configSections = null;
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
+    public static String locale = "en";
 
     public static boolean isUciSupport() throws RootFailureException {
         try {
@@ -136,6 +137,26 @@ public class Utils {
         }
 
         appStarted = false;
+    }
+
+    public static String localise(Object textObject) {
+        if (textObject instanceof String) {
+            return (String) textObject;
+        } else if (textObject instanceof JSONObject) {
+            JSONObject object = (JSONObject) textObject;
+            String localeKey;
+
+            if (object.containsKey(Utils.locale))
+                localeKey = Utils.locale;
+            else if (object.containsKey(Utils.locale.substring(0, 2)))
+                localeKey = Utils.locale.substring(0, 2);
+            else
+                localeKey = "en";
+
+            return (String) object.get(localeKey);
+        }
+
+        return null;
     }
 }
 

@@ -33,6 +33,9 @@ public class Synapse extends Application {
         Synapse.handler = new Handler();
         Utils.initiateDatabase();
 
+        assert context.getResources().getConfiguration().locale != null;
+        Utils.locale = context.getResources().getConfiguration().locale.toString();
+
         try { isValidEnvironment = Utils.isUciSupport(); } catch (RootFailureException ignored) {}
 
         if (isValidEnvironment)
