@@ -39,7 +39,7 @@ public class SCheckBox extends BaseElement
     private STitleBar titleObj = null;
     private SDescription descriptionObj = null;
 
-    private boolean original = false;
+    private int original = Integer.MIN_VALUE;
     private boolean stored = false;
 
     private boolean lastCheck;
@@ -55,6 +55,9 @@ public class SCheckBox extends BaseElement
 
         if (this.element.containsKey("label"))
             this.label = Utils.localise(element.get("label"));
+
+        if (element.containsKey("default"))
+            this.original = (Integer) element.get("default");
 
         /**
          *  Add a description element inside our own with the same JSON object
@@ -169,7 +172,11 @@ public class SCheckBox extends BaseElement
 
     @Override
     public void setDefaults() {
-
+        if (original != Integer.MIN_VALUE) {
+            lastCheck = original != 0;
+            checkBox.setChecked(lastCheck);
+            valueCheck();
+        }
     }
 
     @Override
