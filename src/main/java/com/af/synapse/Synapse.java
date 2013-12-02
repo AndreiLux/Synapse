@@ -13,7 +13,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
-import com.af.synapse.utils.L;
 import com.af.synapse.utils.RootFailureException;
 import com.af.synapse.utils.Utils;
 

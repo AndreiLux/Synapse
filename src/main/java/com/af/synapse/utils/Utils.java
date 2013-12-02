@@ -10,7 +10,6 @@
 package com.af.synapse.utils;
 
 import android.app.Activity;
-import android.content.Context;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;

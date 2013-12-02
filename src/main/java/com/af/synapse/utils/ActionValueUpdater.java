@@ -12,7 +12,6 @@ package com.af.synapse.utils;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.af.synapse.BootReceiver;
 import com.af.synapse.BootService;
 import com.af.synapse.R;
 

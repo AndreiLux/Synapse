@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.L;
-import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
