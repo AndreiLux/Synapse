@@ -2,12 +2,14 @@
     <item android:id="@+id/action_apply"
         android:title="@string/action_apply"
         android:icon="@drawable/navigation_accept"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:visible="false" />
 
     <item android:id="@+id/action_cancel"
         android:title="@string/action_cancel"
         android:icon="@drawable/navigation_cancel"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:visible="false" />
 
     <item android:id="@+id/action_section_default"
         android:title="@string/action_section_default"
