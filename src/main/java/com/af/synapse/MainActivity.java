@@ -11,17 +11,24 @@ package com.af.synapse;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,7 +56,10 @@ public class MainActivity extends FragmentActivity {
      * intensive, it may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
 
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
@@ -88,12 +98,34 @@ public class MainActivity extends FragmentActivity {
             continueCreate();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void continueCreate() {
         setContentView(R.layout.activity_main);
         mViewPager = (ViewPager) findViewById(R.id.mainPager);
         mViewPager.setOffscreenPageLimit(Utils.configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPagerPageChangeListener());
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        String[] section_titles = new String[Utils.configSections.size()];
+        for (int i = 0; i < Utils.configSections.size(); i++)
+            section_titles[i] = Utils.localise(((JSONObject)Utils.configSections.get(i)).get("name"));
+
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_item, section_titles));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setItemChecked(0, true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer,
+                                                  R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
+
         ActionValueUpdater.refreshButtons(true);
+
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
 
         if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
@@ -106,6 +138,12 @@ public class MainActivity extends FragmentActivity {
                 })
                 .show();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -127,6 +165,9 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item))
+            return true;
+
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_apply:
@@ -143,7 +184,29 @@ public class MainActivity extends FragmentActivity {
                     ActionValueUpdater.resetSectionDefault(i);
                 break;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            mViewPager.setCurrentItem(position, true);
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        }
+    }
+
+    private class ViewPagerPageChangeListener implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {}
+
+        @Override
+        public void onPageSelected(int i) {
+            mDrawerList.setItemChecked(i, true);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {}
     }
 
     /**
