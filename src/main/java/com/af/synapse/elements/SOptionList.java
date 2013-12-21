@@ -79,7 +79,7 @@ public class SOptionList extends BaseElement
             else if (values instanceof JSONObject)
                 for (Map.Entry<String, Object> set : ((JSONObject) values).entrySet()) {
                     items.add(set.getKey());
-                    labels.add(set.getValue().toString());
+                    labels.add(Utils.localise(set.getValue()));
                 }
             else
                 L.w("SOptionList without values detected!");
