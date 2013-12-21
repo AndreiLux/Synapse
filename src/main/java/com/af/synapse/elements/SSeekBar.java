@@ -114,7 +114,7 @@ public class SSeekBar extends BaseElement
 
                 for (Map.Entry<String, Object> set : sorted.entrySet()) {
                     values.add(Integer.valueOf(set.getKey()));
-                    labels.add(set.getValue().toString());
+                    labels.add(Utils.localise(set.getValue()));
                 }
 
                 hasLabels = true;
