@@ -176,7 +176,7 @@ class SuperShell {
     private InputStreamReader is = null;
     private InputStreamReader es = null;
 
-    private static final int MAX_ROOT_TIMEOUT_MS = 40000;
+    private static final int MAX_ROOT_TIMEOUT_MS = 120000;
     private static final String callback = "/shellCallback/";
 
     private static String actionPath = null;
