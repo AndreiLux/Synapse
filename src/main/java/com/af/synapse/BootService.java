@@ -61,7 +61,7 @@ public class BootService extends Service {
                 JSONObject elm = (JSONObject) sectionElement;
                 String type = elm.keySet().toString().replace("[", "").replace("]", "");
 
-                if (type.equals("SButton"))
+                if (type.equals("SButton") | type.equals("SLiveLabel"))
                     continue;
 
                 JSONObject parameters = (JSONObject) elm.get(type);
