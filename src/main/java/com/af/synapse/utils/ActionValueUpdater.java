@@ -70,8 +70,7 @@ public class ActionValueUpdater {
         }
 
         registrees.clear();
-        BootService.setBootFlag(false);
-        BootService.setBootFlag(BootService.BOOT_FLAG_APPLY_DELAY);
+        BootService.setBootFlag(true);
         blocked = false;
 
         refreshButtons();
