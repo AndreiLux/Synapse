@@ -10,6 +10,8 @@
 
     <string name="initial_loading">Loading…</string>
     <string name="initial_no_uci">No UCI support detected.</string>
+    <string name="initial_no_root">No root permissions granted.</string>
+    <string name="initial_json_parse">JSON configuration parsing failure.</string>
 
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>

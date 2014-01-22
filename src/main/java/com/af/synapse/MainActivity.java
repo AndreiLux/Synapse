@@ -80,9 +80,19 @@ public class MainActivity extends FragmentActivity {
 
         Utils.mainActivity = this;
         if (fragments == null) {
-            if (!Synapse.isValidEnvironment) {
+            if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT) {
                 findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
-                ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_uci);
+                switch (Synapse.currentEnvironmentState) {
+                    case ROOT_FAILURE:
+                        ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_root);
+                        break;
+                    case UCI_FAILURE:
+                        ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_no_uci);
+                        break;
+                    case JSON_FAILURE:
+                        ((TextView) findViewById(R.id.initialText)).setText(R.string.initial_json_parse);
+                }
+
                 return;
             }
         }

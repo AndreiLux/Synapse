@@ -43,7 +43,7 @@ public class BootService extends Service {
 
     @Override
     public int onStartCommand (Intent intent, int flags, int startId) {
-        if (!Synapse.isValidEnvironment)
+        if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT)
             return START_NOT_STICKY;
 
         if (!getBootFlag()) {

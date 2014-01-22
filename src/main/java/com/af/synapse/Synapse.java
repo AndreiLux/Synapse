@@ -13,7 +13,9 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.af.synapse.utils.L;
 import com.af.synapse.utils.RootFailureException;
+import com.af.synapse.utils.RunCommandFailedException;
 import com.af.synapse.utils.Utils;
 
 /**
@@ -23,7 +25,15 @@ public class Synapse extends Application {
     private static Context context;
     public static Handler handler;
 
-    public static boolean isValidEnvironment = false;
+    public enum environmentState {
+        VALID_ENVIRONMENT,
+        ROOT_FAILURE,
+        UCI_FAILURE,
+        JSON_FAILURE,
+        UNINITIALIZED
+    }
+
+    public static environmentState currentEnvironmentState = environmentState.UNINITIALIZED;
 
     public void onCreate(){
         super.onCreate();
@@ -35,9 +45,16 @@ public class Synapse extends Application {
         assert context.getResources().getConfiguration().locale != null;
         Utils.locale = context.getResources().getConfiguration().locale.toString();
 
-        try { isValidEnvironment = Utils.isUciSupport(); } catch (RootFailureException ignored) {}
+        try {
+            Utils.isUciSupport();
+            currentEnvironmentState = environmentState.VALID_ENVIRONMENT;
+        } catch (RootFailureException e) {
+            currentEnvironmentState = environmentState.ROOT_FAILURE;
+        } catch (RunCommandFailedException e) {
+            currentEnvironmentState = environmentState.UCI_FAILURE;
+        }
 
-        if (isValidEnvironment)
+        if (currentEnvironmentState == environmentState.VALID_ENVIRONMENT)
             Utils.loadSections();
     }
 

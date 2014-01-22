@@ -11,6 +11,8 @@ package com.af.synapse.utils;
 
 import android.app.Activity;
 
+import com.af.synapse.Synapse;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
@@ -38,22 +40,15 @@ public class Utils {
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
     public static String locale = "en";
 
-    public static boolean isUciSupport() throws RootFailureException {
-        try {
-            runCommandWithException("uci", false);
-            return true;
-        } catch (RunCommandFailedException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean isUciSupport() throws RunCommandFailedException, RootFailureException {
+        runCommandWithException("uci", false);
+        return true;
     }
 
-    public static String runCommand(String command, boolean bigOutput)
-        throws RootFailureException {
+    public static String runCommand(String command, boolean bigOutput) {
         try {
             return runCommandWithException(command, bigOutput);
-        } catch (RunCommandFailedException e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
             return null;
         }
     }
@@ -79,12 +74,7 @@ public class Utils {
     }
 
     public static String runCommand(String command) {
-        try {
-            return runCommand(command, false);
-        } catch (RootFailureException ignored) {
-            /* Don't care if root fails at this point, it's the application's job to check before */
-            return null;
-        }
+        return runCommand(command, false);
     }
 
     public static JSONObject getJSON() {
@@ -92,21 +82,18 @@ public class Utils {
 
         String res = null;
         try {
-            L.i("Requesting JSON");
-            res = Utils.runCommand("uci config", true);
-            L.i("Retrieved JSON");
+            res = Utils.runCommandWithException("uci config", true);
         } catch (Exception e) {
             L.e("Can't access live customconfig: " + e.getMessage());
+            return null;
         }
 
-        L.i("Parsing JSON");
         try {
         	result = (JSONObject) JSONValue.parse(res);
         } catch (ClassCastException e) {
             L.e(e.getMessage());
             return null;
         }
-        L.i("Parsed JSON");
 
         return result;
     }
@@ -121,6 +108,10 @@ public class Utils {
     public static void loadSections() {
         if (Utils.configSections == null) {
             JSONObject resultsJSONObject = Utils.getJSON();
+            if (resultsJSONObject == null) {
+                Synapse.currentEnvironmentState = Synapse.environmentState.JSON_FAILURE;
+                return;
+            }
             Utils.configSections = (JSONArray)resultsJSONObject.get("sections");
         }
     }
@@ -159,12 +150,6 @@ public class Utils {
     }
 }
 
-class RunCommandFailedException extends Exception {
-    public RunCommandFailedException(String message) {
-        super(message);
-    }
-}
-
 class SuperShell {
     private Process rp = null;
 
@@ -184,8 +169,7 @@ class SuperShell {
     public final AtomicInteger lock = new AtomicInteger(0);
     public final CountDownLatch rootLatch = new CountDownLatch(1);
 
-    public SuperShell() throws RootFailureException {
-        L.d("New SuperShell");
+    public SuperShell() throws RootFailureException, RunCommandFailedException {
         try {
             this.rp = Runtime.getRuntime().exec("su");
         } catch (IOException e) {
@@ -204,20 +188,15 @@ class SuperShell {
 
         this.isRoot();
 
-        try {
-            if (actionPath == null)
-                actionPath = this.runCommand("uci actionpath", false);
+        if (actionPath == null)
+            actionPath = this.runCommand("uci actionpath", false);
 
-            this.runCommand("export PATH=" + actionPath + ":$PATH", false);
+        this.runCommand("export PATH=" + actionPath + ":$PATH", false);
 
-            Utils.shells.add(this);
-        } catch (RunCommandFailedException e) {
-            e.getMessage();
-            e.printStackTrace();
-        }
+        Utils.shells.add(this);
     }
 
-    public boolean isRoot() throws RootFailureException {
+    public boolean isRoot() throws RootFailureException, RunCommandFailedException {
         String line = "";
 
         try {
@@ -227,28 +206,33 @@ class SuperShell {
             co.flush();
 
             while (true) {
+                try {
+                    /* Throws exception if not terminated */
+                    int exitValue = this.rp.exitValue();
+                    throw new RootFailureException("Root permission revoked.");
+                } catch (IllegalThreadStateException ignored) {}
+
                 if (ci.ready()) {
                     if ((line = ci.readLine()) != null && line.equalsIgnoreCase(callback)) {
                         rootLatch.countDown();
                         return true;
                     }
-                } else if (flushError())
-                    return false;
-                else {
+                } else {
+                    flushError();
                     if (timeStart == 0) {
                         timeStart = System.currentTimeMillis();
                         try { Thread.sleep(10); } catch (InterruptedException ignored) {}
                     } else if (System.currentTimeMillis() > timeStart + MAX_ROOT_TIMEOUT_MS) {
-                        throw new RootFailureException("Root test timeout");
+                        throw new RootFailureException("Root test timeout.");
                     }
                 }
             }
-        } catch (Exception e) {
-            throw new RootFailureException("Root test fail" + e.getMessage());
+        } catch (IOException e) {
+            throw new RootFailureException(e.getMessage());
         }
     }
 
-    private boolean flushError() throws RunCommandFailedException
+    private void flushError() throws RunCommandFailedException
     {
         String lineErr = "";
         boolean ret = false;
@@ -259,13 +243,11 @@ class SuperShell {
                     ret |= true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RunCommandFailedException(e.getMessage());
         }
 
         if (ret)
             throw new RunCommandFailedException(lineErr);
-
-        return false;
     }
 
     public synchronized String runCommand(String command, boolean bigOutput)
@@ -292,7 +274,7 @@ class SuperShell {
         try {
             rootLatch.await();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RootFailureException(e.getMessage());
         }
 
         if (bigOutput)
@@ -317,8 +299,7 @@ class SuperShell {
                         else
                             out += line;
                     }
-                } else if(flushError())
-                    break;
+                } else flushError();
             }
 
             flushError();
