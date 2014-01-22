@@ -253,12 +253,16 @@ public class MainActivity extends FragmentActivity {
                  *  Spawn a builder thread for each section/fragment
                  */
                 final int position = i;
-                new Thread(new Runnable() {
+                Thread st = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         buildFragment(position);
                     }
-                }).start();
+                });
+
+                st.setName("synapse.section." +
+                        Utils.localise(((JSONObject)Utils.configSections.get(position)).get("name")));
+                st.start();
             }
 
             tabSectionFragment.startedFragments = 0;
