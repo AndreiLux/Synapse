@@ -131,9 +131,8 @@ public class SmartSeeker extends View {
             seekerPointerPosition = valuePoints.get(indexNew);
             savedPointerPosition = valuePoints.get(indexOld);
         } else {
-            float jump = barLength / max;
-            seekerPointerPosition = Math.round(jump * indexNew);
-            savedPointerPosition = Math.round(jump * indexOld);
+            seekerPointerPosition = Math.round(barLength * ((float)indexNew / max));
+            savedPointerPosition = Math.round(barLength * ((float)indexOld / max));
         }
 
         indexLast = indexNew;
@@ -211,10 +210,8 @@ public class SmartSeeker extends View {
                             break;
 
                     indexNew = Math.max(0, Math.min(values.size() - 1, indexNew));
-                } else {
-                    float jump = ((barLength + thumbHalfWidth) / max);
-                    indexNew = (int) Math.max(0, Math.min(max, Math.round((double)(x / jump))));
-                }
+                } else
+                    indexNew = Math.max(0, Math.min(max, Math.round((x / barLength) * max)));
 
                 if (indexNew != indexLast) {
                     invalidate();
