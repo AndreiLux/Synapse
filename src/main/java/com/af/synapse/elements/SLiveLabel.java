@@ -9,6 +9,7 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     private TextView liveLabel;
 
     private final String command;
+    private String style = null;
 
     private int refreshInterval = 2500;
     private Runnable runTask = null;
@@ -45,6 +47,9 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
 
         if (element.containsKey("refresh"))
             refreshInterval = Math.max(50, (Integer) element.get("refresh"));
+
+        if (element.containsKey("style"))
+            style = (String) element.get("style");
 
         runTask = new Runnable() {
             @Override
@@ -87,6 +92,19 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
 
         liveLabel = (TextView) v.findViewById(R.id.SLiveLabel_textView);
         liveLabel.setText(Utils.runCommand(command));
+
+        if (style != null) {
+            if (style.contains("bold") && style.contains("italic")) {
+                liveLabel.setTypeface(liveLabel.getTypeface(), Typeface.BOLD_ITALIC);
+                return v;
+            }
+
+            if (style.contains("bold"))
+                liveLabel.setTypeface(liveLabel.getTypeface(), Typeface.BOLD);
+
+            if (style.contains("italic"))
+                liveLabel.setTypeface(liveLabel.getTypeface(), Typeface.ITALIC);
+        }
 
         return v;
     }
