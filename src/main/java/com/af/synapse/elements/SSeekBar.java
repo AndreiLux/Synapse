@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.af.synapse.Synapse;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.R;
@@ -45,7 +46,7 @@ public class SSeekBar extends BaseElement
     private ImageButton minusButton;
     private ImageButton plusButton;
 
-    private TextView defaultLabel; //TODO method to reset to default
+    private TextView defaultLabel;
     private TextView seekLabel;
     private TextView storedLabel;
 
@@ -55,6 +56,9 @@ public class SSeekBar extends BaseElement
     private final String command;
     private String unit = "";
     private double weight = 1;
+
+    private Runnable resumeTask = null;
+    private Runnable seekTask = null;
 
     private int offset = 0;
     private int step = 1;
@@ -151,6 +155,27 @@ public class SSeekBar extends BaseElement
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout);
+
+        resumeTask = new Runnable() {
+            @Override
+            public void run() {
+                    try {
+                        setSeek(getLiveValue());
+                    } catch (ElementFailureException e) {
+                        Utils.createElementErrorView(e);
+                    }
+            }
+        };
+
+        seekTask = new Runnable() {
+            @Override
+            public void run() {
+                if (isListBound)
+                    seekBar.setProgress(values.indexOf(lastSeek));
+                else
+                    seekBar.setProgress((lastSeek - offset) / step);
+            }
+        };
     }
 
     @Override
@@ -257,11 +282,7 @@ public class SSeekBar extends BaseElement
 
     private void setSeek(String value) {
         lastSeek = Integer.valueOf(value);
-
-        if (isListBound)
-            seekBar.setProgress(values.indexOf(lastSeek));
-        else
-            seekBar.setProgress((lastSeek - offset) / step);
+        Synapse.handler.post(seekTask);
     }
 
     /**
@@ -370,6 +391,7 @@ public class SSeekBar extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastSeek = lastLive = stored;
+        lastProgress = values.indexOf(lastSeek);
         commitValue();
     }
 
@@ -379,12 +401,12 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onStart() throws ElementFailureException {}
-        if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
-            setSeek(getLiveValue());
-    }
 
     @Override
     public void onResume() {
+        if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
+            Synapse.executor.execute(resumeTask);
+    }
 
     @Override
     public void onPause() {}
