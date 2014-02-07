@@ -17,6 +17,7 @@ import com.af.synapse.R;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
@@ -74,7 +75,7 @@ public class SColourPicker extends BaseElement
     }
 
     @Override
-    public View getView() {
+    public View getView() throws ElementFailureException {
         if (elementView != null)
             return elementView;
 
@@ -173,10 +174,14 @@ public class SColourPicker extends BaseElement
      */
 
     @Override
-    public String getLiveValue() {
-        String retValue = Utils.runCommand(command);
-        lastLive = Color.parseColor(retValue);
-        return retValue;
+    public String getLiveValue() throws ElementFailureException {
+        try {
+        	String retValue = Utils.runCommand(command);
+        	lastLive = Color.parseColor(retValue);
+        	return retValue;
+        } catch (Exception e) {
+            throw new ElementFailureException(this, e);
+        }
     }
 
     @Override
@@ -206,27 +211,31 @@ public class SColourPicker extends BaseElement
     }
 
     @Override
-    public boolean commitValue() {
-        String target = getSetValue();
-        Utils.runCommand(command + " \"" + target + '"');
-        String result = getLiveValue();
+    public boolean commitValue() throws ElementFailureException {
+        try {
+            String target = getSetValue();
+            Utils.runCommand(command + " \"" + target + '"');
+            String result = getLiveValue();
 
-        if (!result.equals(getStoredValue()))
-            Utils.db.setValue(command, result);
+            if (!result.equals(getStoredValue()))
+                Utils.db.setValue(command, result);
 
-        lastLive = lastChosen = stored = Color.parseColor(result);
+            lastLive = lastChosen = stored = Color.parseColor(result);
 
-        if (controller.getOnColorChangedListener() == this)
-            controller.setControl(lastChosen, original, this.title);
+            if (controller.getOnColorChangedListener() == this)
+                controller.setControl(lastChosen, original, this.title);
 
-        colourButton.setBackgroundColor(stored);
-        valueCheck();
+            colourButton.setBackgroundColor(stored);
+            valueCheck();
 
-        return true;
+            return true;
+        } catch (Exception e) {
+            throw new ElementFailureException(this, e);
+        }
     }
 
     @Override
-    public void cancelValue() {
+    public void cancelValue() throws ElementFailureException {
         lastChosen = lastLive = stored;
         commitValue();
     }

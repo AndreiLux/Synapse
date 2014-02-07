@@ -22,6 +22,7 @@ import com.af.synapse.R;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 
@@ -106,7 +107,7 @@ public class SOptionList extends BaseElement
     }
 
     @Override
-    public View getView() {
+    public View getView() throws ElementFailureException {
         if (elementView != null)
             return elementView;
 
@@ -228,10 +229,12 @@ public class SOptionList extends BaseElement
      */
 
     @Override
-    public String getLiveValue() {
-        String retValue = Utils.runCommand(command);
-        lastLive = retValue;
-        return retValue;
+    public String getLiveValue() throws ElementFailureException {
+        try {
+            String retValue = Utils.runCommand(command);
+            lastLive = retValue;
+            return retValue;
+        } catch (Exception e) { throw new ElementFailureException(this, e); }
     }
 
     @Override
@@ -250,7 +253,7 @@ public class SOptionList extends BaseElement
     }
 
     @Override
-    public void refreshValue() {
+    public void refreshValue() throws ElementFailureException {
         getLiveValue();
         if (!items.contains(lastLive)) {
             items.add(lastLive);
@@ -274,8 +277,11 @@ public class SOptionList extends BaseElement
     }
 
     @Override
-    public boolean commitValue() {
-        Utils.runCommand(command + " " + lastSelect);
+    public boolean commitValue() throws ElementFailureException {
+        try {
+            Utils.runCommand(command + " " + lastSelect);
+        } catch (Exception e) { throw new ElementFailureException(this, e); }
+
         getLiveValue();
 
         if (!lastLive.equals(stored))
@@ -290,7 +296,7 @@ public class SOptionList extends BaseElement
     }
 
     @Override
-    public void cancelValue() {
+    public void cancelValue() throws ElementFailureException {
         lastSelect = lastLive = stored;
         commitValue();
     }

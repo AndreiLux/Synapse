@@ -12,6 +12,8 @@ package com.af.synapse.elements;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.af.synapse.utils.ElementFailureException;
+
 import net.minidev.json.JSONObject;
 
 /**
@@ -21,5 +23,5 @@ abstract class ElementSkeleton {
     public JSONObject element;
     public LinearLayout layout;
 
-    abstract public View getView();
+    abstract public View getView() throws ElementFailureException;
 }

@@ -11,6 +11,8 @@ package com.af.synapse.utils;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.af.synapse.BootService;
 import com.af.synapse.R;
@@ -39,6 +41,17 @@ public class ActionValueUpdater {
         sectionList.add(element);
     }
 
+    public static void removePerpetual(ActionValueClient element) {
+        ArrayList<ActionValueClient> targetSection = null;
+        for (ArrayList<ActionValueClient> section : perpetuals)
+            for (ActionValueClient client : section)
+                if (client == element)
+                    targetSection = section;
+
+        if (targetSection != null)
+            targetSection.remove(element);
+    }
+
     public static void registerElement(ActionValueClient element) {
         if (blocked)
             return;
@@ -63,10 +76,15 @@ public class ActionValueUpdater {
         blocked = true;
 
         for (ActionValueClient element : registrees) {
-            if (commit)
-                element.commitValue();
-            else
-                element.cancelValue();
+            try {
+                if (commit)
+                    element.commitValue();
+                else
+                    element.cancelValue();
+            } catch (ElementFailureException e) {
+                removePerpetual((ActionValueClient) e.getSource());
+                Utils.createElementErrorView(e);
+            }
         }
 
         registrees.clear();

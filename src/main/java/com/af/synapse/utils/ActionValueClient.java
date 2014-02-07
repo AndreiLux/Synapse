@@ -13,12 +13,12 @@ package com.af.synapse.utils;
  * Created by Andrei on 02/09/13.
  */
 public interface ActionValueClient {
-    public String getLiveValue();
+    public String getLiveValue() throws ElementFailureException;
     public String getSetValue();
     public String getStoredValue();
 
-    public void refreshValue();
+    public void refreshValue() throws ElementFailureException;
     public void setDefaults();
-    public boolean commitValue();
-    public void cancelValue();
+    public boolean commitValue() throws ElementFailureException;
+    public void cancelValue() throws ElementFailureException;
 }

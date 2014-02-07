@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.ActivityListener;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
@@ -26,6 +27,8 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 12/01/14.
  */
 public class SLiveLabel extends BaseElement implements ActivityListener {
+    private View elementView = null;
+
     private STitleBar titleObj = null;
     private SDescription descriptionObj = null;
 
@@ -35,7 +38,7 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     private String style = null;
 
     private int refreshInterval = 2500;
-    private Runnable runTask = null;
+    private Runnable resumeTask = null;
 
     public SLiveLabel(JSONObject element, LinearLayout layout) {
         super(element, layout);
@@ -51,11 +54,15 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
         if (element.containsKey("style"))
             style = (String) element.get("style");
 
-        runTask = new Runnable() {
+        resumeTask = new Runnable() {
             @Override
             public void run() {
-                liveLabel.setText(Utils.runCommand(command).replace("@n", "\n"));
-                Synapse.handler.postDelayed(this, refreshInterval);
+                try {
+                    liveLabel.setText(Utils.runCommand(command).replace("@n", "\n"));
+                    Synapse.handler.postDelayed(this, refreshInterval);
+                } catch (Exception e) {
+                    liveLabel.setText(e.getMessage());
+                }
             }
         };
 
@@ -71,9 +78,14 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
 
     @Override
     public View getView() {
+        if (elementView != null)
+            return elementView;
+
         LinearLayout v = (LinearLayout) LayoutInflater.from(Utils.mainActivity)
                 .inflate(R.layout.template_livelabel, this.layout, false);
+
         assert v != null;
+        elementView = v;
 
         /**
          *  Nesting another element's view in our own for title and description.
@@ -91,7 +103,6 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
             descriptionFrame.addView(descriptionObj.getView());
 
         liveLabel = (TextView) v.findViewById(R.id.SLiveLabel_textView);
-        liveLabel.setText(Utils.runCommand(command));
 
         if (style != null) {
             if (style.contains("bold") && style.contains("italic")) {
@@ -115,21 +126,21 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
 
     @Override
     public void onStart() {
-        Synapse.handler.post(runTask);
+        Synapse.handler.post(resumeTask);
     }
 
     @Override
     public void onResume() {
-        Synapse.handler.postDelayed(runTask, refreshInterval);
+        Synapse.handler.postDelayed(resumeTask, refreshInterval);
     }
 
     @Override
     public void onPause() {
-        Synapse.handler.removeCallbacks(runTask);
+        Synapse.handler.removeCallbacks(resumeTask);
     }
 
     @Override
     public void onStop() {
-        Synapse.handler.removeCallbacks(runTask);
+        Synapse.handler.removeCallbacks(resumeTask);
     }
 }

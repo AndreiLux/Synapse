@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.R;
 import com.af.synapse.utils.Utils;
@@ -52,7 +53,11 @@ public class SButton extends BaseElement implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        String result = Utils.runCommand(command);
-        Toast.makeText(Utils.mainActivity, result, Toast.LENGTH_LONG).show();
+        try {
+            String result = Utils.runCommand(command);
+            Toast.makeText(Utils.mainActivity, result, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(Utils.mainActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

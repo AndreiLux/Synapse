@@ -19,6 +19,7 @@ import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.R;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
@@ -70,7 +71,7 @@ public class SCheckBox extends BaseElement
     }
 
     @Override
-    public View getView() {
+    public View getView() throws ElementFailureException {
         if (elementView != null)
             return elementView;
 
@@ -141,10 +142,14 @@ public class SCheckBox extends BaseElement
      */
 
     @Override
-    public String getLiveValue() {
-        String retValue = Utils.runCommand(command);
-        lastLive = !retValue.equals("0");
-        return retValue;
+    public String getLiveValue() throws ElementFailureException {
+        try {
+            String retValue = Utils.runCommand(command);
+            lastLive = !retValue.equals("0");
+            return retValue;
+        } catch (Exception e) {
+            throw new ElementFailureException(this, e);
+        }
     }
 
     @Override
@@ -163,7 +168,7 @@ public class SCheckBox extends BaseElement
     }
 
     @Override
-    public void refreshValue() {
+    public void refreshValue() throws ElementFailureException {
         if (Utils.appStarted)
             getLiveValue();
         checkBox.setChecked(lastLive);
@@ -180,23 +185,28 @@ public class SCheckBox extends BaseElement
     }
 
     @Override
-    public boolean commitValue() {
-        String target = getSetValue();
-        Utils.runCommand(command + " " + target);
-        String result = getLiveValue();
+    public boolean commitValue() throws ElementFailureException {
+        try {
+            String target = getSetValue();
+            Utils.runCommand(command + " " + target);
+            String result = getLiveValue();
 
-        if (!result.equals(getStoredValue()))
-            Utils.db.setValue(command, result);
+            if (!result.equals(getStoredValue()))
+                Utils.db.setValue(command, result);
 
-        lastLive = lastCheck = stored = !result.equals("0");
-        checkBox.setChecked(lastLive);
-        valueCheck();
+            lastLive = lastCheck = stored = !result.equals("0");
+            checkBox.setChecked(lastLive);
+            valueCheck();
 
-        return true;
+            return true;
+
+        } catch (Exception e) {
+            throw new ElementFailureException(this, e);
+        }
     }
 
     @Override
-    public void cancelValue() {
+    public void cancelValue() throws ElementFailureException {
         lastCheck = lastLive = stored;
         commitValue();
     }
@@ -206,7 +216,7 @@ public class SCheckBox extends BaseElement
      */
 
     @Override
-    public void onStart() {
+    public void onStart() throws ElementFailureException {
         checkBox.setText(label);
         refreshValue();
         valueCheck();

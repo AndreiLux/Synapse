@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.af.synapse.Synapse;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 
 import net.minidev.json.JSONObject;
@@ -28,7 +29,8 @@ public class BaseElement extends ElementSkeleton {
         this.layout = layout;
     }
 
-    public static BaseElement createObject(String type, JSONObject element, LinearLayout layout) {
+    public static BaseElement createObject(String type, JSONObject element, LinearLayout layout)
+                              throws ElementFailureException {
         BaseElement newObject = null;
         Class<?> c;
 
@@ -40,9 +42,7 @@ public class BaseElement extends ElementSkeleton {
         try {
             c = Class.forName(Synapse.getAppContext().getPackageName() + ".elements." + type);
         } catch (Exception e) {
-            L.e("Failure to look up dynamic class element " + type + " due to " + e);
-            e.printStackTrace();
-            return null;
+            throw new ElementFailureException(type, e);
         }
 
         /**
@@ -55,16 +55,13 @@ public class BaseElement extends ElementSkeleton {
             Constructor<?> constructor = c.getConstructor(types);
             newObject = (BaseElement)constructor.newInstance(element, layout);
         } catch (Exception e) {
-            L.e("Failure to create dynamic class element " + type + " due to " + e);
-            e.printStackTrace();
-
-            return null;
+            throw new ElementFailureException(type, e);
         }
 
         return newObject;
     }
 
-    public View getView() {
+    public View getView() throws ElementFailureException {
         return null;
     }
 }

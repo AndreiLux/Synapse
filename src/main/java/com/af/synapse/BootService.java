@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.af.synapse.utils.L;
+import com.af.synapse.utils.RootFailureException;
+import com.af.synapse.utils.RunCommandFailedException;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONArray;
@@ -68,7 +70,11 @@ public class BootService extends Service {
                 if (parameters.containsKey("action")) {
                     String command = (String) parameters.get("action");
                     String value = Utils.db.getValue(command);
-                    Utils.runCommand(command + " \"" + value + "\"");
+                    try {
+                        Utils.runCommand(command + " \"" + value + "\"");
+                    } catch (Exception e) {
+                        L.e(e.getMessage());
+                    }
                 }
             }
         }

@@ -10,8 +10,14 @@
 package com.af.synapse.utils;
 
 import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.af.synapse.R;
 import com.af.synapse.Synapse;
+import com.af.synapse.elements.BaseElement;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -73,8 +79,8 @@ public class Utils {
         return ret;
     }
 
-    public static String runCommand(String command) {
-        return runCommand(command, false);
+    public static String runCommand(String command) throws RootFailureException, RunCommandFailedException {
+        return runCommandWithException(command, false);
     }
 
     public static JSONObject getJSON() {
@@ -147,6 +153,37 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static View createElementErrorView(ElementFailureException e) {
+        final LinearLayout v = (LinearLayout) LayoutInflater.from(Utils.mainActivity)
+                                .inflate(R.layout.element_failure, null, false);
+        assert v != null;
+
+        ((TextView)v.findViewById(R.id.element_failure_title))
+                .setText(e.getSourceClass() + " has failed:");
+
+        ((TextView)v.findViewById(R.id.element_failure_description))
+                .setText(e.getMessage());
+
+        try {
+            final View child = e.getSource().getView();
+            final LinearLayout section = (LinearLayout) child.getParent();
+
+            if (section != null) {
+                final int position = section.indexOfChild(child);
+                Synapse.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        section.removeView(child);
+                        section.addView(v, position);
+                    }
+                });
+                return null;
+            }
+        } catch (Exception ignored) {}
+
+        return v;
     }
 }
 

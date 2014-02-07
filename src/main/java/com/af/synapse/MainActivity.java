@@ -40,6 +40,7 @@ import com.af.synapse.elements.*;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 
@@ -329,9 +330,14 @@ public class MainActivity extends FragmentActivity {
                 String type = elm.keySet().toString().replace("[", "").replace("]", "");
                 JSONObject parameters = (JSONObject) elm.get(type);
 
-                BaseElement elementObj = BaseElement.createObject(type, parameters, tabContentLayout);
-                if (elementObj == null)
+                BaseElement elementObj = null;
+
+                try {
+                    elementObj = BaseElement.createObject(type, parameters, tabContentLayout);
+                } catch (ElementFailureException e) {
+                    tabContentLayout.addView(Utils.createElementErrorView(e));
                     continue;
+                }
 
                 try {
                     ActionValueClient perpetual = ((ActionValueClient) elementObj);
@@ -343,7 +349,17 @@ public class MainActivity extends FragmentActivity {
                  *  them here after their creation.
                  */
 
-                View elementView = elementObj.getView();
+                View elementView = null;
+
+                try {
+                    elementView = elementObj.getView();
+                } catch (ElementFailureException e) {
+                    View errorView = Utils.createElementErrorView(e);
+                    if (errorView != null)
+                        tabContentLayout.addView(errorView);
+                    continue;
+                }
+
                 if (elementView != null)
                     tabContentLayout.addView(elementView);
 
@@ -377,6 +393,9 @@ public class MainActivity extends FragmentActivity {
             super.onStart();
             for (BaseElement elm : fragmentElements)
                 try { ((ActivityListener) elm).onStart(); } catch (ClassCastException ignored) {}
+                catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
 
             /**
              *  Utils.appStarted serves as a flag to mark the completion of the *first*
@@ -393,6 +412,9 @@ public class MainActivity extends FragmentActivity {
             super.onResume();
             for (BaseElement elm : fragmentElements)
                 try { ((ActivityListener) elm).onResume(); } catch (ClassCastException ignored) {}
+                catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
         }
 
         @Override
@@ -400,6 +422,9 @@ public class MainActivity extends FragmentActivity {
             super.onPause();
             for (BaseElement elm : fragmentElements)
                 try { ((ActivityListener) elm).onPause(); } catch (ClassCastException ignored) {}
+                catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
         }
 
         @Override
@@ -407,6 +432,9 @@ public class MainActivity extends FragmentActivity {
             super.onStop();
             for (BaseElement elm : fragmentElements)
                 try { ((ActivityListener) elm).onStop(); } catch (ClassCastException ignored) {}
+                catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
         }
 
         @Override

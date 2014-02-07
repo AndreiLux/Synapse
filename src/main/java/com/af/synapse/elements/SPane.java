@@ -11,6 +11,8 @@ package com.af.synapse.elements;
 
 import android.widget.LinearLayout;
 
+import com.af.synapse.utils.ElementFailureException;
+
 import net.minidev.json.JSONObject;
 
 /**
@@ -18,7 +20,7 @@ import net.minidev.json.JSONObject;
  */
 public class SPane extends BaseElement {
 
-    public SPane(JSONObject elm, LinearLayout layout) {
+    public SPane(JSONObject elm, LinearLayout layout) throws ElementFailureException {
         super(elm, layout);
 
         if (elm.containsKey("title")) {

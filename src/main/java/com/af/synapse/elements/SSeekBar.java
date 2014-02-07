@@ -21,6 +21,7 @@ import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.R;
 import com.af.synapse.utils.ActionValueClient;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.af.synapse.view.SmartSeeker;
 
@@ -153,7 +154,7 @@ public class SSeekBar extends BaseElement
     }
 
     @Override
-    public View getView() {
+    public View getView() throws ElementFailureException {
         if (elementView != null)
             return elementView;
 
@@ -305,10 +306,12 @@ public class SSeekBar extends BaseElement
      */
 
     @Override
-    public String getLiveValue() {
-        String retValue = Utils.runCommand(command);
-        lastLive = Integer.parseInt(retValue);
-        return retValue;
+    public String getLiveValue() throws ElementFailureException {
+        try {
+            String retValue = Utils.runCommand(command);
+            lastLive = Integer.parseInt(retValue);
+            return retValue;
+        } catch (Exception e) { throw new ElementFailureException(this, e); }
     }
 
     @Override
@@ -327,7 +330,7 @@ public class SSeekBar extends BaseElement
     }
 
     @Override
-    public void refreshValue() {
+    public void refreshValue() throws ElementFailureException {
         String val = getLiveValue();
         setSeek(val);
     }
@@ -339,31 +342,33 @@ public class SSeekBar extends BaseElement
     }
 
     @Override
-    public boolean commitValue() {
-        String target = getSetValue();
-        Utils.runCommand(command + " " + target);
-        String result = getLiveValue();
+    public boolean commitValue() throws ElementFailureException {
+        try {
+            String target = getSetValue();
+            Utils.runCommand(command + " " + target);
+            String result = getLiveValue();
 
-        if (!result.equals(getStoredValue())) {
-            Utils.db.setValue(command, result);
-            stored = Integer.parseInt(result);
+            if (!result.equals(getStoredValue())) {
+                Utils.db.setValue(command, result);
+                stored = Integer.parseInt(result);
 
-            if (hasLabels)
-                storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
-            else
-                storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
-        }
+                if (hasLabels)
+                    storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
+                else
+                    storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
+            }
 
-        setSeek(result);
+            setSeek(result);
 
-        seekBar.setSaved(isListBound ? lastProgress : (stored - offset) / step);
-        valueCheck();
+            seekBar.setSaved(isListBound ? lastProgress : (stored - offset) / step);
+            valueCheck();
 
-        return true;
+            return true;
+        } catch (Exception e) { throw new ElementFailureException(this, e); }
     }
 
     @Override
-    public void cancelValue() {
+    public void cancelValue() throws ElementFailureException {
         lastSeek = lastLive = stored;
         commitValue();
     }
@@ -373,13 +378,13 @@ public class SSeekBar extends BaseElement
      */
 
     @Override
-    public void onStart() {
+    public void onStart() throws ElementFailureException {}
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             setSeek(getLiveValue());
     }
 
     @Override
-    public void onResume() {}
+    public void onResume() {
 
     @Override
     public void onPause() {}
