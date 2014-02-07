@@ -13,10 +13,14 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
-import com.af.synapse.utils.L;
 import com.af.synapse.utils.RootFailureException;
 import com.af.synapse.utils.RunCommandFailedException;
 import com.af.synapse.utils.Utils;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Andrei on 04/10/13.
@@ -24,6 +28,10 @@ import com.af.synapse.utils.Utils;
 public class Synapse extends Application {
     private static Context context;
     public static Handler handler;
+    public static ThreadPoolExecutor executor;
+    public static BlockingQueue<Runnable> threadWorkQueue;
+
+    public static int NR_CORES =  Runtime.getRuntime().availableProcessors();
 
     public enum environmentState {
         VALID_ENVIRONMENT,
@@ -40,6 +48,10 @@ public class Synapse extends Application {
 
         Synapse.context = getApplicationContext();
         Synapse.handler = new Handler();
+        threadWorkQueue = new LinkedBlockingQueue<Runnable>();
+        Synapse.executor = new ThreadPoolExecutor(NR_CORES, NR_CORES,
+                                                  0L, TimeUnit.MILLISECONDS,
+                                                  threadWorkQueue);
         Utils.initiateDatabase();
 
         assert context.getResources().getConfiguration().locale != null;
