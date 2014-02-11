@@ -65,7 +65,7 @@ public class SSeekBar extends BaseElement
     private int max;
 
     private boolean isListBound = false;
-    private ArrayList<Integer> values;
+    private ArrayList<Integer> values = null;
     private boolean hasLabels = false;
     private ArrayList<String> labels;
 
@@ -391,7 +391,8 @@ public class SSeekBar extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastSeek = lastLive = stored;
-        lastProgress = values.indexOf(lastSeek);
+        if(values != null)
+            lastProgress = values.indexOf(lastSeek);
         commitValue();
     }
 
