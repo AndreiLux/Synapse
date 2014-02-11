@@ -19,6 +19,8 @@ import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
+import com.af.synapse.utils.RootFailureException;
+import com.af.synapse.utils.RunCommandFailedException;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
@@ -77,7 +79,7 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     }
 
     @Override
-    public View getView() {
+    public View getView() throws ElementFailureException {
         if (elementView != null)
             return elementView;
 
@@ -117,6 +119,12 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
                 liveLabel.setTypeface(liveLabel.getTypeface(), Typeface.ITALIC);
         }
 
+        try {
+            liveLabel.setText(Utils.runCommand(command).replace("@n", "\n"));
+        } catch (Exception e) {
+            throw new ElementFailureException(this, e);
+        }
+
         return v;
     }
 
@@ -125,9 +133,7 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
      */
 
     @Override
-    public void onStart() {
-        Synapse.handler.post(resumeTask);
-    }
+    public void onStart() {}
 
     @Override
     public void onResume() {
