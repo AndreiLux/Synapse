@@ -121,6 +121,8 @@ public class SCheckBox extends BaseElement
         checkBox.setOnClickListener(this);
         checkBox.setChecked(lastLive);
 
+        valueCheck();
+
         elementView = v;
 
         return v;
