@@ -42,6 +42,7 @@ import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
+import com.af.synapse.utils.NamedRunnable;
 import com.af.synapse.utils.Utils;
 
 import java.util.ArrayList;
@@ -264,16 +265,19 @@ public class MainActivity extends FragmentActivity {
                  *  Spawn a builder thread for each section/fragment
                  */
                 final int position = i;
-                Thread st = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        buildFragment(position);
+
+                Synapse.executor.execute(new NamedRunnable(
+                    new Runnable() {
+                        @Override
+                        public void run() { buildFragment(position); }
+                    })
+                {
+                    public String getRunnableName() {
+                        return Utils.localise(((JSONObject)Utils.configSections
+                                                                .get(position))
+                                                                .get("name"));
                     }
                 });
-
-                st.setName("synapse.section." +
-                        Utils.localise(((JSONObject)Utils.configSections.get(position)).get("name")));
-                st.start();
             }
 
             tabSectionFragment.startedFragments = 0;
