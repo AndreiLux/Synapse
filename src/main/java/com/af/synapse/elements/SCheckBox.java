@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.af.synapse.Synapse;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
@@ -34,6 +35,7 @@ public class SCheckBox extends BaseElement
     private View elementView = null;
     private CheckBox checkBox;
     private String command;
+    private Runnable resumeTask = null;
 
     private String label;
 
@@ -68,6 +70,18 @@ public class SCheckBox extends BaseElement
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout);
+
+        resumeTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    refreshValue();
+                    valueCheck();
+                } catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
+            }
+        };
     }
 
     @Override
@@ -171,8 +185,14 @@ public class SCheckBox extends BaseElement
     public void refreshValue() throws ElementFailureException {
         if (Utils.appStarted)
             getLiveValue();
-        checkBox.setChecked(lastLive);
+
         lastCheck = lastLive;
+        Utils.mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                checkBox.setChecked(lastLive);
+            }
+        });
     }
 
     @Override
@@ -218,12 +238,13 @@ public class SCheckBox extends BaseElement
     @Override
     public void onStart() throws ElementFailureException {
         checkBox.setText(label);
-        refreshValue();
-        valueCheck();
     }
 
     @Override
-    public void onResume() {}
+    public void onResume() {
+        if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
+            Synapse.executor.execute(resumeTask);
+    }
 
     @Override
     public void onPause() {}
