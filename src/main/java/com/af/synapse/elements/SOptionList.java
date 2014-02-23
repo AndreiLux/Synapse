@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.af.synapse.R;
+import com.af.synapse.Synapse;
 import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
@@ -39,7 +40,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class SOptionList extends BaseElement
                          implements AdapterView.OnItemSelectedListener,
-                         ActionValueClient, View.OnClickListener {
+                         ActionValueClient, ActivityListener, View.OnClickListener {
     private View elementView = null;
     private Spinner spinner;
     private ImageButton previousButton;
@@ -49,6 +50,8 @@ public class SOptionList extends BaseElement
     private SDescription descriptionObj = null;
 
     private String command;
+    private Runnable resumeTask = null;
+
     List<String> items = new ArrayList<String>();
     List<String> labels = new ArrayList<String>();
     private String unit = "";
@@ -99,6 +102,17 @@ public class SOptionList extends BaseElement
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout);
+
+        resumeTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    refreshValue();
+                } catch (ElementFailureException e) {
+                    Utils.createElementErrorView(e);
+                }
+            }
+        };
     }
 
     private void prepareUI(){
@@ -263,9 +277,16 @@ public class SOptionList extends BaseElement
         if (lastSelect.equals(lastLive))
             return;
 
-        int selection = items.indexOf(lastLive);
-        spinner.setSelection(selection);
+        final int selection = items.indexOf(lastLive);
         lastSelect = lastLive;
+
+        Utils.mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                spinner.setSelection(selection);
+                valueCheck();
+            }
+        });
     }
 
     @Override
@@ -300,4 +321,23 @@ public class SOptionList extends BaseElement
         lastSelect = lastLive = stored;
         commitValue();
     }
+    /**
+     *  ActivityListener methods
+     */
+
+    @Override
+    public void onStart() throws ElementFailureException {}
+
+    @Override
+    public void onResume() {
+        if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
+            Synapse.executor.execute(resumeTask);
+    }
+
+    @Override
+    public void onPause() {}
+
+    @Override
+    public void onStop() {}
+
 }
