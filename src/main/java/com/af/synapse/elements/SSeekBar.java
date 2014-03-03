@@ -78,13 +78,16 @@ public class SSeekBar extends BaseElement
     private int lastSeek;
     private int lastLive;
 
-    public SSeekBar(JSONObject element, LinearLayout layout) {
+    public SSeekBar(JSONObject element, LinearLayout layout) throws ElementFailureException {
         super(element, layout);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
         else
             throw new IllegalArgumentException("SSeekBar has no action defined");
+
+        if (element.containsKey("default"))
+            this.original = (Integer) element.get("default");
 
         if (element.containsKey("values")) {
             values = new ArrayList<Integer>();
@@ -122,6 +125,12 @@ public class SSeekBar extends BaseElement
                     labels.add(Utils.localise(set.getValue()));
                 }
 
+                if (values.isEmpty())
+                    throw new IllegalArgumentException("Empty values given.");
+
+                if (this.original != Integer.MIN_VALUE && values.indexOf(this.original) == -1)
+                    throw new IllegalArgumentException("Default value not contained in given values.");
+
                 hasLabels = true;
             }
             isListBound = true;
@@ -129,7 +138,7 @@ public class SSeekBar extends BaseElement
             if (element.containsKey("max"))
                 this.max = (Integer) element.get("max");
             else
-                throw new IllegalArgumentException("SSeekBar has no maximum defined");
+                throw new IllegalArgumentException("Maximum value is not defined.");
 
             if (element.containsKey("min"))
                 this.offset = (Integer) element.get("min");
@@ -137,9 +146,6 @@ public class SSeekBar extends BaseElement
             if (element.containsKey("step"))
                 this.step = (Integer) element.get("step");
         }
-
-        if (element.containsKey("default"))
-            this.original = (Integer) element.get("default");
 
         if (element.containsKey("unit"))
             this.unit = (String) element.get("unit");

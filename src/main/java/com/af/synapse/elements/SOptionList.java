@@ -24,7 +24,6 @@ import com.af.synapse.utils.ActionValueClient;
 import com.af.synapse.utils.ActionValueUpdater;
 import com.af.synapse.utils.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
-import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONArray;
@@ -73,6 +72,9 @@ public class SOptionList extends BaseElement
         if (element.containsKey("unit"))
             this.unit = (String) element.get("unit");
 
+        if (element.containsKey("default"))
+            this.original = element.get("default").toString();
+
         if (element.containsKey("values")) {
             Object values = element.get("values");
             if (values instanceof JSONArray)
@@ -85,14 +87,11 @@ public class SOptionList extends BaseElement
                     items.add(set.getKey());
                     labels.add(Utils.localise(set.getValue()));
                 }
-            else
-                L.w("SOptionList without values detected!");
         } else
-            L.w("SOptionList without values detected!");
+            throw new IllegalArgumentException("No values given.");
 
-        if (element.containsKey("default"))
-            this.original = element.get("default").toString();
-
+        if (this.original != null && !items.contains(original))
+            throw new IllegalArgumentException("Default value not contained in given values");
 
         /**
          *  Add a description element inside our own with the same JSON object
