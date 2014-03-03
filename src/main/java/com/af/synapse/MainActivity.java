@@ -272,7 +272,8 @@ public class MainActivity extends FragmentActivity {
                         public void run() { buildFragment(position); }
                     })
                 {
-                    public String getRunnableName() {
+                    @Override
+                    public String getName() {
                         return Utils.localise(((JSONObject)Utils.configSections
                                                                 .get(position))
                                                                 .get("name"));

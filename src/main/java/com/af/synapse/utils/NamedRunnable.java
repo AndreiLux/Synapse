@@ -31,7 +31,7 @@ public class NamedRunnable implements Runnable {
         }
     }
 
-    private String getName() {
+    public String getName() {
         return "Unnamed";
     }
 }
