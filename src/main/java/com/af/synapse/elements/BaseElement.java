@@ -19,6 +19,7 @@ import com.af.synapse.utils.L;
 import net.minidev.json.JSONObject;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by Andrei on 30/08/13.
@@ -54,6 +55,8 @@ public class BaseElement extends ElementSkeleton {
         try {
             Constructor<?> constructor = c.getConstructor(types);
             newObject = (BaseElement)constructor.newInstance(element, layout);
+        } catch (InvocationTargetException e) {
+            throw new ElementFailureException(type, (Exception) e.getCause());
         } catch (Exception e) {
             throw new ElementFailureException(type, e);
         }
