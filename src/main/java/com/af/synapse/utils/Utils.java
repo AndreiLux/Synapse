@@ -10,8 +10,10 @@
 package com.af.synapse.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,6 +47,7 @@ public class Utils {
     public static JSONArray configSections = null;
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
     public static String locale = "en";
+    public static InputMethodManager imm;
 
     public static boolean isUciSupport() throws RunCommandFailedException, RootFailureException {
         runCommandWithException("uci", false);

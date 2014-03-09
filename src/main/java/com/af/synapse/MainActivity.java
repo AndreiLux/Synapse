@@ -10,6 +10,7 @@
 package com.af.synapse;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -74,13 +76,13 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.mainActivity = this;
         startTime = System.nanoTime();
         setContentView(R.layout.activity_loading);
 
         super.onCreate(fragments == null ? null : savedInstanceState);
 
         Utils.mainActivity = this;
+        Utils.imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (fragments == null) {
             if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT) {
                 findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
