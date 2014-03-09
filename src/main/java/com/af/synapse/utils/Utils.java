@@ -210,8 +210,7 @@ class SuperShell {
         try {
             this.rp = Runtime.getRuntime().exec("su");
         } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            throw new RootFailureException(e.getMessage());
         }
 
         os = new OutputStreamWriter(rp.getOutputStream());
