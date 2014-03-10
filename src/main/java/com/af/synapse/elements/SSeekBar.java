@@ -90,6 +90,7 @@ public class SSeekBar extends BaseElement
             this.original = (Integer) element.get("default");
 
         if (element.containsKey("values")) {
+            this.isListBound = element.containsKey("listBound") ? (Boolean) element.get("listBound") : true;
             values = new ArrayList<Integer>();
             Object jsonValues = element.get("values");
             if (jsonValues instanceof JSONArray)
@@ -128,13 +129,14 @@ public class SSeekBar extends BaseElement
                 if (values.isEmpty())
                     throw new IllegalArgumentException("Empty values given.");
 
-                if (this.original != Integer.MIN_VALUE && values.indexOf(this.original) == -1)
+                if (this.original != Integer.MIN_VALUE && values.indexOf(this.original) == -1 && this.isListBound)
                     throw new IllegalArgumentException("Default value not contained in given values.");
 
                 hasLabels = true;
             }
-            isListBound = true;
-        } else {
+        }
+
+        if (!isListBound) {
             if (element.containsKey("max"))
                 this.max = (Integer) element.get("max");
             else
@@ -222,7 +224,7 @@ public class SSeekBar extends BaseElement
          */
 
         if (original != Integer.MIN_VALUE)
-            if (hasLabels)
+            if (hasLabels && values.indexOf(this.original) != -1)
                 defaultLabel.setText("D:" + labels.get(values.indexOf(original)));
             else
                 defaultLabel.setText("D:" + Utils.df.format(original * weight) + unit);
@@ -250,7 +252,7 @@ public class SSeekBar extends BaseElement
         minusButton.setOnClickListener(this);
         plusButton.setOnClickListener(this);
 
-        if (hasLabels) {
+        if (hasLabels && values.indexOf(Integer.valueOf(initialLive)) != -1) {
             seekLabel.setText(labels.get(values.indexOf(Integer.valueOf(initialLive))));
             storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
         } else {
@@ -301,7 +303,7 @@ public class SSeekBar extends BaseElement
 
         lastSeek = isListBound ? values.get(lastProgress) : offset + (progress * step);
 
-        if (hasLabels)
+        if (hasLabels && values.indexOf(lastSeek) != -1)
             seekLabel.setText(labels.get(values.indexOf(lastSeek)));
         else
             seekLabel.setText(Utils.df.format(lastSeek * weight) + unit);
@@ -379,7 +381,7 @@ public class SSeekBar extends BaseElement
                 Utils.db.setValue(command, result);
                 stored = Integer.parseInt(result);
 
-                if (hasLabels)
+                if (hasLabels && values.indexOf(stored) != -1)
                     storedLabel.setText("S:" + labels.get(values.indexOf(stored)));
                 else
                     storedLabel.setText("S:" + Utils.df.format(stored * weight) + unit);
@@ -397,7 +399,7 @@ public class SSeekBar extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastSeek = lastLive = stored;
-        if(values != null)
+        if (isListBound)
             lastProgress = values.indexOf(lastSeek);
         commitValue();
     }
