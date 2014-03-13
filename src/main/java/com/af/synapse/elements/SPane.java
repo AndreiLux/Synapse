@@ -9,9 +9,13 @@
 
 package com.af.synapse.elements;
 
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.af.synapse.R;
 import com.af.synapse.utils.ElementFailureException;
+import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
@@ -24,8 +28,12 @@ public class SPane extends BaseElement {
         super(elm, layout);
 
         if (elm.containsKey("title")) {
-            BaseElement titleBar = BaseElement.createObject("STitleBar", elm, layout);
-            layout.addView(titleBar.getView());
+            TextView v = (TextView) LayoutInflater.from(Utils.mainActivity)
+                    .inflate(R.layout.template_pane_titlebar, this.layout, false);
+            assert v != null;
+
+            v.setText(Utils.localise(element.get("title")));
+            layout.addView(v);
         }
 
         if (elm.containsKey("description")) {
