@@ -9,12 +9,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/SColourPicker_descriptionFrame"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/frameLayout"
-        android:layout_alignBottom="@+id/frameLayout"
-        android:layout_marginLeft="@dimen/descriptionFrame_left_margin"
-        android:layout_marginTop="@dimen/descriptionFrame_left_margin" />
+        android:gravity="center_vertical"
+        android:layout_toLeftOf="@+id/SColourPicker_colourButton"
+        android:layout_alignTop="@+id/SColourPicker_colourButton"
+        android:layout_alignBottom="@+id/SColourPicker_colourButton" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -24,14 +22,15 @@
         android:paddingRight="@dimen/descriptionFrame_left_margin"
         android:paddingTop="@dimen/descriptionFrame_left_margin">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="96dp"
-            android:layout_height="32dp"
-            android:id="@+id/SColourPicker_colourButton"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="#ff0600"
-            android:layout_gravity="center" />
     </FrameLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="180dp"
+        android:layout_height="32dp"
+        android:id="@+id/SColourPicker_colourButton"
+        android:background="#ff0600"
+        android:layout_gravity="center"
+        android:layout_below="@+id/frameLayout"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
