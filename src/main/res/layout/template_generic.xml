@@ -18,6 +18,7 @@
         android:id="@+id/SGeneric_editText"
         android:gravity="center"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textColor="@android:color/secondary_text_dark" />
 
 </LinearLayout>
