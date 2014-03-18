@@ -346,10 +346,8 @@ public class MainActivity extends FragmentActivity {
                     continue;
                 }
 
-                try {
-                    ActionValueClient perpetual = ((ActionValueClient) elementObj);
-                    ActionValueUpdater.registerPerpetual(perpetual, sectionNumber);
-                } catch (ClassCastException ignored) {}
+                if (ActionValueClient.class.isAssignableFrom(elementObj.getClass()))
+                    ActionValueUpdater.registerPerpetual((ActionValueClient) elementObj, sectionNumber);
 
                 /**
                  *  Simple standalone elements may not add themselves to the layout, if so, add
@@ -399,10 +397,10 @@ public class MainActivity extends FragmentActivity {
         public void onStart(){
             super.onStart();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onStart(); } catch (ClassCastException ignored) {}
-                catch (ElementFailureException e) {
-                    Utils.createElementErrorView(e);
-                }
+                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
+                    try {
+                        ((ActivityListener) elm).onStart();
+                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
 
             /**
              *  Utils.appStarted serves as a flag to mark the completion of the *first*
@@ -418,30 +416,30 @@ public class MainActivity extends FragmentActivity {
         public void onResume(){
             super.onResume();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onResume(); } catch (ClassCastException ignored) {}
-                catch (ElementFailureException e) {
-                    Utils.createElementErrorView(e);
-                }
+                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
+                    try {
+                        ((ActivityListener) elm).onResume();
+                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
         public void onPause(){
             super.onPause();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onPause(); } catch (ClassCastException ignored) {}
-                catch (ElementFailureException e) {
-                    Utils.createElementErrorView(e);
-                }
+                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
+                    try {
+                        ((ActivityListener) elm).onPause();
+                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
         public void onStop(){
             super.onStop();
             for (BaseElement elm : fragmentElements)
-                try { ((ActivityListener) elm).onStop(); } catch (ClassCastException ignored) {}
-                catch (ElementFailureException e) {
-                    Utils.createElementErrorView(e);
-                }
+                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
+                    try {
+                        ((ActivityListener) elm).onStop();
+                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
