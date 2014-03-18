@@ -65,6 +65,7 @@ public class SSeekBar extends BaseElement
     private int max;
 
     private boolean isListBound = false;
+    private boolean absolute = false;
     private ArrayList<Integer> values = null;
     private boolean hasLabels = false;
     private ArrayList<String> labels;
@@ -147,7 +148,9 @@ public class SSeekBar extends BaseElement
 
             if (element.containsKey("step"))
                 this.step = (Integer) element.get("step");
-        }
+        } else
+            if (element.containsKey("absolute"))
+                this.absolute = (Boolean) element.get("absolute");
 
         if (element.containsKey("unit"))
             this.unit = (String) element.get("unit");
@@ -240,8 +243,11 @@ public class SSeekBar extends BaseElement
         }
 
         if (isListBound) {
-            seekBar.setValues(values);
             maxSeek = values.size() - 1;
+            if (!absolute)
+                seekBar.setValues(values);
+            else
+                seekBar.setMax(maxSeek);
             seekBar.setSaved(values.indexOf(stored));
         } else {
             maxSeek = (max - offset) / step;
