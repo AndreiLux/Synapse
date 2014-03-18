@@ -50,8 +50,11 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
         else
             throw new IllegalArgumentException("SSeekBar has no action defined");
 
-        if (element.containsKey("refresh"))
-            refreshInterval = Math.max(50, (Integer) element.get("refresh"));
+        if (element.containsKey("refresh")) {
+            refreshInterval = (Integer) element.get("refresh");
+            if (refreshInterval != 0 && refreshInterval < 50)
+                refreshInterval = 50;
+        }
 
         if (element.containsKey("style"))
             style = (String) element.get("style");
@@ -61,7 +64,8 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
             public void run() {
                 try {
                     liveLabel.setText(Utils.runCommand(command).replace("@n", "\n"));
-                    Synapse.handler.postDelayed(this, refreshInterval);
+                    if (refreshInterval > 0)
+                        Synapse.handler.postDelayed(this, refreshInterval);
                 } catch (Exception e) {
                     liveLabel.setText(e.getMessage());
                 }
@@ -137,7 +141,8 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
 
     @Override
     public void onResume() {
-        Synapse.handler.postDelayed(resumeTask, refreshInterval);
+        if (refreshInterval > 0)
+            Synapse.handler.postDelayed(resumeTask, refreshInterval);
     }
 
     @Override
