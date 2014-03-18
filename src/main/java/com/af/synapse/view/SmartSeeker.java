@@ -24,35 +24,33 @@ import java.util.Collections;
  * Created by Andrei on 29/09/13.
  */
 public class SmartSeeker extends View {
-    private final Bitmap thumbNormal = BitmapFactory.decodeResource(getResources(),
-                                                          R.drawable.scrubber_control_normal_holo);
-    private final Bitmap thumbPressed = BitmapFactory.decodeResource(getResources(),
-                                                          R.drawable.scrubber_control_pressed_holo);
-    private final Bitmap thumbDisabled = BitmapFactory.decodeResource(getResources(),
-                                                          R.drawable.scrubber_control_disabled_holo);
+    private static Bitmap thumbNormal = null;
+    private static Bitmap thumbPressed = null;
+    private static Bitmap thumbDisabled = null;
 
-    private boolean isMovingSeeker = false;
+    private static Paint paint = null;
 
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private static int thumbHalfHeight;
+    private static int thumbHalfWidth;
+
+    private static boolean initialized = false;
+
+    private static int barBackThickness;
+    private static int barFillThickness;
+
+    private static Paint barPaintBack;
+    private static Paint barPaintFill;
+
+    private RectF barRectFill = new RectF();
+    private RectF barRectBack = new RectF();
 
     private int barLength;
-
-    private int barBackThickness;
-    private int barFillThickness;
 
     private int savedPointerPosition;
     private int seekerPointerPosition;
 
-    private int thumbHalfHeight = thumbPressed.getHeight() / 2;
-    private int thumbHalfWidth = thumbPressed.getWidth() / 2;
-
-    private RectF barRectFill = new RectF();
-    private Paint barPaintFill;
-
-    private RectF barRectBack = new RectF();
-    private Paint barPaintBack;
-
     private boolean isListBound = false;
+    private boolean isMovingSeeker = false;
 
     private ArrayList<Integer> values = null;
     ArrayList<Integer> valuePoints = new ArrayList<Integer>();
@@ -68,42 +66,59 @@ public class SmartSeeker extends View {
 
     public SmartSeeker(Context context) {
         super(context);
-        initialize(null, 0);
+        if (!initialized)
+            initialize(null, 0);
+        setPointers();
     }
 
     public SmartSeeker(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialize(attrs, 0);
+        if (!initialized)
+            initialize(attrs, 0);
+        setPointers();
     }
 
     public SmartSeeker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initialize(attrs, defStyle);
+        if (!initialized)
+            initialize(attrs, defStyle);
+        setPointers();
     }
 
     private void initialize(AttributeSet attrs, int defStyle) {
-        final TypedArray a = getContext().obtainStyledAttributes(attrs,
-                                                              R.styleable.SmartSeeker, defStyle, 0);
-        final Resources b = getContext().getResources();
+        thumbNormal     = BitmapFactory.decodeResource(getResources(),
+                R.drawable.scrubber_control_normal_holo);
+        thumbPressed    = BitmapFactory.decodeResource(getResources(),
+                R.drawable.scrubber_control_pressed_holo);
+        thumbDisabled   = BitmapFactory.decodeResource(getResources(),
+                R.drawable.scrubber_control_disabled_holo);
+
+        thumbHalfHeight = thumbPressed.getHeight() / 2;
+        thumbHalfWidth = thumbPressed.getWidth() / 2;
+
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        TypedArray  a = getContext().obtainStyledAttributes(attrs,
+                R.styleable.SmartSeeker, defStyle, 0);
+        Resources   b = getContext().getResources();
 
         barBackThickness = a.getDimensionPixelSize(
-                                       R.styleable.SmartSeeker_smartseeker_bar_back_thickness,
-                                       b.getDimensionPixelSize(R.dimen.bar_back_thickness));
+                R.styleable.SmartSeeker_smartseeker_bar_back_thickness,
+                b.getDimensionPixelSize(R.dimen.bar_back_thickness));
 
         barFillThickness = a.getDimensionPixelSize(
-                                       R.styleable.SmartSeeker_smartseeker_bar_fill_thickness,
-                                       b.getDimensionPixelSize(R.dimen.bar_fill_thickness));
+                R.styleable.SmartSeeker_smartseeker_bar_fill_thickness,
+                b.getDimensionPixelSize(R.dimen.bar_fill_thickness));
 
         barLength = a.getDimensionPixelSize(R.styleable.ColorBars_bar_length,
-                    b.getDimensionPixelSize(R.dimen.bar_length));
+                b.getDimensionPixelSize(R.dimen.bar_length));
 
         barPaintBack = new Paint();
         barPaintBack.setColor(Color.DKGRAY);
 
         barPaintFill = new Paint();
         barPaintFill.setColor(Color.argb(0xFF, 0x33, 0xB5, 0xE5));
-
-        setPointers();
+        initialized = true;
     }
 
     @Override
