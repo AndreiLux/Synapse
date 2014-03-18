@@ -9,6 +9,8 @@
 
 package com.af.synapse.elements;
 
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -35,7 +37,14 @@ public class SDescription extends BaseElement{
         assert v != null;
 
         Object description = this.element.get("description");
-        v.setText(Utils.localise(description));
+
+        String content = Utils.localise(description);
+        if (content.contains("href=")) {
+            v.setClickable(true);
+            v.setMovementMethod(LinkMovementMethod.getInstance());
+            v.setText(Html.fromHtml(content));
+        } else
+            v.setText(content);
 
         return v;
     }
