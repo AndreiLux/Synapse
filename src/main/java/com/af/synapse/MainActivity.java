@@ -179,7 +179,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item))
+        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item))
             return true;
 
         // Handle presses on the action bar items
