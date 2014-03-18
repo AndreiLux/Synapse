@@ -346,7 +346,7 @@ public class MainActivity extends FragmentActivity {
                     continue;
                 }
 
-                if (ActionValueClient.class.isAssignableFrom(elementObj.getClass()))
+                if (elementObj instanceof ActionValueClient)
                     ActionValueUpdater.registerPerpetual((ActionValueClient) elementObj, sectionNumber);
 
                 /**
@@ -397,10 +397,9 @@ public class MainActivity extends FragmentActivity {
         public void onStart(){
             super.onStart();
             for (BaseElement elm : fragmentElements)
-                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
-                    try {
-                        ((ActivityListener) elm).onStart();
-                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
+                if (elm instanceof ActivityListener)
+                    try { ((ActivityListener) elm).onStart(); }
+                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
 
             /**
              *  Utils.appStarted serves as a flag to mark the completion of the *first*
@@ -416,30 +415,27 @@ public class MainActivity extends FragmentActivity {
         public void onResume(){
             super.onResume();
             for (BaseElement elm : fragmentElements)
-                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
-                    try {
-                        ((ActivityListener) elm).onResume();
-                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
+                if (elm instanceof ActivityListener)
+                    try { ((ActivityListener) elm).onResume(); }
+                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
         public void onPause(){
             super.onPause();
             for (BaseElement elm : fragmentElements)
-                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
-                    try {
-                        ((ActivityListener) elm).onPause();
-                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
+                if (elm instanceof ActivityListener)
+                    try { ((ActivityListener) elm).onPause(); }
+                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
         public void onStop(){
             super.onStop();
             for (BaseElement elm : fragmentElements)
-                if (ActivityListener.class.isAssignableFrom(elm.getClass()))
-                    try {
-                        ((ActivityListener) elm).onStop();
-                    } catch (ElementFailureException e) { Utils.createElementErrorView(e); }
+                if (elm instanceof ActivityListener)
+                    try { ((ActivityListener) elm).onStop(); }
+                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 
         @Override
