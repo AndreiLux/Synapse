@@ -13,6 +13,8 @@
     <string name="initial_no_root">No root permissions granted.</string>
     <string name="initial_json_parse">JSON configuration parsing failure.</string>
 
+    <string name="activity_link_movement_failure">Link could not be opened by any application.</string>
+
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_section_default">Reset section</string>
