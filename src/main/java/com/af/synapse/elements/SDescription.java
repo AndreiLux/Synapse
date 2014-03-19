@@ -36,6 +36,9 @@ public class SDescription extends BaseElement{
                                      .inflate(R.layout.template_description, this.layout, false);
         assert v != null;
 
+        if (!this.element.containsKey("description"))
+            return v;
+
         Object description = this.element.get("description");
 
         String content = Utils.localise(description);
