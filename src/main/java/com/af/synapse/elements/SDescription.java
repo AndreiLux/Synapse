@@ -10,13 +10,13 @@
 package com.af.synapse.elements;
 
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.af.synapse.R;
+import com.af.synapse.utils.LinkMovementMethod;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
