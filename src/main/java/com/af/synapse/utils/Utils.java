@@ -169,6 +169,8 @@ public class Utils {
         ((TextView)v.findViewById(R.id.element_failure_description))
                 .setText(e.getMessage());
 
+        e.printStackTrace();
+
         try {
             final View child = e.getSource().getView();
             final LinearLayout section = (LinearLayout) child.getParent();
