@@ -64,7 +64,7 @@ public class BootService extends Service {
             JSONArray sectionElements = (JSONArray)((JSONObject)section).get("elements");
             for (Object sectionElement : sectionElements) {
                 JSONObject elm = (JSONObject) sectionElement;
-                String type = elm.keySet().toString().replace("[", "").replace("]", "");
+                String type = Utils.getEnclosure(elm);
 
                 if (type.equals("SButton") | type.equals("SLiveLabel"))
                     continue;

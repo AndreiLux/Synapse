@@ -336,7 +336,7 @@ public class MainActivity extends FragmentActivity {
 
             for (Object sectionElement : sectionElements) {
                 JSONObject elm = (JSONObject) sectionElement;
-                String type = elm.keySet().toString().replace("[", "").replace("]", "");
+                String type = Utils.getEnclosure(elm);
                 JSONObject parameters = (JSONObject) elm.get(type);
 
                 BaseElement elementObj = null;
