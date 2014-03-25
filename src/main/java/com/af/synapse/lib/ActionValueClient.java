@@ -7,7 +7,9 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse.utils;
+package com.af.synapse.lib;
+
+import com.af.synapse.utils.ElementFailureException;
 
 /**
  * Created by Andrei on 02/09/13.

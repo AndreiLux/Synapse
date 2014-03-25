@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
-import com.af.synapse.elements.BaseElement;
+import com.af.synapse.lib.ActionValueDatabase;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;

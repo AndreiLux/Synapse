@@ -7,7 +7,7 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse.utils;
+package com.af.synapse.lib;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.af.synapse.Synapse;
+import com.af.synapse.utils.L;
 
 /**
  * Created by Andrei on 03/09/13.

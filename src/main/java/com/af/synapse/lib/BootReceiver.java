@@ -7,7 +7,7 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse;
+package com.af.synapse.lib;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -7,16 +7,19 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse;
+package com.af.synapse.lib;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.af.synapse.R;
+import com.af.synapse.Synapse;
+import com.af.synapse.elements.SButton;
+import com.af.synapse.elements.SDirectoryParser;
+import com.af.synapse.elements.SLiveLabel;
 import com.af.synapse.utils.L;
-import com.af.synapse.utils.RootFailureException;
-import com.af.synapse.utils.RunCommandFailedException;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONArray;

@@ -18,10 +18,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.af.synapse.Synapse;
-import com.af.synapse.utils.ActionValueUpdater;
-import com.af.synapse.utils.ActivityListener;
+import com.af.synapse.lib.ActionValueUpdater;
+import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
-import com.af.synapse.utils.ActionValueClient;
+import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.af.synapse.view.SmartSeeker;

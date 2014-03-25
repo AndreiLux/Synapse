@@ -7,15 +7,14 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse.utils;
+package com.af.synapse.lib;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
-import com.af.synapse.BootService;
 import com.af.synapse.R;
+import com.af.synapse.utils.ElementFailureException;
+import com.af.synapse.utils.Utils;
 
 import java.util.ArrayList;
 

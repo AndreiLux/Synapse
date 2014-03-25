@@ -7,7 +7,7 @@
  * Please see the attached LICENSE.txt for the full license.
  */
 
-package com.af.synapse.utils;
+package com.af.synapse.lib;
 
 /**
  * Created by Andrei on 03/09/13.
