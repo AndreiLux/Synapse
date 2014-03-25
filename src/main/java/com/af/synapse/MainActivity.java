@@ -116,12 +116,13 @@ public class MainActivity extends FragmentActivity {
 
     @SuppressWarnings("ConstantConditions")
     private void continueCreate() {
-        setContentView(R.layout.activity_main);
-        mViewPager = (ViewPager) findViewById(R.id.mainPager);
+        View v = (View) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+
+        mViewPager = (ViewPager) v.findViewById(R.id.mainPager);
         mViewPager.setOffscreenPageLimit(Utils.configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPagerPageChangeListener());
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (ListView) v.findViewById(R.id.left_drawer);
 
         String[] section_titles = new String[Utils.configSections.size()];
         for (int i = 0; i < Utils.configSections.size(); i++)
@@ -131,7 +132,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.setItemChecked(0, true);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) v.findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer,
                                                   R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -142,6 +143,7 @@ public class MainActivity extends FragmentActivity {
 
         ActionValueUpdater.refreshButtons(true);
 
+        setContentView(v);
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
 
         if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
