@@ -9,10 +9,15 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.af.synapse.R;
@@ -25,17 +30,30 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class SDescription extends BaseElement{
+    private static LayoutParams layoutParams = null;
 
     public SDescription(JSONObject element, LinearLayout layout) {
         super(element, layout);
+
+        if (layoutParams == null)
+            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     @Override
     public View getView() {
-        TextView v = (TextView) LayoutInflater.from(Utils.mainActivity)
-                                     .inflate(R.layout.template_description, this.layout, false);
-        assert v != null;
+        TextView v;
 
+        if (Utils.useInflater) {
+            v = (TextView) LayoutInflater.from(Utils.mainActivity)
+                    .inflate(R.layout.template_description, this.layout, false);
+            assert v != null;
+        } else {
+            v = new TextView(Utils.mainActivity);
+            v.setLayoutParams(layoutParams);
+            v.setGravity(Gravity.FILL_HORIZONTAL);
+            v.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+            v.setTextColor(Color.parseColor("#AAAAAA"));
+        }
         if (!this.element.containsKey("description"))
             return v;
 
