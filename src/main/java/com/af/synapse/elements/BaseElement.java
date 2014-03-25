@@ -35,6 +35,10 @@ public class BaseElement extends ElementSkeleton {
         BaseElement newObject = null;
         Class<?> c;
 
+        if (type == null)
+            throw new ElementFailureException(BaseElement.class.getName(),
+                    new IllegalArgumentException("Can't create element without a type."));
+
         /**
          *  Get the target class object that we want to create. Use the dummy instance
          *  that was statically created to get the package path.
