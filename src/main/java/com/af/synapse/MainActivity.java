@@ -83,6 +83,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(fragments == null ? null : savedInstanceState);
 
         Utils.mainActivity = this;
+        Utils.density = getResources().getDisplayMetrics().density;
         Utils.imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (fragments == null) {
             if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT) {

@@ -48,6 +48,9 @@ public class Utils {
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();
     public static String locale = "en";
     public static InputMethodManager imm;
+    public static float density;
+
+    public static boolean useInflater = false;
 
     public static boolean isUciSupport() throws RunCommandFailedException, RootFailureException {
         runCommandWithException("uci", false);
