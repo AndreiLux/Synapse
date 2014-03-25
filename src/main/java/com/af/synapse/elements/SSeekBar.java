@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -53,6 +55,13 @@ public class SSeekBar extends BaseElement
     private STitleBar titleObj = null;
     private SDescription descriptionObj = null;
 
+    private static int dfl_id = View.generateViewId();
+    private static int sbl_id = View.generateViewId();
+    private static int pbl_id = View.generateViewId();
+    private static int mbl_id = View.generateViewId();
+
+    private static final int buttonWidth = (int)Utils.mainActivity.getResources().
+                                                getDimension(R.dimen.stepButtons_width);
     private final String command;
     private String unit = "";
     private double weight = 1;
@@ -194,24 +203,115 @@ public class SSeekBar extends BaseElement
         if (elementView != null)
             return elementView;
 
-        View v = LayoutInflater.from(Utils.mainActivity)
-                                     .inflate(R.layout.template_seekbar, this.layout, false);
-        assert v != null;
-        elementView = v;
+        RelativeLayout v;
+        LinearLayout descriptionFrame;
 
-        seekBar     = (SmartSeeker) v.findViewById(R.id.SSeekBar_seekBar);
-        minusButton = (ImageButton)  v.findViewById(R.id.SSeekBar_minusButton);
-        plusButton  = (ImageButton)  v.findViewById(R.id.SSeekBar_plusButton);
+        if (Utils.useInflater) {
+            v = (RelativeLayout) LayoutInflater.from(Utils.mainActivity)
+                    .inflate(R.layout.template_seekbar, this.layout, false);
+            assert v != null;
+            elementView = v;
 
-        defaultLabel    = (TextView) v.findViewById(R.id.SSeekBar_defaultLabel);
-        seekLabel       = (TextView) v.findViewById(R.id.SSeekBar_seekLabel);
-        storedLabel     = (TextView) v.findViewById(R.id.SSeekBar_storedLabel);
+            seekBar = (SmartSeeker) v.findViewById(R.id.SSeekBar_seekBar);
+            minusButton = (ImageButton) v.findViewById(R.id.SSeekBar_minusButton);
+            plusButton = (ImageButton) v.findViewById(R.id.SSeekBar_plusButton);
+
+            defaultLabel = (TextView) v.findViewById(R.id.SSeekBar_defaultLabel);
+            seekLabel = (TextView) v.findViewById(R.id.SSeekBar_seekLabel);
+            storedLabel = (TextView) v.findViewById(R.id.SSeekBar_storedLabel);
+
+            descriptionFrame = (LinearLayout) v.findViewById(R.id.SSeekBar_descriptionFrame);
+        } else {
+            v = new RelativeLayout(Utils.mainActivity);
+            v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            final int topPadding = (int) (2 * Utils.density + 0.5f);
+            v.setPadding(0,topPadding,0,0);
+
+            descriptionFrame = new LinearLayout(Utils.mainActivity);
+            seekBar = new SmartSeeker(Utils.mainActivity);
+            plusButton = new ImageButton(Utils.mainActivity);
+            minusButton = new ImageButton(Utils.mainActivity);
+            seekLabel = new TextView(Utils.mainActivity);
+            defaultLabel = new TextView(Utils.mainActivity);
+            storedLabel = new TextView(Utils.mainActivity);
+
+            LayoutParams dfl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            descriptionFrame.setId(dfl_id);
+            seekBar.setId(sbl_id);
+            plusButton.setId(pbl_id);
+            minusButton.setId(mbl_id);
+
+            descriptionFrame.setOrientation(LinearLayout.VERTICAL);
+            final int leftMargin = (int) (2 * Utils.density + 0.5f);
+            dfl.setMargins(leftMargin,0,0,0);
+            dfl.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            descriptionFrame.setLayoutParams(dfl);
+
+            final int minimumWidth = (int) (260 * Utils.density + 0.5f);
+            seekBar.setMinimumWidth(minimumWidth);
+            LayoutParams sbl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            sbl.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            sbl.addRule(RelativeLayout.BELOW, dfl_id);
+            sbl.addRule(RelativeLayout.LEFT_OF, pbl_id);
+            sbl.addRule(RelativeLayout.RIGHT_OF, mbl_id);
+            seekBar.setLayoutParams(sbl);
+
+            plusButton.setImageResource(R.drawable.navigation_next_item);
+            plusButton.setBackground(null);
+            LayoutParams pbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
+            pbl.addRule(RelativeLayout.ALIGN_TOP, sbl_id);
+            pbl.addRule(RelativeLayout.ALIGN_BOTTOM, sbl_id);
+            pbl.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            plusButton.setLayoutParams(pbl);
+
+            minusButton.setImageResource(R.drawable.navigation_previous_item);
+            minusButton.setBackground(null);
+            LayoutParams mbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
+            mbl.addRule(RelativeLayout.ALIGN_TOP, sbl_id);
+            mbl.addRule(RelativeLayout.ALIGN_BOTTOM, sbl_id);
+            mbl.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            minusButton.setLayoutParams(mbl);
+
+            seekLabel.setTextAppearance(Utils.mainActivity,
+                    android.R.style.TextAppearance_DeviceDefault_Small);
+            LayoutParams skl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            skl.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            skl.addRule(RelativeLayout.BELOW, sbl_id);
+            seekLabel.setLayoutParams(skl);
+
+            defaultLabel.setVisibility(ImageView.INVISIBLE);
+            defaultLabel.setTextAppearance(Utils.mainActivity,
+                    android.R.style.TextAppearance_DeviceDefault_Small);
+            LayoutParams dll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            dll.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            dll.addRule(RelativeLayout.BELOW, sbl_id);
+            dll.addRule(RelativeLayout.RIGHT_OF, mbl_id);
+            defaultLabel.setLayoutParams(dll);
+
+            storedLabel.setVisibility(ImageView.INVISIBLE);
+            storedLabel.setTextAppearance(Utils.mainActivity,
+                    android.R.style.TextAppearance_DeviceDefault_Small);
+            LayoutParams sll = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            sll.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            sll.addRule(RelativeLayout.BELOW, sbl_id);
+            sll.addRule(RelativeLayout.LEFT_OF, pbl_id);
+            storedLabel.setLayoutParams(sll);
+
+            v.addView(descriptionFrame);
+            v.addView(seekBar);
+            v.addView(plusButton);
+            v.addView(minusButton);
+            v.addView(seekLabel);
+            v.addView(defaultLabel);
+            v.addView(storedLabel);
+
+            elementView = v;
+        }
 
         /**
          *  Nesting another element's view in our own for title and description.
          */
 
-        LinearLayout descriptionFrame = (LinearLayout) v.findViewById(R.id.SSeekBar_descriptionFrame);
 
         if (titleObj != null) {
             TextView titleView = (TextView)titleObj.getView();
