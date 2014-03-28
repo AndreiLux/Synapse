@@ -29,7 +29,6 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class SPane extends BaseElement {
-    private static LinearLayout.LayoutParams layoutParams = null;
     private static Drawable background = null;
 
     private static int paddingLeft = Integer.MIN_VALUE;
@@ -37,9 +36,6 @@ public class SPane extends BaseElement {
 
     public SPane(JSONObject elm, LinearLayout layout) throws ElementFailureException {
         super(elm, layout);
-
-        if (layoutParams == null)
-            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         if (background == null)
             background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);
@@ -59,7 +55,7 @@ public class SPane extends BaseElement {
                 assert v != null;
             } else {
                 v = new TextView(Utils.mainActivity);
-                v.setLayoutParams(layoutParams);
+                v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 v.setTypeface(Typeface.DEFAULT_BOLD);
                 v.setTextColor(Color.WHITE);
                 v.setBackground(background);

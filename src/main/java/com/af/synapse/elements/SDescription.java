@@ -30,13 +30,8 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class SDescription extends BaseElement{
-    private static LayoutParams layoutParams = null;
-
     public SDescription(JSONObject element, LinearLayout layout) {
         super(element, layout);
-
-        if (layoutParams == null)
-            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     @Override
@@ -49,7 +44,7 @@ public class SDescription extends BaseElement{
             assert v != null;
         } else {
             v = new TextView(Utils.mainActivity);
-            v.setLayoutParams(layoutParams);
+            v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             v.setGravity(Gravity.FILL_HORIZONTAL);
             v.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
             v.setTextColor(Color.parseColor("#AAAAAA"));

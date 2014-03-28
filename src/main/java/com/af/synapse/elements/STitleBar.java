@@ -27,16 +27,12 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class STitleBar extends BaseElement {
-    private static LayoutParams layoutParams = null;
     private static Drawable background = null;
     private static int paddingLeft = Integer.MIN_VALUE;
     private static int paddingBottom = Integer.MIN_VALUE;
 
     public STitleBar(JSONObject element, LinearLayout layout) {
         super(element, layout);
-
-        if (layoutParams == null)
-            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
         if (background == null)
             background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);
@@ -58,7 +54,7 @@ public class STitleBar extends BaseElement {
             assert v != null;
         } else {
             v = new TextView(Utils.mainActivity);
-            v.setLayoutParams(layoutParams);
+            v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             v.setTypeface(Typeface.DEFAULT_BOLD);
             v.setTextColor(Color.WHITE);
             v.setBackground(background);
