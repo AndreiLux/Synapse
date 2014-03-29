@@ -12,8 +12,10 @@ package com.af.synapse.lib;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.L;
@@ -34,6 +36,9 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
     private static final String COL_VALUE = "value";
 
     private SQLiteDatabase db;
+    private SQLiteStatement read;
+
+    private String lastContext = "Shenanigans";
 
     public ActionValueDatabase() {
         super(Synapse.getAppContext(), DB_NAME, null, 1);
@@ -44,6 +49,9 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
             L.d("Database not found, creating one");
             db = this.getWritableDatabase();
         }
+
+        read = db.compileStatement("SELECT " + COL_VALUE + " FROM " + TABLE_NAME +
+                " WHERE " + COL_CONTEXT + " = ? AND " + COL_KEY + " = ? ;");
     }
 
     private SQLiteDatabase getDatabase() {
@@ -94,15 +102,18 @@ public class ActionValueDatabase extends SQLiteOpenHelper {
         return getValue(ContextSwitcher.getContext(), key);
     }
 
-    public String getValue(String context, String key) {
-        Cursor c = db.query(TABLE_NAME, new String[] { COL_VALUE }, "context=? AND key=?",
-                    new String[] { context, key }, null, null, null);
+    public synchronized String getValue(String context, String key) {
+        if (!lastContext.equals(context)) {
+            read.bindString(1, context);
+            lastContext = context;
+        }
 
-        if (c.getCount() == 0)
+        read.bindString(2, key);
+        try {
+            return read.simpleQueryForString();
+        } catch (SQLiteDoneException ignored) {
             return null;
-
-        c.moveToFirst();
-        return c.getString(c.getColumnIndex(COL_VALUE));
+        }
     }
 
     public void setValue(String key, String value) {
