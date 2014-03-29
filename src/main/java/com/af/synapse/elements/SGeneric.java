@@ -304,7 +304,4 @@ public class SGeneric extends BaseElement
 
     @Override
     public void onPause() throws ElementFailureException {}
-
-    @Override
-    public void onStop() throws ElementFailureException {}
 }

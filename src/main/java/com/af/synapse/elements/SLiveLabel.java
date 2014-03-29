@@ -149,9 +149,4 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     public void onPause() {
         Synapse.handler.removeCallbacks(resumeTask);
     }
-
-    @Override
-    public void onStop() {
-        Synapse.handler.removeCallbacks(resumeTask);
-    }
 }

@@ -251,10 +251,7 @@ public class SColourPicker extends BaseElement
     public void onResume() {}
 
     @Override
-    public void onPause() {}
-
-    @Override
-    public void onStop() {
+    public void onPause() {
         controller.dismiss();
     }
 }

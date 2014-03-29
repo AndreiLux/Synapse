@@ -69,9 +69,9 @@ public class MainActivity extends FragmentActivity {
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private static ViewPager mViewPager;
 
-    private static Fragment[] fragments = null;
+    private static TabSectionFragment[] fragments = null;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
@@ -119,7 +119,6 @@ public class MainActivity extends FragmentActivity {
         View v = (View) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
 
         mViewPager = (ViewPager) v.findViewById(R.id.mainPager);
-        mViewPager.setOffscreenPageLimit(Utils.configSections.size());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPagerPageChangeListener());
         mDrawerList = (ListView) v.findViewById(R.id.left_drawer);
@@ -215,12 +214,20 @@ public class MainActivity extends FragmentActivity {
     }
 
     private class ViewPagerPageChangeListener implements ViewPager.OnPageChangeListener {
+        int previousPosition = 0;
+
         @Override
         public void onPageScrolled(int i, float v, int i2) {}
 
         @Override
         public void onPageSelected(int i) {
             mDrawerList.setItemChecked(i, true);
+            fragments[i].onElementsResume();
+
+            if (previousPosition != i)
+                fragments[previousPosition].onElementsPause();
+
+            previousPosition = i;
         }
 
         @Override
@@ -236,11 +243,13 @@ public class MainActivity extends FragmentActivity {
             if (fragments[position] != null)
                 return;
 
-            tabSectionFragment fragment = new tabSectionFragment();
+            TabSectionFragment fragment = new TabSectionFragment();
             Bundle args = new Bundle();
-            args.putInt(tabSectionFragment.ARG_SECTION_NUMBER, position);
+            args.putInt(TabSectionFragment.ARG_SECTION_NUMBER, position);
             fragment.setArguments(args);
             fragments[position] = fragment;
+            fragment.prepareView();
+            fragment.onElementsStart();
             fragmentsDone.incrementAndGet();
 
             if (fragmentsDone.get() < Utils.configSections.size())
@@ -264,7 +273,7 @@ public class MainActivity extends FragmentActivity {
                 return;
 
             if (fragments == null)
-                fragments = new Fragment[Utils.configSections.size()];
+                fragments = new TabSectionFragment[Utils.configSections.size()];
 
             for (int i = 0; i < Utils.configSections.size(); i++) {
                 /**
@@ -287,7 +296,7 @@ public class MainActivity extends FragmentActivity {
                 });
             }
 
-            tabSectionFragment.startedFragments = 0;
+            TabSectionFragment.startedFragments = 0;
         }
 
         @Override
@@ -301,24 +310,31 @@ public class MainActivity extends FragmentActivity {
         }
 
         @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            fragments[position].onDetach();
+            super.destroyItem(container, position, object);
+        }
+
+        @Override
         public CharSequence getPageTitle(int position) {
             JSONObject section = (JSONObject)Utils.configSections.get(position);
             return Utils.localise(section.get("name"));
         }
     }
 
-    public static class tabSectionFragment extends Fragment {
+    public static class TabSectionFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this fragment.
          */
 
         public static final String ARG_SECTION_NUMBER = "section_number";
         public static int startedFragments = 0;
+        private int sectionNumber;
 
         public View fragmentView = null;
         private ArrayList<BaseElement> fragmentElements = new ArrayList<BaseElement>();
 
-        public tabSectionFragment() {
+        public TabSectionFragment() {
             this.setRetainInstance(true);
         }
 
@@ -326,7 +342,7 @@ public class MainActivity extends FragmentActivity {
             if (fragmentView != null)
                 return;
 
-            int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+            sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
             ScrollView tabSectionView = (ScrollView)LayoutInflater.from(Utils.mainActivity)
                                                         .inflate(R.layout.section_container, null);
             assert tabSectionView != null;
@@ -400,6 +416,9 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onStart(){
             super.onStart();
+        }
+
+        public void onElementsStart() {
             for (BaseElement elm : fragmentElements)
                 if (elm instanceof ActivityListener)
                     try { ((ActivityListener) elm).onStart(); }
@@ -418,6 +437,11 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onResume(){
             super.onResume();
+            if (mViewPager.getCurrentItem() == sectionNumber)
+                onElementsResume();
+        }
+
+        public void onElementsResume() {
             for (BaseElement elm : fragmentElements)
                 if (elm instanceof ActivityListener)
                     try { ((ActivityListener) elm).onResume(); }
@@ -427,18 +451,14 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onPause(){
             super.onPause();
+            if (mViewPager.getCurrentItem() == sectionNumber)
+                onElementsPause();
+        }
+
+        public void onElementsPause(){
             for (BaseElement elm : fragmentElements)
                 if (elm instanceof ActivityListener)
                     try { ((ActivityListener) elm).onPause(); }
-                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
-        }
-
-        @Override
-        public void onStop(){
-            super.onStop();
-            for (BaseElement elm : fragmentElements)
-                if (elm instanceof ActivityListener)
-                    try { ((ActivityListener) elm).onStop(); }
                     catch (ElementFailureException e) { Utils.createElementErrorView(e); }
         }
 

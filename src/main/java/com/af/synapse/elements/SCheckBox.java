@@ -250,7 +250,4 @@ public class SCheckBox extends BaseElement
 
     @Override
     public void onPause() {}
-
-    @Override
-    public void onStop() {}
 }

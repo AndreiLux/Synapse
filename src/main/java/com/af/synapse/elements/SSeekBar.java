@@ -525,7 +525,4 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onPause() {}
-
-    @Override
-    public void onStop() {}
 }

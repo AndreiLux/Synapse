@@ -336,7 +336,4 @@ public class SOptionList extends BaseElement
     @Override
     public void onPause() {}
 
-    @Override
-    public void onStop() {}
-
 }

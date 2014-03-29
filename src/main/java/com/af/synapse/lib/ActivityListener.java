@@ -18,5 +18,4 @@ public interface ActivityListener {
     public void onStart() throws ElementFailureException;
     public void onResume() throws ElementFailureException;
     public void onPause() throws ElementFailureException;
-    public void onStop() throws ElementFailureException;
 }
