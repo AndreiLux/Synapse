@@ -72,6 +72,7 @@ public class MainActivity extends FragmentActivity {
     private static ViewPager mViewPager;
 
     private static TabSectionFragment[] fragments = null;
+    private static int startedFragments = 0;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
@@ -295,8 +296,6 @@ public class MainActivity extends FragmentActivity {
                     }
                 });
             }
-
-            TabSectionFragment.startedFragments = 0;
         }
 
         @Override
@@ -328,7 +327,6 @@ public class MainActivity extends FragmentActivity {
          */
 
         public static final String ARG_SECTION_NUMBER = "section_number";
-        public static int startedFragments = 0;
         private int sectionNumber;
 
         public View fragmentView = null;
@@ -428,7 +426,7 @@ public class MainActivity extends FragmentActivity {
              *  Utils.appStarted serves as a flag to mark the completion of the *first*
              *  post-onStart of *all* fragments.
              */
-            if (startedFragments < Utils.configSections.size())
+            if (startedFragments < Utils.configSections.size() - 1)
                 startedFragments++;
             else
                 Utils.appStarted = true;
