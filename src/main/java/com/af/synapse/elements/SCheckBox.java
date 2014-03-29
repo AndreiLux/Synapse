@@ -192,6 +192,7 @@ public class SCheckBox extends BaseElement
         Utils.mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                checkBox.setText(label);
                 checkBox.setChecked(lastLive);
             }
         });
