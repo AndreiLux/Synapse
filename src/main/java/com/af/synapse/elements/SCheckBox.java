@@ -239,15 +239,16 @@ public class SCheckBox extends BaseElement
      */
 
     @Override
-    public void onStart() throws ElementFailureException {
-        checkBox.setText(label);
-    }
-
-    @Override
-    public void onResume() {
+    public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
     }
+
+    @Override
+    public void onStart() {}
+
+    @Override
+    public void onResume() {}
 
     @Override
     public void onPause() {}

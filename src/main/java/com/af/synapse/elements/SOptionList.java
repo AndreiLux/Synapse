@@ -50,6 +50,7 @@ public class SOptionList extends BaseElement
 
     private String command;
     private Runnable resumeTask = null;
+    private Runnable drawTask = null;
 
     List<String> items = new ArrayList<String>();
     List<String> labels = new ArrayList<String>();
@@ -110,6 +111,13 @@ public class SOptionList extends BaseElement
                 } catch (ElementFailureException e) {
                     Utils.createElementErrorView(e);
                 }
+            }
+        };
+
+        drawTask = new Runnable() {
+            @Override
+            public void run() {
+                spinner.setSelection(items.indexOf(lastSelect));
             }
         };
     }
@@ -325,15 +333,19 @@ public class SOptionList extends BaseElement
      */
 
     @Override
-    public void onStart() throws ElementFailureException {}
-
-    @Override
-    public void onResume() {
+    public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
     }
 
     @Override
-    public void onPause() {}
+    public void onStart() {
+        Synapse.handler.post(drawTask);
+    }
 
+    @Override
+    public void onResume() {}
+
+    @Override
+    public void onPause() {}
 }

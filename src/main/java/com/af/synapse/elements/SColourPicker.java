@@ -245,6 +245,9 @@ public class SColourPicker extends BaseElement
      */
 
     @Override
+    public void onMainStart() {}
+
+    @Override
     public void onStart() {}
 
     @Override

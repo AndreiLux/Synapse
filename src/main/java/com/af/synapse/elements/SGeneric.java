@@ -294,14 +294,17 @@ public class SGeneric extends BaseElement
      */
 
     @Override
-    public void onStart() throws ElementFailureException {}
-
-    @Override
-    public void onResume() throws ElementFailureException {
+    public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
     }
 
     @Override
-    public void onPause() throws ElementFailureException {}
+    public void onStart() {}
+
+    @Override
+    public void onResume() {}
+
+    @Override
+    public void onPause() {}
 }

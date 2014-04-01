@@ -72,7 +72,6 @@ public class MainActivity extends FragmentActivity {
     private static ViewPager mViewPager;
 
     private static TabSectionFragment[] fragments = null;
-    private static int startedFragments = 0;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
@@ -144,6 +143,7 @@ public class MainActivity extends FragmentActivity {
         ActionValueUpdater.refreshButtons(true);
 
         setContentView(v);
+        Utils.appStarted = true;
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
 
         if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
@@ -169,6 +169,7 @@ public class MainActivity extends FragmentActivity {
         if (!isChangingConfigurations()) {
             fragments = null;
             fragmentsDone = new AtomicInteger(0);
+            Utils.appStarted = false;
         }
         super.onDestroy();
     }
@@ -250,7 +251,6 @@ public class MainActivity extends FragmentActivity {
             fragment.setArguments(args);
             fragments[position] = fragment;
             fragment.prepareView();
-            fragment.onElementsStart();
             fragmentsDone.incrementAndGet();
 
             if (fragmentsDone.get() < Utils.configSections.size())
@@ -259,7 +259,7 @@ public class MainActivity extends FragmentActivity {
             /**
              *  After all fragments are created, continue building the UI.
              */
-            Utils.mainActivity.runOnUiThread(new Runnable() {
+            Synapse.handler.post(new Runnable() {
                 @Override
                 public void run() {
                     continueCreate();
@@ -411,9 +411,18 @@ public class MainActivity extends FragmentActivity {
             return fragmentView;
         }
 
+
+        public void onElementsMainStart() {
+            for (BaseElement elm : fragmentElements)
+                if (elm instanceof ActivityListener)
+                    try { ((ActivityListener) elm).onMainStart(); }
+                    catch (ElementFailureException e) { Utils.createElementErrorView(e); }
+        }
+
         @Override
         public void onStart(){
             super.onStart();
+            onElementsStart();
         }
 
         public void onElementsStart() {
@@ -421,15 +430,6 @@ public class MainActivity extends FragmentActivity {
                 if (elm instanceof ActivityListener)
                     try { ((ActivityListener) elm).onStart(); }
                     catch (ElementFailureException e) { Utils.createElementErrorView(e); }
-
-            /**
-             *  Utils.appStarted serves as a flag to mark the completion of the *first*
-             *  post-onStart of *all* fragments.
-             */
-            if (startedFragments < Utils.configSections.size() - 1)
-                startedFragments++;
-            else
-                Utils.appStarted = true;
         }
 
         @Override
@@ -476,5 +476,13 @@ public class MainActivity extends FragmentActivity {
             }
             super.onDetach();
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (Utils.appStarted)
+            for (TabSectionFragment f : fragments)
+                    f.onElementsMainStart();
     }
 }

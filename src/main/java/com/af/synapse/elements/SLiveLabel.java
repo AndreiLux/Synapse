@@ -137,6 +137,9 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
      */
 
     @Override
+    public void onMainStart() {}
+
+    @Override
     public void onStart() {}
 
     @Override

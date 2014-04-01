@@ -515,13 +515,16 @@ public class SSeekBar extends BaseElement
      */
 
     @Override
-    public void onStart() throws ElementFailureException {}
-
-    @Override
-    public void onResume() {
+    public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
     }
+
+    @Override
+    public void onStart() {}
+
+    @Override
+    public void onResume() {}
 
     @Override
     public void onPause() {}
