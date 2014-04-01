@@ -288,16 +288,24 @@ public class SmartSeeker extends View {
     }
 
     public void setProgress(int progress) {
-        indexNew = Math.max(0, Math.min(progress, isListBound ? values.size() - 1 : max));
-        invalidate();
+        int val = Math.max(0, Math.min(progress, isListBound ? values.size() - 1 : max));
 
-        if (listener != null)
-            listener.onProgressChanged(null, indexNew, false);
+        if (val != indexNew) {
+            indexNew = val;
+            invalidate();
+
+            if (listener != null)
+                listener.onProgressChanged(null, indexNew, false);
+        }
     }
 
     public void setSaved(int progress) {
-        indexOld = Math.max(0, Math.min(progress, isListBound ? values.size() - 1 : max));
-        invalidate();
+        int val = Math.max(0, Math.min(progress, isListBound ? values.size() - 1 : max));
+
+        if (val != indexOld) {
+            indexOld = val;
+            invalidate();
+        }
     }
 
     public void incrementProgressBy(int progressDelta) {
