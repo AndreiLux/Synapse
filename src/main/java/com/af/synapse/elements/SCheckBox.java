@@ -192,10 +192,9 @@ public class SCheckBox extends BaseElement
             return;
 
         lastCheck = lastLive;
-        Utils.mainActivity.runOnUiThread(new Runnable() {
+        Synapse.handler.post(new Runnable() {
             @Override
             public void run() {
-                checkBox.setText(label);
                 checkBox.setChecked(lastLive);
             }
         });
@@ -248,7 +247,9 @@ public class SCheckBox extends BaseElement
     }
 
     @Override
-    public void onStart() {}
+    public void onStart() {
+        checkBox.setText(label);
+    }
 
     @Override
     public void onResume() {}
