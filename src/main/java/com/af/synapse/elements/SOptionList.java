@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,6 +49,14 @@ public class SOptionList extends BaseElement
 
     private STitleBar titleObj = null;
     private SDescription descriptionObj = null;
+
+    private static int dfl_id = View.generateViewId();
+    private static int spl_id = View.generateViewId();
+    private static int nbl_id = View.generateViewId();
+    private static int pbl_id = View.generateViewId();
+
+    private static final int buttonWidth = (int)Utils.mainActivity.getResources().
+            getDimension(R.dimen.stepButtons_width);
 
     private String command;
     private Runnable resumeTask = null;
@@ -141,28 +151,87 @@ public class SOptionList extends BaseElement
 
         final CountDownLatch latch = new CountDownLatch(1);
 
-        Utils.mainActivity.runOnUiThread(new Runnable() {
+        LinearLayout descriptionFrame = null;
+
+        Synapse.handler.post(new Runnable() {
             @Override
             public void run() {
-                prepareUI();
+                if (Utils.useInflater)
+                    prepareUI();
+                else
+                    spinner = new Spinner(Utils.mainActivity);
                 latch.countDown();
             }
         });
 
         String initialLive = getLiveValue();
+
         if (getStoredValue() == null) {
             Utils.db.setValue(command, initialLive);
             stored = lastLive;
         }
+
         lastSelect = lastLive;
 
-        try { latch.await(); } catch (InterruptedException ignored) {}
+        if (!Utils.useInflater) {
+            RelativeLayout v = new RelativeLayout(Utils.mainActivity);
+
+            descriptionFrame = new LinearLayout(Utils.mainActivity);
+            previousButton = new ImageButton(Utils.mainActivity);
+            nextButton = new ImageButton(Utils.mainActivity);
+
+            LayoutParams dfl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            final int leftMargin = (int) (2 * Utils.density + 0.5f);
+            dfl.setMargins(leftMargin,0,0,0);
+            dfl.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            descriptionFrame.setLayoutParams(dfl);
+            descriptionFrame.setId(dfl_id);
+
+            LayoutParams spl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            spl.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            spl.addRule(RelativeLayout.BELOW, dfl_id);
+            spl.addRule(RelativeLayout.LEFT_OF, nbl_id);
+            spl.addRule(RelativeLayout.RIGHT_OF, pbl_id);
+
+            nextButton.setImageResource(R.drawable.navigation_next_item);
+            nextButton.setBackground(null);
+            LayoutParams nbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
+            nbl.addRule(RelativeLayout.ALIGN_TOP, spl_id);
+            nbl.addRule(RelativeLayout.ALIGN_BOTTOM, spl_id);
+            nbl.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            nextButton.setLayoutParams(nbl);
+            nextButton.setId(nbl_id);
+
+            previousButton.setImageResource(R.drawable.navigation_previous_item);
+            previousButton.setBackground(null);
+            LayoutParams pbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
+            pbl.addRule(RelativeLayout.ALIGN_TOP, spl_id);
+            pbl.addRule(RelativeLayout.ALIGN_BOTTOM, spl_id);
+            pbl.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            previousButton.setLayoutParams(pbl);
+            previousButton.setId(pbl_id);
+
+            try { latch.await(); } catch (InterruptedException ignored) {}
+            spinner.setLayoutParams(spl);
+            spinner.setId(spl_id);
+
+            v.addView(descriptionFrame);
+            v.addView(previousButton);
+            v.addView(nextButton);
+            v.addView(spinner);
+
+            elementView = v;
+        }
+
+        if (Utils.useInflater)
+            try { latch.await(); } catch (InterruptedException ignored) {}
 
         /**
          *  Nesting another element's view in our own for title and description.
          */
 
-        LinearLayout descriptionFrame = (LinearLayout) elementView.findViewById(R.id.SOptionList_descriptionFrame);
+        if (Utils.useInflater)
+            descriptionFrame = (LinearLayout) elementView.findViewById(R.id.SOptionList_descriptionFrame);
 
         if (titleObj != null) {
             TextView titleView = (TextView)titleObj.getView();
@@ -177,8 +246,10 @@ public class SOptionList extends BaseElement
          *  Next and previous buttons
          */
 
-        previousButton = (ImageButton)  elementView.findViewById(R.id.SOptionList_previousButton);
-        nextButton = (ImageButton)  elementView.findViewById(R.id.SOptionList_nextButton);
+        if (Utils.useInflater) {
+            previousButton = (ImageButton) elementView.findViewById(R.id.SOptionList_previousButton);
+            nextButton = (ImageButton) elementView.findViewById(R.id.SOptionList_nextButton);
+        }
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
 
@@ -186,7 +257,9 @@ public class SOptionList extends BaseElement
          *  The spinner itself
          */
 
-        spinner = (Spinner) elementView.findViewById(R.id.SOptionList_spinner);
+        if (Utils.useInflater)
+            spinner = (Spinner) elementView.findViewById(R.id.SOptionList_spinner);
+
         spinner.setOnItemSelectedListener(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(Utils.mainActivity,
                                                 R.layout.template_optionlist_main_item, labels);
