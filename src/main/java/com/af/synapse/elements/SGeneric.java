@@ -237,6 +237,9 @@ public class SGeneric extends BaseElement
         if (Utils.appStarted)
             getLiveValue();
 
+        if (lastEdit.equals(lastLive))
+            return;
+
         lastEdit = lastLive;
         Utils.mainActivity.runOnUiThread(new Runnable() {
             @Override

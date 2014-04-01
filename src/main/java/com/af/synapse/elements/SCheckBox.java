@@ -188,6 +188,9 @@ public class SCheckBox extends BaseElement
         if (Utils.appStarted)
             getLiveValue();
 
+        if (lastCheck == lastLive)
+            return;
+
         lastCheck = lastLive;
         Utils.mainActivity.runOnUiThread(new Runnable() {
             @Override

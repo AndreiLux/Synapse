@@ -395,7 +395,8 @@ public class SSeekBar extends BaseElement
     }
 
     private void setSeek(String value) {
-        lastSeek = Integer.valueOf(value);
+        int val = Integer.valueOf(value);
+        lastSeek = val;
         Synapse.handler.post(seekTask);
     }
 
@@ -466,8 +467,10 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void refreshValue() throws ElementFailureException {
+        int oldLive = lastLive;
         String val = getLiveValue();
-        setSeek(val);
+        if (lastLive != oldLive)
+            setSeek(val);
     }
 
     @Override
