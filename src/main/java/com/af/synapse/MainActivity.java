@@ -196,7 +196,8 @@ public class MainActivity extends FragmentActivity {
                 ActionValueUpdater.cancelElements();
                 break;
             case R.id.action_section_default:
-                ActionValueUpdater.resetSectionDefault(mViewPager.getCurrentItem());
+                if (mViewPager != null)
+                    ActionValueUpdater.resetSectionDefault(mViewPager.getCurrentItem());
                 break;
             case R.id.action_global_default:
                 for (int i=0; i < Utils.configSections.size(); i++)
