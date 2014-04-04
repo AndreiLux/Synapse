@@ -12,6 +12,7 @@ package com.af.synapse.elements;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
 import com.af.synapse.utils.ElementFailureException;
+import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
@@ -29,7 +31,7 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class SCheckBox extends BaseElement
-                       implements View.OnClickListener, ActionValueClient, ActivityListener
+                       implements CompoundButton.OnCheckedChangeListener, ActionValueClient, ActivityListener
 
 {
     private View elementView = null;
@@ -47,6 +49,8 @@ public class SCheckBox extends BaseElement
 
     private boolean lastCheck;
     private boolean lastLive;
+
+    private boolean onCheckedChangedIgnore = false;
 
     public SCheckBox(JSONObject element, LinearLayout layout) {
         super(element, layout);
@@ -76,7 +80,6 @@ public class SCheckBox extends BaseElement
             public void run() {
                 try {
                     refreshValue();
-                    valueCheck();
                 } catch (ElementFailureException e) {
                     Utils.createElementErrorView(e);
                 }
@@ -118,10 +121,8 @@ public class SCheckBox extends BaseElement
         }
 
         lastCheck = lastLive;
-        checkBox.setOnClickListener(this);
+        checkBox.setOnCheckedChangeListener(this);
         checkBox.setChecked(lastLive);
-
-        valueCheck();
 
         elementView = v;
 
@@ -144,13 +145,18 @@ public class SCheckBox extends BaseElement
     }
 
     /**
-     *  OnClickListener methods
+     *  OnCheckedChangeListener methods
      */
 
     @Override
-    public void onClick(View view) {
-        lastCheck = checkBox.isChecked();
-        valueCheck();
+    public void onCheckedChanged (CompoundButton buttonView, boolean isChecked) {
+        if (onCheckedChangedIgnore) {
+            onCheckedChangedIgnore = false;
+            checkBox.setChecked(lastCheck);
+        } else {
+            lastCheck = isChecked;
+            valueCheck();
+        }
     }
 
     /**
@@ -196,6 +202,7 @@ public class SCheckBox extends BaseElement
             @Override
             public void run() {
                 checkBox.setChecked(lastLive);
+                valueCheck();
             }
         });
     }
@@ -248,12 +255,17 @@ public class SCheckBox extends BaseElement
 
     @Override
     public void onStart() {
+        onCheckedChangedIgnore = true;
         checkBox.setText(label);
     }
 
     @Override
-    public void onResume() {}
+    public void onResume() {
+        onCheckedChangedIgnore = false;
+    }
 
     @Override
-    public void onPause() {}
+    public void onPause() {
+        onCheckedChangedIgnore = true;
+    }
 }
