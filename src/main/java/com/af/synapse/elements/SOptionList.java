@@ -60,7 +60,6 @@ public class SOptionList extends BaseElement
 
     private String command;
     private Runnable resumeTask = null;
-    private Runnable drawTask = null;
 
     List<String> items = new ArrayList<String>();
     List<String> labels = new ArrayList<String>();
@@ -71,6 +70,8 @@ public class SOptionList extends BaseElement
 
     private String lastSelect = null;
     private String lastLive = null;
+
+    private boolean onItemSelectedIgnored = false;
 
     public SOptionList(JSONObject element, LinearLayout layout) {
         super(element, layout);
@@ -121,13 +122,6 @@ public class SOptionList extends BaseElement
                 } catch (ElementFailureException e) {
                     Utils.createElementErrorView(e);
                 }
-            }
-        };
-
-        drawTask = new Runnable() {
-            @Override
-            public void run() {
-                spinner.setSelection(items.indexOf(lastSelect));
             }
         };
     }
@@ -308,9 +302,14 @@ public class SOptionList extends BaseElement
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        ((TextView)adapterView.getChildAt(0)).setTextColor(Utils.mainActivity.getResources().getColor(android.R.color.secondary_text_light_nodisable));
-        lastSelect = items.get(i);
-        valueCheck();
+        if (onItemSelectedIgnored) {
+            onItemSelectedIgnored = false;
+            spinner.setSelection(items.indexOf(lastSelect));
+        } else {
+            ((TextView) adapterView.getChildAt(0)).setTextColor(Utils.mainActivity.getResources().getColor(android.R.color.secondary_text_light_nodisable));
+            lastSelect = items.get(i);
+            valueCheck();
+        }
     }
 
     @Override
@@ -413,12 +412,16 @@ public class SOptionList extends BaseElement
 
     @Override
     public void onStart() {
-        Synapse.handler.post(drawTask);
+        onItemSelectedIgnored = true;
     }
 
     @Override
-    public void onResume() {}
+    public void onResume() {
+        onItemSelectedIgnored = false;
+    }
 
     @Override
-    public void onPause() {}
+    public void onPause() {
+        onItemSelectedIgnored = true;
+    }
 }
