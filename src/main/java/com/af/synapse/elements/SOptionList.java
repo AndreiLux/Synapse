@@ -178,6 +178,7 @@ public class SOptionList extends BaseElement
             final int leftMargin = (int) (2 * Utils.density + 0.5f);
             dfl.setMargins(leftMargin,0,0,0);
             dfl.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            descriptionFrame.setOrientation(LinearLayout.VERTICAL);
             descriptionFrame.setLayoutParams(dfl);
             descriptionFrame.setId(dfl_id);
 
