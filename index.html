@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Synapse : Config at your own taste" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Synapse</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/AndreiLux/Synapse">View on GitHub</a>
+
+          <h1 id="project_title">Synapse</h1>
+          <h2 id="project_tagline">Config at your own taste</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/AndreiLux/Synapse/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/AndreiLux/Synapse/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="installation--compatibility" class="anchor" href="#installation--compatibility"><span class="octicon octicon-link"></span></a>Installation / compatibility</h2>
+
+<p><a href="https://play.google.com/store/apps/details?id=com.af.synapse"><strong>Download on the Play Store</strong></a></p>
+
+<p>Discussions maybe be held or questions asked here: </p>
+
+<ul>
+<li><a href="https://plus.google.com/communities/108137360526908770337">Google+ community</a></li>
+</ul><h3>
+<a name="initialization" class="anchor" href="#initialization"><span class="octicon octicon-link"></span></a>Initialization</h3>
+
+<ul>
+<li>Synapse expects a <code>su</code> program in the environment PATH to execute.</li>
+<li>Synapse expects a <code>uci</code> program in the environment PATH to execute.</li>
+</ul><p><code>uci</code> is expected to serve two possible parameters in its first parameter position;</p>
+
+<ul>
+<li>
+<code>uci config</code> which will return via standard output a JSON formatted configuration output representing the element domain model.</li>
+<li>
+<code>uci actionpath</code> which will return via standard output a plaintext absolute path to the folder containing the helper executables.</li>
+</ul><p>The <code>uci</code> back-end serves as the configuration to the application, declaring the interface elements and actions available to it. The location of the executable doesn't matter to the app as long as it has access to it via PATH. </p>
+
+<p>The actionpath serves as a second-order executable environment that is internally used on top of PATH (it is just exported to PATH in the internal command shells). Its purpose is to facilitate separation of helper executables from other system executables. The actionpath is given the highest execution priority, above <code>/sbin</code>.</p>
+
+<p>The common implementation is to include it into the ramdisk of a kernel: this method allows binding of the controls to a specific kernel image. Optionally, it can be injected anywhere else such as the system partition and symlinked to <code>/xbin</code> or <code>/bin</code>. The latter requires that the domain model (uci config) be perpetually dynamic to avoid conflicts caused by differing kernel or OS versions.</p>
+
+<h3>
+<a name="actions" class="anchor" href="#actions"><span class="octicon octicon-link"></span></a>Actions</h3>
+
+<p>An action is any executable found in the location provided by <code>uci actionpath</code> or in the common executable environments provided by PATH.</p>
+
+<p>An action is expected to be in itself a unique identifier inside the domain model of the application.</p>
+
+<p>Parameters may be concatenated to the action's executable name; the resulting string is an element's action.</p>
+
+<p>Example: <code>generic /sys/block/mmcblk0/queue/read_ahead_kb</code> defines an action to the <code>generic</code> executable and always passes <code>/sys/block/mmcblk0/queue/read_ahead_kb</code> as its first parameter.</p>
+
+<p>Action executables are expected to have two modes of functioning:</p>
+
+<ul>
+<li>Read-mode; The action is executed without any additional parameters, and is expected to return via standard output an <em>action-value</em>.</li>
+<li>Write-mode; The action is executed with an additional parameter representing an <em>action-value</em>, and is expected to return via standard output an <em>action-value</em>.</li>
+</ul><p>An <em>action-value</em> is an arbitrary value of undefined type and length, terminated by a <code>\n</code> newline character.</p>
+
+<p>The application remembers and saves action-values on a key-value basis, where the key is the unique identifier provided by the action itself. They are stored internally in a database in the system's application data under <code>com.af.synapse/databases/actionValueStore</code>.</p>
+
+<p>Example: <code>generic</code></p>
+
+<div class="highlight highlight-sh"><pre><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$1</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+<span class="k">    if</span> <span class="o">[[</span> ! -z <span class="nv">$2</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+<span class="k">        </span><span class="nb">echo</span> <span class="nv">$2</span> &gt; <span class="nv">$1</span>
+    <span class="k">fi</span>
+
+<span class="k">    </span><span class="nb">echo</span> <span class="sb">`</span>cat <span class="nv">$1</span><span class="sb">`</span>
+<span class="k">fi</span>
+</pre></div>
+
+<p>The above action executable takes a file path and returns its contents. If an action-value is passed on, the action-value is forwarded to the standard input of the given file path.</p>
+
+<p>In the case of <code>generic /sys/block/mmcblk0/queue/read_ahead_kb</code>, it will read out the file and output it via standard output, or pipe the given parameter into the file's standard input and then read out the file to standard output.</p>
+
+<p>The point of actions are that they be used as configurable and dynamic translation layers which provide large amount of flexibility.</p>
+
+<p>Advanced example: <code>colour</code></p>
+
+<div class="highlight highlight-sh"><pre><span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$2</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+<span class="k">    </span><span class="nb">let</span> <span class="s2">"RC=($((16$2)) &amp; 16711680) &gt;&gt; 16"</span><span class="p">;</span>
+    <span class="nb">let</span> <span class="s2">"GC=($((16$2)) &amp; 65280) &gt;&gt; 8"</span><span class="p">;</span>
+    <span class="nb">let</span> <span class="s2">"BC=$((16$2)) &amp; 255"</span><span class="p">;</span>
+<span class="k">fi</span>
+
+<span class="k">case</span> <span class="nv">$1</span> in
+
+scr_red<span class="o">)</span>    <span class="p">;&amp;</span>
+scr_green<span class="o">)</span>  <span class="p">;&amp;</span>
+scr_blue<span class="o">)</span>   <span class="p">;&amp;</span>
+scr_yellow<span class="o">)</span> <span class="p">;&amp;</span>
+scr_cyan<span class="o">)</span>   <span class="p">;&amp;</span>
+scr_magenta<span class="o">)</span>    <span class="p">;&amp;</span>
+scr_white<span class="o">)</span>  <span class="p">;&amp;</span>
+scr_black<span class="o">)</span>
+    <span class="nv">P</span><span class="o">=</span>/sys/class/misc/mdnie/hook_control/
+
+    <span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$2</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+<span class="k">        </span><span class="nb">echo</span> <span class="nv">$RC</span> &gt; <span class="nv">$P</span>/<span class="nv">$1_red</span>
+        <span class="nb">echo</span> <span class="nv">$GC</span> &gt; <span class="nv">$P</span>/<span class="nv">$1_green</span>
+        <span class="nb">echo</span> <span class="nv">$BC</span> &gt; <span class="nv">$P</span>/<span class="nv">$1_blue</span>
+    <span class="k">fi</span>
+
+<span class="k">    </span><span class="nb">echo</span> <span class="k">$(</span><span class="nb">printf</span> <span class="s2">"#%02X%02X%02X\n"</span> <span class="k">$(</span>cat <span class="nv">$P</span>/<span class="nv">$1_red</span><span class="k">)</span> <span class="k">$(</span>cat <span class="nv">$P</span>/<span class="nv">$1_green</span><span class="k">)</span> <span class="k">$(</span>cat <span class="nv">$P</span>/<span class="nv">$1_blue</span><span class="k">))</span>
+    <span class="p">;;</span>
+<span class="k">esac</span>
+</pre></div>
+
+<p>The above translates a hexadecimal representation of a colour to, and from three sysfs nodes representing each component in decimal.</p>
+
+<h3>
+<a name="json-domain-model" class="anchor" href="#json-domain-model"><span class="octicon octicon-link"></span></a>JSON domain model</h3>
+
+<p><code>uci config</code>, as mentioned, is expected to output a JSON formatted domain model of the interface elements.</p>
+
+<p>The root structure is:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"sections"</span><span class="p">:</span> <span class="p">[</span>
+     <span class="err">....</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The root object contains a <code>sections</code> name/value pair whose value is an array of objects representing sections.</p>
+
+<p>A section is defined as:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span><span class="s2">"Section name example"</span><span class="p">,</span>
+    <span class="nt">"elements"</span><span class="p">:[</span>
+      <span class="err">....</span>
+    <span class="p">]</span>
+<span class="p">}</span> 
+</pre></div>
+
+<p>Section names can also be localised:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:{</span> <span class="nt">"en"</span><span class="p">:</span><span class="s2">"Section name example"</span><span class="p">,</span> <span class="nt">"fr"</span><span class="p">:</span><span class="s2">"Nom de section exemplaire"</span> <span class="p">},</span>
+    <span class="nt">"elements"</span><span class="p">:[</span>
+      <span class="err">....</span>
+    <span class="p">]</span>
+<span class="p">}</span> 
+</pre></div>
+
+<p>A section contains a <code>name</code> key with the name of the section as its value, and an <code>elements</code> key with an array of objects as its values.</p>
+
+<p><strong>NOTE:</strong> The parser accepts non-strictly formatted JSON as input, such that structures as the following are still correctly interpreted:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="err">name:MySection,</span>
+    <span class="err">elements:</span> <span class="err">[</span>
+      <span class="err">....</span>
+    <span class="err">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Each element represents a View inside the LinearLayout of a section.</p>
+
+<h3>
+<a name="localisation" class="anchor" href="#localisation"><span class="octicon octicon-link"></span></a>Localisation</h3>
+
+<p>Localisation is supported on the element level. Any string-based interface elements can be localised.</p>
+
+<p>Where a non-localised element string would look as follows:</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="nx">description</span><span class="o">:</span><span class="s2">"This is your desired default description language-independent"</span>
+</pre></div>
+
+<p>A localised one would look as follows:</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="nx">description</span><span class="o">:</span><span class="p">{</span>
+       <span class="nx">en</span><span class="o">:</span><span class="s2">"This is your desired English language localisation and also fall-back localisation."</span><span class="p">,</span>
+       <span class="nx">fr</span><span class="o">:</span><span class="s2">"This is your French language localisation"</span><span class="p">,</span>
+       <span class="nx">es</span><span class="o">:</span><span class="s2">"This is your Spanish language localisation"</span>
+    <span class="p">}</span>
+</pre></div>
+
+<p>If your device is currently set to a country-specific locale such as <code>es_ES</code> for the Spain locale, if a <code>es_ES</code> locale is not specifically defined, the application will try to fall back to a general language locale. In the above case <code>es_ES</code> and <code>es_US</code> or any other regional locale of Spanish will fall back to <code>es</code>. Localisation codes are standard Java defines, <a href="http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html">as listed here</a>, but also highly depend on the ROM.</p>
+
+<p>For a listing of available elements and their JSON notations please read:</p>
+
+<h3>
+<a name="element-listing-and-documentation" class="anchor" href="#element-listing-and-documentation"><span class="octicon octicon-link"></span></a><a href="https://github.com/AndreiLux/Synapse/wiki/Element-listing-and-documentation">Element listing and documentation</a>
+</h3>
+
+<p>A fully valid domain model can be now built given the previous described elements:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="p">{</span>
+   <span class="nx">sections</span><span class="o">:</span><span class="p">[</span>
+      <span class="p">{</span>
+         <span class="nx">name</span><span class="o">:</span><span class="nx">CPU</span><span class="p">,</span>
+         <span class="nx">elements</span><span class="o">:</span><span class="p">[</span>
+            <span class="p">{</span>
+               <span class="nx">STitleBar</span><span class="o">:</span><span class="p">{</span>
+                  <span class="nx">title</span><span class="o">:</span><span class="s2">"CPUFreq scaling"</span>
+               <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+               <span class="nx">SSeekBar</span><span class="o">:</span><span class="p">{</span>
+                  <span class="nx">title</span><span class="o">:</span><span class="s2">"CPU max frequency"</span><span class="p">,</span>
+                  <span class="nx">description</span><span class="o">:</span><span class="s2">"Set the maximum freqency the CPU scales up to."</span><span class="p">,</span>
+                  <span class="nx">unit</span><span class="o">:</span><span class="s2">"MHz"</span><span class="p">,</span>
+                  <span class="nx">step</span><span class="o">:</span><span class="mi">100000</span><span class="p">,</span>
+                  <span class="nx">weight</span><span class="o">:</span><span class="mf">0.001</span><span class="p">,</span>
+                  <span class="nx">min</span><span class="o">:</span><span class="mi">100000</span><span class="p">,</span>
+                  <span class="nx">max</span><span class="o">:</span><span class="mi">2000000</span><span class="p">,</span>
+                  <span class="k">default</span><span class="o">:</span><span class="mi">1600000</span><span class="p">,</span>
+                  <span class="nx">action</span><span class="o">:</span><span class="s2">"generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"</span>
+               <span class="p">}</span>
+            <span class="p">},</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nx">name</span><span class="o">:</span><span class="nx">GPU</span><span class="p">,</span>
+         <span class="nx">elements</span><span class="o">:</span><span class="p">[</span>
+            <span class="p">{</span>
+               <span class="nx">SPane</span><span class="o">:</span><span class="p">{</span>
+                  <span class="nx">title</span><span class="o">:</span><span class="s2">"GPU scaling settings"</span><span class="p">,</span>
+                  <span class="nx">description</span><span class="o">:</span><span class="s2">"By editing the following configurables you can change the performance behaviour of the GPU."</span>
+               <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+               <span class="nx">SOptionList</span><span class="o">:</span><span class="p">{</span>
+                  <span class="nx">title</span><span class="o">:</span><span class="s2">"GPU max freq"</span><span class="p">,</span>
+                  <span class="nx">description</span><span class="o">:</span><span class="s2">"Set the maximum freqency the GPU scales up to."</span><span class="p">,</span>
+                  <span class="k">default</span><span class="o">:</span><span class="mi">480</span><span class="p">,</span>
+                  <span class="nx">unit</span><span class="o">:</span><span class="s2">"MHz"</span><span class="p">,</span>
+                  <span class="nx">action</span><span class="o">:</span><span class="s2">"generic /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock"</span><span class="p">,</span>
+                  <span class="nx">values</span><span class="o">:</span><span class="p">[</span>
+                     <span class="mi">700</span><span class="p">,</span>
+                     <span class="mi">640</span><span class="p">,</span>
+                     <span class="mi">600</span><span class="p">,</span>
+                     <span class="mi">532</span><span class="p">,</span>
+                     <span class="mi">480</span><span class="p">,</span>
+                     <span class="mi">350</span><span class="p">,</span>
+                     <span class="mi">266</span><span class="p">,</span>
+                     <span class="mi">177</span><span class="p">,</span>
+                  <span class="p">]</span>
+               <span class="p">}</span>
+            <span class="p">},</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>The domain models can be extended in breadth with no limit. <a href="https://gist.github.com/AndreiLux/6702092">Here is an example of a 7-section model with over 150 elements.</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Synapse maintained by <a href="https://github.com/AndreiLux">AndreiLux</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
