@@ -40,7 +40,8 @@ public class SDescription extends BaseElement{
 
     @Override
     public View getView() {
-        TextView v;
+        if (v != null)
+            return v;
 
         if (Utils.useInflater) {
             v = (TextView) LayoutInflater.from(Utils.mainActivity)
