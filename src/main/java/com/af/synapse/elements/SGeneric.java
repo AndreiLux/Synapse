@@ -26,7 +26,10 @@ import android.widget.TextView;
 import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
-import com.af.synapse.lib.ActionValueClient;
+import com.af.synapse.lib.ActionNotification;
+import com.af.synapse.lib.ActionValueEvent;
+import com.af.synapse.lib.ActionValueNotifierClient;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
@@ -35,11 +38,14 @@ import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
+import java.util.ArrayDeque;
+
 /**
  * Created by Andrei on 07/03/14.
  */
 public class SGeneric extends BaseElement
-        implements ActionValueClient, ActivityListener, TextView.OnEditorActionListener {
+        implements ActionValueNotifierClient, ActivityListener,
+                   TextView.OnEditorActionListener, View.OnClickListener {
     private LinearLayout elementView = null;
     private TextView textView;
     private static EditText editText;
@@ -92,11 +98,8 @@ public class SGeneric extends BaseElement
                 }
             }
         };
-    }
 
-    private void prepareUI(){
-        elementView = LayoutInflater.from(Utils.mainActivity)
-                .inflate(R.layout.template_generic, this.layout, false);
+        ActionValueNotifierHandler.register(this);
     }
 
     @Override
@@ -199,6 +202,7 @@ public class SGeneric extends BaseElement
             textView.setVisibility(View.VISIBLE);
             elementView.removeView(editText);
             valueCheck();
+            ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
         }
 
         return false;
@@ -230,6 +234,59 @@ public class SGeneric extends BaseElement
         editText.requestFocus();
         editText.setSelection(0, editText.getText().length());
         Utils.imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    }
+
+    /**
+     *  ActionValueNotifierClient methods
+     */
+
+    @Override
+    public String getId() {
+        return command;
+    }
+
+    private ArrayDeque<ActionNotification> queue = new ArrayDeque<ActionNotification>();
+    private boolean jobRunning = false;
+
+    public void handleNotifications() {
+        jobRunning = true;
+        while (queue.size() > 0) {
+            ActionNotification current = queue.removeFirst();
+            switch (current.notification) {
+                case REFRESH:
+                    try { refreshValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case CANCEL:
+                    try { cancelValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case RESET:
+                    setDefaults();
+                    break;
+
+                case APPLY:
+                    try { applyValue(); } catch (ElementFailureException e) {  e.printStackTrace(); }
+                    break;
+            }
+        }
+        jobRunning = false;
+    }
+
+    private Runnable dequeJob = new Runnable() {
+        @Override
+        public void run() {
+            handleNotifications();
+        }
+    };
+
+    @Override
+    public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
+        L.d(notification.toString());
+        queue.add(new ActionNotification(source, notification));
+
+        if (queue.size() == 1 && !jobRunning)
+            Synapse.executor.execute(dequeJob);
     }
 
     /**
@@ -280,11 +337,13 @@ public class SGeneric extends BaseElement
             return;
 
         lastEdit = lastLive;
+        final ActionValueNotifierClient t = this;
         Utils.mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textView.setText(lastLive.toString());
                 valueCheck();
+                ActionValueNotifierHandler.propagate(t, ActionValueEvent.REFRESH);
             }
         });
     }
@@ -297,7 +356,7 @@ public class SGeneric extends BaseElement
             if (((LinearLayout)editText.getParent()).findViewById(tv_id) == textView)
                 editText.setText(lastLive.toString());
         valueCheck();
-        }
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.RESET);
     }
 
     private boolean commitValue() throws ElementFailureException {
@@ -330,12 +389,14 @@ public class SGeneric extends BaseElement
     @Override
     public void applyValue() throws ElementFailureException {
         commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
     }
 
     @Override
     public void cancelValue() throws ElementFailureException {
         lastEdit = lastLive = stored;
         applyValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 
     /**
@@ -346,6 +407,13 @@ public class SGeneric extends BaseElement
     public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
+
+        if (!Utils.mainActivity.isChangingConfigurations() && !Utils.appStarted)
+            try {
+                ActionValueNotifierHandler.addNotifiers(this);
+            } catch (Exception e) {
+                Utils.createElementErrorView(new ElementFailureException(this, e));
+            }
     }
 
     @Override
