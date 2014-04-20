@@ -396,6 +396,20 @@ public class MainActivity extends FragmentActivity {
             fragmentView = tabSectionView;
         }
 
+        public boolean containsElement(BaseElement element) {
+            return fragmentElements.contains(element);
+        }
+
+        public void addElement(BaseElement element) {
+            fragmentElements.add(element);
+        }
+
+        public void removeElement(BaseElement element) {
+            fragmentElements.remove(element);
+        }
+
+        public int getSectionNumber() { return sectionNumber; }
+
         @Override
         public void setArguments(Bundle args) {
             super.setArguments(args);
@@ -487,6 +501,6 @@ public class MainActivity extends FragmentActivity {
         super.onResume();
         if (Utils.appStarted)
             for (TabSectionFragment f : fragments)
-                    f.onElementsMainStart();
+                f.onElementsMainStart();
     }
 }
