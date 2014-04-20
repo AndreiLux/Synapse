@@ -142,6 +142,9 @@ public class MainActivity extends FragmentActivity {
 
         ActionValueUpdater.refreshButtons(true);
 
+        for (TabSectionFragment f : fragments)
+            f.onElementsMainStart();
+
         setContentView(v);
         Utils.appStarted = true;
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
