@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.elements.SButton;
-import com.af.synapse.elements.SDirectoryParser;
+import com.af.synapse.elements.STreeDescriptor;
 import com.af.synapse.elements.SLiveLabel;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
@@ -66,8 +66,23 @@ public class BootService extends Service {
                 JSONObject elm = (JSONObject) sectionElement;
                 String type = Utils.getEnclosure(elm);
 
-                if (type.equals("SButton") | type.equals("SLiveLabel"))
+                if (type.equals(SButton.class.getSimpleName()) ||
+                    type.equals(SLiveLabel.class.getSimpleName()))
                     continue;
+
+                if (type.equals(STreeDescriptor.class.getSimpleName())) {
+                    STreeDescriptor sdp = new STreeDescriptor((JSONObject) elm.get(type), null, null);
+
+                    for (String command : sdp.getFlatActionTreeList()) {
+                        String value = Utils.db.getValue(command);
+                        try {
+                            Utils.runCommand(command + " \"" + value + "\"");
+                        } catch (Exception e) {
+                            L.e(e.getMessage());
+                        }
+                    }
+                    continue;
+                }
 
                 JSONObject parameters = (JSONObject) elm.get(type);
                 if (parameters.containsKey("action")) {
