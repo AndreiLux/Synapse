@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity {
      */
     private static ViewPager mViewPager;
 
-    private static TabSectionFragment[] fragments = null;
+    public static TabSectionFragment[] fragments = null;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
