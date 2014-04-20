@@ -21,6 +21,6 @@ public interface ActionValueClient {
 
     public void refreshValue() throws ElementFailureException;
     public void setDefaults();
-    public boolean commitValue() throws ElementFailureException;
+    public void applyValue() throws ElementFailureException;
     public void cancelValue() throws ElementFailureException;
 }

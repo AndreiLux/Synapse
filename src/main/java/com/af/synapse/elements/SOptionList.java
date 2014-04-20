@@ -379,8 +379,7 @@ public class SOptionList extends BaseElement
         }
     }
 
-    @Override
-    public boolean commitValue() throws ElementFailureException {
+    private boolean commitValue() throws ElementFailureException {
         try {
             Utils.runCommand(command + " " + lastSelect);
         } catch (Exception e) { throw new ElementFailureException(this, e); }
@@ -399,10 +398,17 @@ public class SOptionList extends BaseElement
     }
 
     @Override
+    public void applyValue() throws ElementFailureException {
+        commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
+    }
+
+    @Override
     public void cancelValue() throws ElementFailureException {
         lastSelect = lastLive = stored;
-        commitValue();
+        applyValue();
     }
+
     /**
      *  ActivityListener methods
      */

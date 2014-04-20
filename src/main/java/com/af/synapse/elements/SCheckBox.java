@@ -218,8 +218,7 @@ public class SCheckBox extends BaseElement
         }
     }
 
-    @Override
-    public boolean commitValue() throws ElementFailureException {
+    private void commitValue() throws ElementFailureException {
         try {
             String target = getSetValue();
             Utils.runCommand(command + " " + target);
@@ -232,17 +231,21 @@ public class SCheckBox extends BaseElement
             checkBox.setChecked(lastLive);
             valueCheck();
 
-            return true;
-
         } catch (Exception e) {
             throw new ElementFailureException(this, e);
         }
     }
 
     @Override
+    public void applyValue() throws ElementFailureException {
+        commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
+    }
+
+    @Override
     public void cancelValue() throws ElementFailureException {
         lastCheck = lastLive = stored;
-        commitValue();
+        applyValue();
     }
 
     /**

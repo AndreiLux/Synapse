@@ -261,8 +261,7 @@ public class SGeneric extends BaseElement
         }
     }
 
-    @Override
-    public boolean commitValue() throws ElementFailureException {
+    private boolean commitValue() throws ElementFailureException {
         try {
             String target = getSetValue();
             Utils.runCommand(command + " " + target);
@@ -288,11 +287,15 @@ public class SGeneric extends BaseElement
     }
 
     @Override
-    public void cancelValue() throws ElementFailureException {
-        lastEdit = lastLive = stored;
+    public void applyValue() throws ElementFailureException {
         commitValue();
     }
 
+    @Override
+    public void cancelValue() throws ElementFailureException {
+        lastEdit = lastLive = stored;
+        applyValue();
+    }
 
     /**
      *  ActivityListener methods

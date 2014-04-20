@@ -77,7 +77,7 @@ public class ActionValueUpdater {
         for (ActionValueClient element : registrees) {
             try {
                 if (commit)
-                    element.commitValue();
+                    element.applyValue();
                 else
                     element.cancelValue();
             } catch (ElementFailureException e) {

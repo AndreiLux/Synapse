@@ -212,8 +212,7 @@ public class SColourPicker extends BaseElement
         }
     }
 
-    @Override
-    public boolean commitValue() throws ElementFailureException {
+    private void commitValue() throws ElementFailureException {
         try {
             String target = getSetValue();
             Utils.runCommand(command + " \"" + target + '"');
@@ -230,16 +229,21 @@ public class SColourPicker extends BaseElement
             colourButton.setBackgroundColor(stored);
             valueCheck();
 
-            return true;
         } catch (Exception e) {
             throw new ElementFailureException(this, e);
         }
     }
 
     @Override
+    public void applyValue() throws ElementFailureException {
+        commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
+    }
+
+    @Override
     public void cancelValue() throws ElementFailureException {
         lastChosen = lastLive = stored;
-        commitValue();
+        applyValue();
     }
 
     /**

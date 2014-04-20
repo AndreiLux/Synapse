@@ -481,8 +481,7 @@ public class SSeekBar extends BaseElement
             setSeek(String.valueOf(original));
     }
 
-    @Override
-    public boolean commitValue() throws ElementFailureException {
+    private boolean commitValue() throws ElementFailureException {
         try {
             String target = getSetValue();
             Utils.runCommand(command + " " + target);
@@ -508,10 +507,17 @@ public class SSeekBar extends BaseElement
     }
 
     @Override
+    public void applyValue() throws ElementFailureException {
+        commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
+    }
+
+    @Override
     public void cancelValue() throws ElementFailureException {
         lastSeek = lastLive = stored;
         if (isListBound)
             lastProgress = values.indexOf(lastSeek);
+
         commitValue();
     }
 
