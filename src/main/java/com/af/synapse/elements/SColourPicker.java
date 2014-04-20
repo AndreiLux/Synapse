@@ -15,7 +15,11 @@ import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
 import com.af.synapse.R;
-import com.af.synapse.lib.ActionValueClient;
+import com.af.synapse.Synapse;
+import com.af.synapse.lib.ActionNotification;
+import com.af.synapse.lib.ActionValueEvent;
+import com.af.synapse.lib.ActionValueNotifierClient;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
@@ -27,13 +31,14 @@ import com.larswerkman.colorpicker.ValueBar;
 import net.minidev.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayDeque;
 import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Andrei on 15/09/13.
  */
 public class SColourPicker extends BaseElement
-                           implements ActionValueClient, ActivityListener, View.OnClickListener,
+                           implements ActionValueNotifierClient, ActivityListener, View.OnClickListener,
                                       ColorPicker.OnColorChangedListener
 {
     private View elementView = null;
@@ -74,6 +79,8 @@ public class SColourPicker extends BaseElement
             titleObj = new STitleBar(element, layout, fragment);
             title = (String) element.get("title");
         }
+
+        ActionValueNotifierHandler.register(this);
     }
 
     @Override
@@ -172,6 +179,58 @@ public class SColourPicker extends BaseElement
     }
 
     /**
+     *  ActionValueNotifierClient methods
+     */
+
+    @Override
+    public String getId() {
+        return command;
+    }
+
+    private ArrayDeque<ActionNotification> queue = new ArrayDeque<ActionNotification>();
+    private boolean jobRunning = false;
+
+    public void handleNotifications() {
+        jobRunning = true;
+        while (queue.size() > 0) {
+            ActionNotification current = queue.removeFirst();
+            switch (current.notification) {
+                case REFRESH:
+                    refreshValue();
+                    break;
+
+                case CANCEL:
+                    try { cancelValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case RESET:
+                    setDefaults();
+                    break;
+
+                case APPLY:
+                    try { applyValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+            }
+        }
+        jobRunning = false;
+    }
+
+    private Runnable dequeJob = new Runnable() {
+        @Override
+        public void run() {
+            handleNotifications();
+        }
+    };
+
+    @Override
+    public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
+        queue.add(new ActionNotification(source, notification));
+
+        if (queue.size() == 1 && !jobRunning)
+            Synapse.executor.execute(dequeJob);
+    }
+
+    /**
      *  ActionValueClient methods
      */
 
@@ -243,6 +302,7 @@ public class SColourPicker extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastChosen = lastLive = stored;
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
         applyValue();
     }
 
@@ -251,7 +311,14 @@ public class SColourPicker extends BaseElement
      */
 
     @Override
-    public void onMainStart() {}
+    public void onMainStart() {
+        if (!Utils.mainActivity.isChangingConfigurations() && !Utils.appStarted)
+            try {
+                ActionValueNotifierHandler.addNotifiers(this);
+            } catch (Exception e) {
+                Utils.createElementErrorView(new ElementFailureException(this, e));
+            }
+    }
 
     @Override
     public void onStart() {}
