@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.lib.ActionValueClient;
@@ -52,8 +53,9 @@ public class SGeneric extends BaseElement
     private Object lastEdit;
     private Object lastLive;
 
-    public SGeneric(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SGeneric(JSONObject element, LinearLayout layout,
+                    MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -70,10 +72,10 @@ public class SGeneric extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
 
         resumeTask = new Runnable() {
             @Override

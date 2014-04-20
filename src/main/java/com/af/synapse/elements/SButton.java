@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.R;
@@ -29,8 +30,9 @@ public class SButton extends BaseElement implements View.OnClickListener {
     private Button button;
     private String command;
 
-    public SButton(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SButton(JSONObject element, LinearLayout layout,
+                   MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = element.get("action").toString();

@@ -359,7 +359,7 @@ public class MainActivity extends FragmentActivity {
                 BaseElement elementObj = null;
 
                 try {
-                    elementObj = BaseElement.createObject(type, parameters, tabContentLayout);
+                    elementObj = BaseElement.createObject(type, parameters, tabContentLayout, this);
                 } catch (ElementFailureException e) {
                     tabContentLayout.addView(Utils.createElementErrorView(e));
                     continue;

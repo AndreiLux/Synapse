@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.Synapse;
 import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.lib.ActionValueUpdater;
@@ -52,8 +53,9 @@ public class SCheckBox extends BaseElement
 
     private boolean onCheckedChangedIgnore = false;
 
-    public SCheckBox(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SCheckBox(JSONObject element, LinearLayout layout,
+                     MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -70,10 +72,10 @@ public class SCheckBox extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
 
         resumeTask = new Runnable() {
             @Override

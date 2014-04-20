@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.lib.ActivityListener;
@@ -42,8 +43,9 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     private int refreshInterval = 2500;
     private Runnable resumeTask = null;
 
-    public SLiveLabel(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SLiveLabel(JSONObject element, LinearLayout layout,
+                      MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -76,10 +78,10 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
     }
 
     @Override

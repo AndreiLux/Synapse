@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.lib.ActionValueUpdater;
@@ -50,8 +51,9 @@ public class SColourPicker extends BaseElement
     private int lastLive;
     private int lastChosen;
 
-    public SColourPicker(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SColourPicker(JSONObject element, LinearLayout layout,
+                         MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = element.get("action").toString();
@@ -66,10 +68,10 @@ public class SColourPicker extends BaseElement
          */
 
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title")) {
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
             title = (String) element.get("title");
         }
     }

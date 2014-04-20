@@ -20,6 +20,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
 import com.af.synapse.lib.ActionValueClient;
@@ -73,8 +74,9 @@ public class SOptionList extends BaseElement
 
     private boolean onItemSelectedIgnored = false;
 
-    public SOptionList(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public SOptionList(JSONObject element, LinearLayout layout,
+                       MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -109,10 +111,10 @@ public class SOptionList extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
 
         resumeTask = new Runnable() {
             @Override

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
@@ -34,8 +35,9 @@ public class SPane extends BaseElement {
     private static int paddingLeft = Integer.MIN_VALUE;
     private static int paddingBottom = Integer.MIN_VALUE;
 
-    public SPane(JSONObject elm, LinearLayout layout) throws ElementFailureException {
-        super(elm, layout);
+    public SPane(JSONObject elm, LinearLayout layout,
+                 MainActivity.TabSectionFragment fragment) throws ElementFailureException {
+        super(elm, layout, fragment);
 
         if (background == null)
             background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);
@@ -68,7 +70,7 @@ public class SPane extends BaseElement {
         }
 
         if (elm.containsKey("description")) {
-            BaseElement descriptionText = BaseElement.createObject("SDescription", elm, layout);
+            BaseElement descriptionText = BaseElement.createObject("SDescription", elm, layout, fragment);
             layout.addView(descriptionText.getView());
         }
     }

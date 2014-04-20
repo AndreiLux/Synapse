@@ -19,6 +19,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.Synapse;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
@@ -88,8 +89,9 @@ public class SSeekBar extends BaseElement
     private int lastSeek;
     private int lastLive;
 
-    public SSeekBar(JSONObject element, LinearLayout layout) throws ElementFailureException {
-        super(element, layout);
+    public SSeekBar(JSONObject element, LinearLayout layout,
+                    MainActivity.TabSectionFragment fragment) throws ElementFailureException {
+        super(element, layout, fragment);
 
         if (element.containsKey("action"))
             this.command = (String) element.get("action");
@@ -171,10 +173,10 @@ public class SSeekBar extends BaseElement
          *  Add a description element inside our own with the same JSON object
          */
         if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout);
+            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
-            titleObj = new STitleBar(element, layout);
+            titleObj = new STitleBar(element, layout, fragment);
 
         resumeTask = new Runnable() {
             @Override

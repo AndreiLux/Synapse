@@ -12,6 +12,7 @@ package com.af.synapse.elements;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
@@ -25,12 +26,15 @@ import java.lang.reflect.InvocationTargetException;
  * Created by Andrei on 30/08/13.
  */
 public class BaseElement extends ElementSkeleton {
-    public BaseElement(JSONObject element, LinearLayout layout) {
+    public BaseElement(JSONObject element, LinearLayout layout,
+                       MainActivity.TabSectionFragment fragment) {
         this.element = element;
         this.layout = layout;
+        this.fragment = fragment;
     }
 
-    public static BaseElement createObject(String type, JSONObject element, LinearLayout layout)
+    public static BaseElement createObject(String type, JSONObject element, LinearLayout layout,
+                                           MainActivity.TabSectionFragment fragment)
                               throws ElementFailureException {
         BaseElement newObject = null;
         Class<?> c;
@@ -55,10 +59,12 @@ public class BaseElement extends ElementSkeleton {
          *  the target class object. Initialize a new instance of the new object.
          */
 
-        Class<?>[] types = new Class[] { JSONObject.class, LinearLayout.class };
+        Class<?>[] types = new Class[] { JSONObject.class,
+                                         LinearLayout.class,
+                                         MainActivity.TabSectionFragment.class};
         try {
             Constructor<?> constructor = c.getConstructor(types);
-            newObject = (BaseElement)constructor.newInstance(element, layout);
+            newObject = (BaseElement)constructor.newInstance(element, layout, fragment);
         } catch (InvocationTargetException e) {
             throw new ElementFailureException(type, (Exception) e.getCause());
         } catch (Exception e) {

@@ -12,6 +12,7 @@ package com.af.synapse.elements;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.utils.ElementFailureException;
 
 import net.minidev.json.JSONObject;
@@ -22,6 +23,7 @@ import net.minidev.json.JSONObject;
 abstract class ElementSkeleton {
     public JSONObject element;
     public LinearLayout layout;
+    public MainActivity.TabSectionFragment fragment;
 
     abstract public View getView() throws ElementFailureException;
 }

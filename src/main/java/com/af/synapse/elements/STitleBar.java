@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.utils.Utils;
 
@@ -31,8 +32,8 @@ public class STitleBar extends BaseElement {
     private static int paddingLeft = Integer.MIN_VALUE;
     private static int paddingBottom = Integer.MIN_VALUE;
 
-    public STitleBar(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    public STitleBar(JSONObject element, LinearLayout layout, MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
 
         if (background == null)
             background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);

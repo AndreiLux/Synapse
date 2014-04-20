@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.utils.LinkMovementMethod;
 import com.af.synapse.utils.Utils;
@@ -30,8 +31,11 @@ import net.minidev.json.JSONObject;
  * Created by Andrei on 30/08/13.
  */
 public class SDescription extends BaseElement{
-    public SDescription(JSONObject element, LinearLayout layout) {
-        super(element, layout);
+    private TextView v = null;
+
+    public SDescription(JSONObject element, LinearLayout layout,
+                        MainActivity.TabSectionFragment fragment) {
+        super(element, layout, fragment);
     }
 
     @Override
