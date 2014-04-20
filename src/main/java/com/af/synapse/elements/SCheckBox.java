@@ -18,7 +18,10 @@ import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
 import com.af.synapse.Synapse;
-import com.af.synapse.lib.ActionValueClient;
+import com.af.synapse.lib.ActionNotification;
+import com.af.synapse.lib.ActionValueEvent;
+import com.af.synapse.lib.ActionValueNotifierClient;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
@@ -28,11 +31,14 @@ import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
+import java.util.ArrayDeque;
+
 /**
  * Created by Andrei on 30/08/13.
  */
 public class SCheckBox extends BaseElement
-                       implements CompoundButton.OnCheckedChangeListener, ActionValueClient, ActivityListener
+                       implements CompoundButton.OnCheckedChangeListener,
+                                  ActionValueNotifierClient, ActivityListener
 
 {
     private View elementView = null;
@@ -87,6 +93,8 @@ public class SCheckBox extends BaseElement
                 }
             }
         };
+
+        ActionValueNotifierHandler.register(this);
     }
 
     @Override
@@ -158,7 +166,61 @@ public class SCheckBox extends BaseElement
         } else {
             lastCheck = isChecked;
             valueCheck();
+            ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
         }
+    }
+
+    /**
+     *  ActionValueNotifierClient methods
+     */
+
+    @Override
+    public String getId() {
+        return command;
+    }
+
+    private ArrayDeque<ActionNotification> queue = new ArrayDeque<ActionNotification>();
+    private boolean jobRunning = false;
+
+    public void handleNotifications() {
+        jobRunning = true;
+        while (queue.size() > 0) {
+            ActionNotification current = queue.removeFirst();
+            switch (current.notification) {
+                case REFRESH:
+                    try { refreshValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case CANCEL:
+                    try { cancelValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case RESET:
+                    setDefaults();
+                    break;
+
+                case APPLY:
+                    try { applyValue(); } catch (ElementFailureException e) {  e.printStackTrace(); }
+                    break;
+            }
+        }
+        jobRunning = false;
+    }
+
+    private Runnable dequeJob = new Runnable() {
+        @Override
+        public void run() {
+            handleNotifications();
+        }
+    };
+
+    @Override
+    public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
+        L.d(notification.toString());
+        queue.add(new ActionNotification(source, notification));
+
+        if (queue.size() == 1 && !jobRunning)
+            Synapse.executor.execute(dequeJob);
     }
 
     /**
@@ -200,11 +262,13 @@ public class SCheckBox extends BaseElement
             return;
 
         lastCheck = lastLive;
+        final ActionValueNotifierClient t = this;
         Synapse.handler.post(new Runnable() {
             @Override
             public void run() {
                 checkBox.setChecked(lastLive);
                 valueCheck();
+                ActionValueNotifierHandler.propagate(t, ActionValueEvent.REFRESH);
             }
         });
     }
@@ -215,6 +279,7 @@ public class SCheckBox extends BaseElement
             lastCheck = original != 0;
             checkBox.setChecked(lastCheck);
             valueCheck();
+            ActionValueNotifierHandler.propagate(this, ActionValueEvent.RESET);
         }
     }
 
@@ -246,6 +311,7 @@ public class SCheckBox extends BaseElement
     public void cancelValue() throws ElementFailureException {
         lastCheck = lastLive = stored;
         applyValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 
     /**
@@ -256,6 +322,13 @@ public class SCheckBox extends BaseElement
     public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
+
+        if (!Utils.mainActivity.isChangingConfigurations() && !Utils.appStarted)
+            try {
+                ActionValueNotifierHandler.addNotifiers(this);
+            } catch (Exception e) {
+                Utils.createElementErrorView(new ElementFailureException(this, e));
+            }
     }
 
     @Override
