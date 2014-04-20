@@ -23,7 +23,11 @@ import android.widget.TextView;
 import com.af.synapse.MainActivity;
 import com.af.synapse.R;
 import com.af.synapse.Synapse;
+import com.af.synapse.lib.ActionNotification;
 import com.af.synapse.lib.ActionValueClient;
+import com.af.synapse.lib.ActionValueEvent;
+import com.af.synapse.lib.ActionValueNotifierClient;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.utils.ElementFailureException;
@@ -32,6 +36,7 @@ import com.af.synapse.utils.Utils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +46,7 @@ import java.util.concurrent.CountDownLatch;
  * Created by Andrei on 12/09/13.
  */
 public class SOptionList extends BaseElement
-                         implements AdapterView.OnItemSelectedListener,
+                         implements AdapterView.OnItemSelectedListener, ActionValueNotifierClient,
                          ActionValueClient, ActivityListener, View.OnClickListener {
     private View elementView = null;
     private Spinner spinner;
@@ -126,6 +131,8 @@ public class SOptionList extends BaseElement
                 }
             }
         };
+
+        ActionValueNotifierHandler.register(this);
     }
 
     private void prepareUI(){
@@ -312,12 +319,63 @@ public class SOptionList extends BaseElement
             ((TextView) adapterView.getChildAt(0)).setTextColor(Utils.mainActivity.getResources().getColor(android.R.color.secondary_text_light_nodisable));
             lastSelect = items.get(i);
             valueCheck();
+            ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
         }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 
+    /**
+     *  ActionValueNotifierClient methods
+     */
+
+    @Override
+    public String getId() {
+        return command;
+    }
+
+    private ArrayDeque<ActionNotification> queue = new ArrayDeque<ActionNotification>();
+    private boolean jobRunning = false;
+
+    public void handleNotifications() {
+        jobRunning = true;
+        while (queue.size() > 0) {
+            ActionNotification current = queue.removeFirst();
+            switch (current.notification) {
+                case REFRESH:
+                    try { refreshValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case CANCEL:
+                    try { cancelValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case RESET:
+                    setDefaults();
+                    break;
+
+                case APPLY:
+                    try { applyValue(); } catch (ElementFailureException e) {  e.printStackTrace(); }
+                    break;
+            }
+        }
+        jobRunning = false;
+    }
+
+    private Runnable dequeJob = new Runnable() {
+        @Override
+        public void run() {
+            handleNotifications();
+        }
+    };
+
+    @Override
+    public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
+        queue.add(new ActionNotification(source, notification));
+
+        if (queue.size() == 1 && !jobRunning)
+            Synapse.executor.execute(dequeJob);
     }
 
     /**
@@ -362,13 +420,15 @@ public class SOptionList extends BaseElement
         final int selection = items.indexOf(lastLive);
         lastSelect = lastLive;
 
-        Utils.mainActivity.runOnUiThread(new Runnable() {
+        Synapse.handler.post(new Runnable() {
             @Override
             public void run() {
                 spinner.setSelection(selection);
                 valueCheck();
             }
         });
+
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.REFRESH);
     }
 
     @Override
@@ -376,6 +436,7 @@ public class SOptionList extends BaseElement
         if (original != null) {
             spinner.setSelection(items.indexOf(original));
             valueCheck();
+            ActionValueNotifierHandler.propagate(this, ActionValueEvent.RESET);
         }
     }
 
@@ -407,6 +468,7 @@ public class SOptionList extends BaseElement
     public void cancelValue() throws ElementFailureException {
         lastSelect = lastLive = stored;
         applyValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 
     /**
@@ -417,6 +479,13 @@ public class SOptionList extends BaseElement
     public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
+
+        if (!Utils.mainActivity.isChangingConfigurations() && !Utils.appStarted)
+            try {
+                ActionValueNotifierHandler.addNotifiers(this);
+            } catch (Exception e) {
+                Utils.createElementErrorView(new ElementFailureException(this, e));
+            }
     }
 
     @Override
