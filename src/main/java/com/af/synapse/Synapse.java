@@ -12,6 +12,7 @@ package com.af.synapse;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 import com.af.synapse.utils.RootFailureException;
 import com.af.synapse.utils.RunCommandFailedException;
@@ -47,7 +48,7 @@ public class Synapse extends Application {
         super.onCreate();
 
         Synapse.context = getApplicationContext();
-        Synapse.handler = new Handler();
+        Synapse.handler = new Handler(Looper.getMainLooper());
         threadWorkQueue = new LinkedBlockingQueue<Runnable>();
         Synapse.executor = new ThreadPoolExecutor(NR_CORES, NR_CORES,
                                                   0L, TimeUnit.MILLISECONDS,
