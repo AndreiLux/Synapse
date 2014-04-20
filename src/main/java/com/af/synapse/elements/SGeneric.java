@@ -9,13 +9,18 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Color;
 import android.text.InputType;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
@@ -30,15 +35,15 @@ import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONObject;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * Created by Andrei on 07/03/14.
  */
 public class SGeneric extends BaseElement
         implements ActionValueClient, ActivityListener, TextView.OnEditorActionListener {
-    private View elementView = null;
-    private EditText editText;
+    private LinearLayout elementView = null;
+    private TextView textView;
+    private static EditText editText;
+    private static int tv_id = View.generateViewId();
     private String command;
     private Runnable resumeTask = null;
 
@@ -99,43 +104,26 @@ public class SGeneric extends BaseElement
         if (elementView != null)
             return elementView;
 
-        View v;
-        /**
-         *  SGeneric needs to inflate its View inside of the main UI thread because the
-         *  spinner spawns a Looper handler which may not exist in auxiliary threads.
-         *
-         *  We use use a CountDownLatch for inter-thread synchronization.
-         */
-
-        final CountDownLatch latch = new CountDownLatch(1);
-
-        Utils.mainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                prepareUI();
-                latch.countDown();
-            }
-        });
-
-        String initialLive = getLiveValue();
-        if (getStoredValue() == null) {
-            Utils.db.setValue(command, initialLive);
-            stored = lastLive;
-        }
-
-        try { latch.await(); } catch (InterruptedException ignored) {}
-
-        v = elementView;
-        editText = (EditText) v.findViewById(R.id.SGeneric_editText);
-
-        if (lastLive instanceof Integer)
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        LinearLayout v = new LinearLayout(Utils.mainActivity);
+        v.setOrientation(LinearLayout.VERTICAL);
+        elementView = v;
 
         /**
          *  Nesting another element's view in our own for title and description.
          */
 
-        LinearLayout descriptionFrame = (LinearLayout) v.findViewById(R.id.SGeneric_descriptionFrame);
+        LinearLayout descriptionFrame;
+        if (Utils.useInflater)
+            descriptionFrame = (LinearLayout) v.findViewById(R.id.SGeneric_descriptionFrame);
+        else {
+            descriptionFrame = new LinearLayout(Utils.mainActivity);
+            LayoutParams dfl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            descriptionFrame.setOrientation(LinearLayout.VERTICAL);
+            final int leftMargin = (int) (2 * Utils.density + 0.5f);
+            dfl.setMargins(leftMargin, 0, 0, 0);
+            descriptionFrame.setLayoutParams(dfl);
+            ((LinearLayout)elementView).addView(descriptionFrame);
+        }
 
         if (titleObj != null) {
             TextView titleView = (TextView)titleObj.getView();
@@ -146,9 +134,27 @@ public class SGeneric extends BaseElement
         if (descriptionObj != null)
             descriptionFrame.addView(descriptionObj.getView());
 
+        textView = new TextView(Utils.mainActivity);
+        textView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        textView.setTextColor(Color.parseColor("#AAAAAA"));
+        textView.setId(tv_id);
+        elementView.addView(textView);
+
+        String initialLive = getLiveValue();
+        if (getStoredValue() == null) {
+            Utils.db.setValue(command, initialLive);
+            stored = lastLive;
+        }
+
         lastEdit = lastLive;
-        editText.setOnEditorActionListener(this);
-        editText.setText(lastLive.toString());
+
+        if (original == null)
+            original = lastLive;
+
+        textView.setOnClickListener(this);
+        textView.setText(lastLive.toString());
 
         valueCheck();
 
@@ -184,15 +190,46 @@ public class SGeneric extends BaseElement
 
             String text = v.getText().toString();
             try {
-                lastEdit = Integer.parseInt(text.toString());
+                lastEdit = Integer.parseInt(text);
             } catch (NumberFormatException ignored) {
                 lastEdit = text;
             }
 
+            textView.setText(text);
+            textView.setVisibility(View.VISIBLE);
+            elementView.removeView(editText);
             valueCheck();
         }
 
         return false;
+    }
+
+    /**
+     *  OnClickListener methods
+     */
+
+    @Override
+    public void onClick(View view) {
+        if (editText == null) {
+            editText = new EditText(Utils.mainActivity);
+            editText.setGravity(Gravity.CENTER);
+        }
+
+        if (lastLive instanceof Integer)
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        textView.setVisibility(View.GONE);
+        if (editText.getParent() != null) {
+            ((LinearLayout)editText.getParent()).findViewById(tv_id).setVisibility(View.VISIBLE);
+            ((LinearLayout)editText.getParent()).removeView(editText);
+        }
+
+        elementView.addView(editText);
+        editText.setOnEditorActionListener(this);
+        editText.setText(lastEdit.toString());
+        editText.requestFocus();
+        editText.setSelection(0, editText.getText().length());
+        Utils.imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
     }
 
     /**
@@ -246,7 +283,7 @@ public class SGeneric extends BaseElement
         Utils.mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                editText.setText(lastLive.toString());
+                textView.setText(lastLive.toString());
                 valueCheck();
             }
         });
@@ -254,17 +291,18 @@ public class SGeneric extends BaseElement
 
     @Override
     public void setDefaults() {
-        if (original != null) {
-            lastLive = original;
-            editText.setText(lastLive.toString());
-            valueCheck();
+        lastEdit = lastLive = original;
+        textView.setText(lastLive.toString());
+        if (editText.getParent() != null)
+            if (((LinearLayout)editText.getParent()).findViewById(tv_id) == textView)
+                editText.setText(lastLive.toString());
+        valueCheck();
         }
     }
 
     private boolean commitValue() throws ElementFailureException {
         try {
-            String target = getSetValue();
-            Utils.runCommand(command + " " + target);
+            Utils.runCommand(command + " \"" + lastEdit.toString() + '"');
             String result = getLiveValue();
 
             if (!result.equals(getStoredValue()))
@@ -277,7 +315,10 @@ public class SGeneric extends BaseElement
             }
 
             lastLive = lastEdit = stored;
-            editText.setText(lastLive.toString());
+            textView.setText(lastLive.toString());
+            if (editText != null && editText.getParent() != null)
+                if (((LinearLayout)editText.getParent()).findViewById(tv_id) == textView)
+                    editText.setText(lastLive.toString());
             valueCheck();
 
             return true;
