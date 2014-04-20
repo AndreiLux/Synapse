@@ -493,13 +493,25 @@ public class SOptionList extends BaseElement
         onItemSelectedIgnored = true;
     }
 
+    int resumeCount = 0;
+
     @Override
     public void onResume() {
-        onItemSelectedIgnored = false;
+        /*
+         * This may very well be the most idiotic and unbelieveable hack in the whole of the app.
+         * Re: Spinner resumes twice in a row when fragments jump beyond the nearest neighbour,
+         * Causing the spinner to again reset to the last Spinner's index inside of the fragment.
+         * Fuck everything about Google's asinine framework.
+         */
+        if (++resumeCount > 1)
+            onItemSelectedIgnored = !onItemSelectedIgnored;
+        else
+            onItemSelectedIgnored = false;
     }
 
     @Override
     public void onPause() {
+        resumeCount = 0;
         onItemSelectedIgnored = true;
     }
 }
