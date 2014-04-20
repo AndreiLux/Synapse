@@ -21,10 +21,13 @@ import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
 import com.af.synapse.Synapse;
+import com.af.synapse.lib.ActionNotification;
+import com.af.synapse.lib.ActionValueEvent;
+import com.af.synapse.lib.ActionValueNotifierClient;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
-import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.af.synapse.view.SmartSeeker;
@@ -32,6 +35,7 @@ import com.af.synapse.view.SmartSeeker;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONArray;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
@@ -42,7 +46,7 @@ import java.util.TreeMap;
  */
 public class SSeekBar extends BaseElement
                       implements SeekBar.OnSeekBarChangeListener, View.OnClickListener,
-                                 ActionValueClient, ActivityListener
+                                 ActionValueNotifierClient, ActivityListener
 {
     private View elementView = null;
     private SmartSeeker seekBar;
@@ -198,6 +202,8 @@ public class SSeekBar extends BaseElement
                     seekBar.setProgress((lastSeek - offset) / step);
             }
         };
+
+        ActionValueNotifierHandler.register(this);
     }
 
     @Override
@@ -418,6 +424,7 @@ public class SSeekBar extends BaseElement
             seekLabel.setText(Utils.df.format(lastSeek * weight) + unit);
 
         valueCheck();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
     }
 
     @Override
@@ -437,6 +444,59 @@ public class SSeekBar extends BaseElement
 
         if (view == plusButton && lastProgress < maxSeek)
             seekBar.incrementProgressBy(1);
+    }
+
+    /**
+     *  ActionValueNotifierClient methods
+     */
+
+    @Override
+    public String getId() {
+        return command;
+    }
+
+    private ArrayDeque<ActionNotification> queue = new ArrayDeque<ActionNotification>();
+    private boolean jobRunning = false;
+
+    public void handleNotifications() {
+        jobRunning = true;
+        while (queue.size() > 0) {
+            ActionNotification current = queue.removeFirst();
+            switch (current.notification) {
+                case REFRESH:
+                    try { refreshValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case CANCEL:
+                    try { cancelValue(); } catch (ElementFailureException e) { e.printStackTrace(); }
+                    break;
+
+                case RESET:
+                    setDefaults();
+                    break;
+
+                case APPLY:
+                    try { applyValue(); } catch (ElementFailureException e) {  e.printStackTrace(); }
+                    break;
+            }
+        }
+        jobRunning = false;
+    }
+
+    private Runnable dequeJob = new Runnable() {
+        @Override
+        public void run() {
+            handleNotifications();
+        }
+    };
+
+    @Override
+    public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
+        L.d(notification.toString());
+        queue.add(new ActionNotification(source, notification));
+
+        if (queue.size() == 1 && !jobRunning)
+            Synapse.executor.execute(dequeJob);
     }
 
     /**
@@ -473,12 +533,14 @@ public class SSeekBar extends BaseElement
         String val = getLiveValue();
         if (lastLive != oldLive)
             setSeek(val);
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.REFRESH);
     }
 
     @Override
     public void setDefaults() {
         if (original != Integer.MIN_VALUE)
             setSeek(String.valueOf(original));
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.RESET);
     }
 
     private boolean commitValue() throws ElementFailureException {
@@ -519,6 +581,7 @@ public class SSeekBar extends BaseElement
             lastProgress = values.indexOf(lastSeek);
 
         commitValue();
+        ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 
     /**
@@ -529,6 +592,13 @@ public class SSeekBar extends BaseElement
     public void onMainStart() throws ElementFailureException {
         if (!Utils.mainActivity.isChangingConfigurations() && Utils.appStarted)
             Synapse.executor.execute(resumeTask);
+
+        if (!Utils.mainActivity.isChangingConfigurations() && !Utils.appStarted)
+            try {
+                ActionValueNotifierHandler.addNotifiers(this);
+            } catch (Exception e) {
+                Utils.createElementErrorView(new ElementFailureException(this, e));
+            }
     }
 
     @Override
