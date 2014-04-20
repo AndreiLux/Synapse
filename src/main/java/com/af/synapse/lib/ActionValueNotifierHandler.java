@@ -12,7 +12,11 @@ package com.af.synapse.lib;
 import android.support.v4.util.ArrayMap;
 
 import com.af.synapse.elements.BaseElement;
+import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
+import com.af.synapse.utils.RootFailureException;
+import com.af.synapse.utils.RunCommandFailedException;
+import com.af.synapse.utils.Utils;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -105,7 +109,7 @@ public class ActionValueNotifierHandler {
                             ((ArrayList<Object>)response).add(ActionValueEvent.valueOf((String) o));
                         } catch (IllegalArgumentException ignored) {
                             // Add the next action
-                            ((ArrayList<Object>)response).add(doo.toString());
+                            ((ArrayList<Object>)response).add(o.toString());
                         }
                 }
 
@@ -163,12 +167,18 @@ public class ActionValueNotifierHandler {
         notifiers.get(notifier).add(new NotificationRelation(t, event, response));
     }
 
-    public static void propagate(ActionValueNotifierClient source, ActionValueEvent event) {
-        //L.d(source.getId() + " " + event);
+    private static String replaceTokens(String input, ActionValueNotifierClient source) throws ElementFailureException {
+        return
+            input
+                .replace("@SAVED", source.getStoredValue())
+                .replace("@SET", source.getSetValue())
+                .replace("@LIVE", source.getLiveValue())
+                .replace("@ACTION", source.getId());
+    }
 
+    public static void propagate(ActionValueNotifierClient source, ActionValueEvent event) {
         if (!notifiers.containsKey(source))
             return;
-
 
         for (NotificationRelation n : notifiers.get(source)) {
             if (n.event == event) {
@@ -177,7 +187,20 @@ public class ActionValueNotifierHandler {
                         n.target.onNotify(source, (ActionValueEvent) r);
                     else if (r instanceof ArrayList) {
                         for (Object rr : (ArrayList) r)
-                            n.target.onNotify(source, (ActionValueEvent) rr);
+                            if (rr instanceof ActionValueEvent)
+                                n.target.onNotify(source, (ActionValueEvent) rr);
+                            else if (rr instanceof String)
+                                try {
+                                    Utils.runCommand(replaceTokens((String) rr, source));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                    } else if (r instanceof String) {
+                        try {
+                            Utils.runCommand(replaceTokens((String) r, source));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
             }
         }
