@@ -51,6 +51,15 @@ public class ActionValueUpdater {
             targetSection.remove(element);
     }
 
+    public static boolean isPerpetual(ActionValueClient element) {
+        for (ArrayList<ActionValueClient> section : perpetuals)
+            for (ActionValueClient client : section)
+                if (client == element)
+                    return true;
+
+        return false;
+    }
+
     public static void registerElement(ActionValueClient element) {
         if (blocked)
             return;
