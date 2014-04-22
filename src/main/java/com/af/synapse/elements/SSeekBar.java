@@ -492,11 +492,10 @@ public class SSeekBar extends BaseElement
 
     @Override
     public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
-        L.d(notification.toString());
         queue.add(new ActionNotification(source, notification));
 
         if (queue.size() == 1 && !jobRunning)
-            Synapse.executor.execute(dequeJob);
+            Synapse.handler.post(dequeJob);
     }
 
     /**

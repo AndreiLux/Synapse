@@ -227,7 +227,7 @@ public class SColourPicker extends BaseElement
         queue.add(new ActionNotification(source, notification));
 
         if (queue.size() == 1 && !jobRunning)
-            Synapse.executor.execute(dequeJob);
+            Synapse.handler.post(dequeJob);
     }
 
     /**
