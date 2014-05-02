@@ -161,8 +161,12 @@ public class SSeekBar extends BaseElement
             if (element.containsKey("min"))
                 this.offset = (Integer) element.get("min");
 
-            if (element.containsKey("step"))
+            if (element.containsKey("step")) {
                 this.step = (Integer) element.get("step");
+
+                if (this.step < 1)
+                    throw new IllegalArgumentException("Step-size must be greater than zero.");
+            }
         } else
             if (element.containsKey("absolute"))
                 this.absolute = (Boolean) element.get("absolute");
