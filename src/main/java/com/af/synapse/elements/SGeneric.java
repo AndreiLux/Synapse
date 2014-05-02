@@ -217,10 +217,13 @@ public class SGeneric extends BaseElement
         if (editText == null) {
             editText = new EditText(Utils.mainActivity);
             editText.setGravity(Gravity.CENTER);
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
 
         if (lastLive instanceof Integer)
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        else
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         textView.setVisibility(View.GONE);
         if (editText.getParent() != null) {
