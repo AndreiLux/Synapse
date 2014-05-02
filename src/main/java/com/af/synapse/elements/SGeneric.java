@@ -54,6 +54,7 @@ public class SGeneric extends BaseElement
     private Runnable resumeTask = null;
 
     private String label;
+    private String inputType = null;
 
     private STitleBar titleObj = null;
     private SDescription descriptionObj = null;
@@ -78,6 +79,9 @@ public class SGeneric extends BaseElement
 
         if (element.containsKey("default"))
             this.original = element.get("default");
+
+        if (element.containsKey("inputType"))
+            this.inputType = (String) element.get("inputType");
 
         /**
          *  Add a description element inside our own with the same JSON object
@@ -220,10 +224,16 @@ public class SGeneric extends BaseElement
             editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
 
-        if (lastLive instanceof Integer)
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        else
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        if (inputType != null) {
+            if (inputType.toLowerCase().equals("numeric"))
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            else
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        } else
+            if (lastLive instanceof Integer)
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            else
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         textView.setVisibility(View.GONE);
         if (editText.getParent() != null) {
