@@ -467,7 +467,7 @@ public class SOptionList extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastSelect = lastLive = stored;
-        applyValue();
+        commitValue();
         ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 

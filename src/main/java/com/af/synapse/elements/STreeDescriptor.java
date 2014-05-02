@@ -72,7 +72,6 @@ public class STreeDescriptor extends BaseElement implements ActionValueNotifierC
 
     public STreeDescriptor(JSONObject element, LinearLayout layout, MainActivity.TabSectionFragment fragment) {
         super(element, layout, fragment);
-        L.d(element.toString());
 
         if (element.containsKey("path"))
             this.directoryPath = (String) element.get("path");
@@ -368,7 +367,6 @@ public class STreeDescriptor extends BaseElement implements ActionValueNotifierC
 
     @Override
     public void onNotify(ActionValueNotifierClient source, ActionValueEvent notification) {
-        L.d(notification.toString());
         queue.add(new ActionNotification(source, notification));
 
         if (queue.size() == 1 && !jobRunning)

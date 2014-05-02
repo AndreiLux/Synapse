@@ -302,8 +302,8 @@ public class SColourPicker extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastChosen = lastLive = stored;
+        commitValue();
         ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
-        applyValue();
     }
 
     /**

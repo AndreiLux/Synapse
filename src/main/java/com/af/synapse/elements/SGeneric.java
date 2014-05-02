@@ -395,7 +395,7 @@ public class SGeneric extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastEdit = lastLive = stored;
-        applyValue();
+        commitValue();
         ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 

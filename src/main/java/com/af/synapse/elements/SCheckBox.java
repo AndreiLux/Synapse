@@ -310,7 +310,7 @@ public class SCheckBox extends BaseElement
     @Override
     public void cancelValue() throws ElementFailureException {
         lastCheck = lastLive = stored;
-        applyValue();
+        commitValue();
         ActionValueNotifierHandler.propagate(this, ActionValueEvent.CANCEL);
     }
 
