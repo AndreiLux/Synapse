@@ -363,12 +363,14 @@ public class SGeneric extends BaseElement
 
     @Override
     public void setDefaults() {
-        lastEdit = lastLive = original;
-        textView.setText(lastLive.toString());
-        if (editText.getParent() != null)
-            if (((LinearLayout)editText.getParent()).findViewById(tv_id) == textView)
-                editText.setText(lastLive.toString());
-        valueCheck();
+        if (original != null) {
+            lastEdit = lastLive = original;
+            textView.setText(lastLive.toString());
+            if (editText != null && editText.getParent() != null)
+                if (((LinearLayout) editText.getParent()).findViewById(tv_id) == textView)
+                    editText.setText(lastLive.toString());
+            valueCheck();
+        }
         ActionValueNotifierHandler.propagate(this, ActionValueEvent.RESET);
     }
 
