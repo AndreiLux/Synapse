@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ActionValueNotifierHandler {
     public static ArrayMap<String, ActionValueNotifierClient> clients = new ArrayMap<String, ActionValueNotifierClient>();
 
-    private static ArrayMap<ActionValueNotifierClient, ArrayList<NotificationRelation>> notifiers =
+    public static ArrayMap<ActionValueNotifierClient, ArrayList<NotificationRelation>> notifiers =
             new ArrayMap<ActionValueNotifierClient, ArrayList<NotificationRelation>>();
 
     static class NotificationRelation {
@@ -204,5 +204,10 @@ public class ActionValueNotifierHandler {
                     }
             }
         }
+    }
+
+    public static void clear(){
+        notifiers.clear();
+        clients.clear();
     }
 }

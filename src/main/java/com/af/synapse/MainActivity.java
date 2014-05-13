@@ -39,6 +39,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONArray;
 
 import com.af.synapse.elements.*;
+import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.BootService;
 import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.lib.ActionValueUpdater;
@@ -173,6 +174,9 @@ public class MainActivity extends FragmentActivity {
             fragments = null;
             fragmentsDone = new AtomicInteger(0);
             Utils.appStarted = false;
+
+            ActionValueNotifierHandler.clear();
+            ActionValueUpdater.clear();
         }
         super.onDestroy();
     }

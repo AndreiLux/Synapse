@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by Andrei on 04/09/13.
  */
 public class ActionValueUpdater {
-    private static ArrayList<ArrayList<ActionValueClient>> perpetuals = null;
+    private static ArrayList<ArrayList<ActionValueClient>> perpetuals = new ArrayList<ArrayList<ActionValueClient>>();
     private static ArrayList<ActionValueClient> registrees = new ArrayList<ActionValueClient>();
     private static MenuItem applyButton;
     private static MenuItem cancelButton;
@@ -30,11 +30,8 @@ public class ActionValueUpdater {
     private static boolean showingButtons = false;
 
     public static void registerPerpetual(ActionValueClient element, int sectionNumber) {
-        if (perpetuals == null) {
-            perpetuals = new ArrayList<ArrayList<ActionValueClient>>();
-            for (Object o : Utils.configSections)
-                perpetuals.add(new ArrayList<ActionValueClient>());
-        }
+        for (Object o : Utils.configSections)
+            perpetuals.add(new ArrayList<ActionValueClient>());
 
         ArrayList<ActionValueClient> sectionList = perpetuals.get(sectionNumber);
         sectionList.add(element);
@@ -151,5 +148,10 @@ public class ActionValueUpdater {
         cancelButton = menu.findItem(R.id.action_cancel);
         showingButtons = false;
         refreshButtons();
+    }
+
+    public static void clear() {
+        perpetuals.clear();
+        registrees.clear();
     }
 }
