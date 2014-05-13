@@ -10,8 +10,12 @@
 package com.af.synapse.utils;
 
 import android.app.Activity;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -162,6 +166,19 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static boolean hasSoftKeys(WindowManager windowManager){
+        Display d = windowManager.getDefaultDisplay();
+
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        d.getRealMetrics(realDisplayMetrics);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        d.getMetrics(displayMetrics);
+
+        return (realDisplayMetrics.widthPixels - displayMetrics.widthPixels) > 0 ||
+               (realDisplayMetrics.heightPixels - displayMetrics.heightPixels) > 0;
     }
 
     public static View createElementErrorView(ElementFailureException e) {
