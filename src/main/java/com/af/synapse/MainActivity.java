@@ -12,7 +12,9 @@ package com.af.synapse;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -21,12 +23,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +52,7 @@ import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.NamedRunnable;
 import com.af.synapse.utils.Utils;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,16 +81,41 @@ public class MainActivity extends FragmentActivity {
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
     long startTime;
 
+    public static int topPadding = 0;
+    public static int bottomPadding = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         startTime = System.nanoTime();
-        setContentView(R.layout.activity_loading);
-
-        super.onCreate(fragments == null ? null : savedInstanceState);
 
         Utils.mainActivity = this;
         Utils.density = getResources().getDisplayMetrics().density;
         Utils.imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        Settings.setWallpaper(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+
+            if (Settings.getAppTheme() == Settings.Theme.TRANSLUCENT_DARK) {
+                tintManager.setStatusBarTintEnabled(true);
+                tintManager.setStatusBarTintResource(R.drawable.black_gradient_270);
+            }
+
+            if (Utils.hasSoftKeys(getWindowManager())) {
+                tintManager.setNavigationBarTintEnabled(true);
+                tintManager.setNavigationBarTintResource(R.drawable.black_gradient_90);
+            }
+        }
+
+        getActionBar().hide();
+
+        setPaddingDimensions();
+        setContentView(R.layout.activity_loading);
+
+        super.onCreate(fragments == null ? null : savedInstanceState);
+
         if (fragments == null) {
             if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT) {
                 findViewById(R.id.initialProgressBar).setVisibility(View.INVISIBLE);
@@ -117,7 +147,7 @@ public class MainActivity extends FragmentActivity {
 
     @SuppressWarnings("ConstantConditions")
     private void continueCreate() {
-        View v = (View) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+        View v = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
 
         mViewPager = (ViewPager) v.findViewById(R.id.mainPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -147,7 +177,10 @@ public class MainActivity extends FragmentActivity {
             f.onElementsMainStart();
 
         setContentView(v);
+        getActionBar().show();
         Utils.appStarted = true;
+
+        setPaddingDimensions();
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
 
         if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
@@ -162,9 +195,50 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    private void setPaddingDimensions() {
+        bottomPadding = 0;
+        int resourceId;
+
+        if (Utils.hasSoftKeys(this.getWindowManager())) {
+            resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0)
+                bottomPadding += getResources().getDimensionPixelSize(resourceId);
+        }
+
+        topPadding = 0;
+        resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            topPadding += getResources().getDimensionPixelSize(resourceId);
+
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+            topPadding += TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+
+        View v;
+
+        v = findViewById(R.id.activity_loading);
+        if (v != null)
+            v.setPadding(0, topPadding, 0, 0);
+
+        v = findViewById(R.id.activity_main);
+        if (v != null)
+            v.setPadding(0, topPadding, 0, 0);
+
+        if (!Utils.appStarted || bottomPadding == 0)
+            return;
+
+        for (TabSectionFragment f : fragments) {
+            if (f != null && f.fragmentView != null)
+                f.fragmentView
+                        .findViewById(R.id.section_container_linear_layout)
+                        .setPadding(0, 0, 0, bottomPadding);
+        }
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        setPaddingDimensions();
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -175,10 +249,13 @@ public class MainActivity extends FragmentActivity {
             fragmentsDone = new AtomicInteger(0);
             Utils.appStarted = false;
 
+            Settings.wallpaper = null;
             ActionValueNotifierHandler.clear();
             ActionValueUpdater.clear();
         }
         super.onDestroy();
+        Utils.mainActivity = null;
+        System.gc();
     }
 
     @Override
@@ -209,6 +286,11 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_global_default:
                 for (int i=0; i < Utils.configSections.size(); i++)
                     ActionValueUpdater.resetSectionDefault(i);
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                this.startActivity(intent);
                 break;
         }
 
@@ -501,10 +583,18 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        System.gc();
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         if (Utils.appStarted)
             for (TabSectionFragment f : fragments)
                 f.onElementsMainStart();
+
+        System.gc();
     }
 }

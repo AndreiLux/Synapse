@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/preference_category_boot_title">
+
+        <CheckBoxPreference
+            android:key="preference_bool_boot_master"
+            android:title="@string/preference_bool_boot_master_title"
+            android:summary="@string/preference_bool_boot_master_summary"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/preference_category_theme_title">
+
+        <ListPreference
+            android:key="preference_list_theme_option"
+            android:title="@string/preference_list_theme_option_title"
+            android:summary="@string/preference_list_theme_option_summary"
+            android:entries="@array/preference_array_theme_option_labels"
+            android:entryValues="@array/preference_array_theme_option_values"
+            android:dialogTitle="@string/preference_list_theme_option_dialog_title"
+            android:defaultValue="HOLO_BLACK"/>
+    </PreferenceCategory>
+</PreferenceScreen>

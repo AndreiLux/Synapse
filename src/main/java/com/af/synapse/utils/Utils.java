@@ -50,6 +50,7 @@ public class Utils {
     public static ActionValueDatabase db = null;
     public static DecimalFormat df = new DecimalFormat("#.######");
     public static Activity mainActivity;
+    public static Activity settingsActivity;
     public static final String CONFIG_CONTEXT = "CONFIGURATION";
     public static JSONArray configSections = null;
     protected static ArrayList<SuperShell> shells = new ArrayList<SuperShell>();

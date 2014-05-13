@@ -12,9 +12,11 @@ package com.af.synapse.lib;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.af.synapse.R;
+import com.af.synapse.Settings;
 import com.af.synapse.Synapse;
 import com.af.synapse.elements.SButton;
 import com.af.synapse.elements.STreeDescriptor;
@@ -49,6 +51,10 @@ public class BootService extends Service {
     @Override
     public int onStartCommand (Intent intent, int flags, int startId) {
         if (Synapse.currentEnvironmentState != Synapse.environmentState.VALID_ENVIRONMENT)
+            return START_NOT_STICKY;
+
+        if (!PreferenceManager.getDefaultSharedPreferences(Synapse.getAppContext())
+                .getBoolean(Settings.PREF_BOOT, true))
             return START_NOT_STICKY;
 
         if (!getBootFlag()) {

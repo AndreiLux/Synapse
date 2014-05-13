@@ -4,4 +4,13 @@
 
     <!-- Navigation panel colours -->
     <color name="nav_panel_background">#111</color>
+
+    <color name="app_background">#f0000000</color>
+    <color name="app_background_inverse">#303030</color>
+
+    <color name="ics_background_start">#ff020202</color>
+    <color name="ics_background_end">#ff272D33</color>
+
+    <color name="holo_blue_light_alpha">#f033b5e5</color>
+
 </resources>

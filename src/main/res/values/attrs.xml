@@ -27,5 +27,9 @@
         <attr name="livelabel_vertical_padding" format="dimension" />
     </declare-styleable>
 
-
+    <string-array name="preference_array_theme_option_values">
+        <item>HOLO_BLACK</item>
+        <item>HOLO_DARK</item>
+        <item>TRANSLUCENT_DARK</item>
+    </string-array>
 </resources>

@@ -44,5 +44,10 @@
         </receiver>
 
         <service android:name=".lib.BootService" />
+
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 </manifest>
