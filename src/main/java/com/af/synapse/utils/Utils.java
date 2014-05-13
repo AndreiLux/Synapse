@@ -10,6 +10,10 @@
 package com.af.synapse.utils;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -179,6 +183,19 @@ public class Utils {
 
         return (realDisplayMetrics.widthPixels - displayMetrics.widthPixels) > 0 ||
                (realDisplayMetrics.heightPixels - displayMetrics.heightPixels) > 0;
+    }
+
+    public static Bitmap drawableToBitmap (WindowManager wm, Drawable drawable) {
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        Bitmap bitmap = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     public static View createElementErrorView(ElementFailureException e) {
