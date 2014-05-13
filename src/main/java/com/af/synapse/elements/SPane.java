@@ -14,7 +14,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.webkit.WebSettings;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -40,7 +39,7 @@ public class SPane extends BaseElement {
         super(elm, layout, fragment);
 
         if (background == null)
-            background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);
+            background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient_dark_0);
 
         if (paddingLeft == Integer.MIN_VALUE)
             paddingLeft = (int) (3 * Utils.density + 0.5f);

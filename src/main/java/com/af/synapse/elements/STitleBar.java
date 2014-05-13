@@ -36,7 +36,7 @@ public class STitleBar extends BaseElement {
         super(element, layout, fragment);
 
         if (background == null)
-            background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient);
+            background = Utils.mainActivity.getResources().getDrawable(R.drawable.holo_gradient_dark_0);
 
         if (paddingLeft == Integer.MIN_VALUE)
             paddingLeft = (int) (3 * Utils.density + 0.5f);
