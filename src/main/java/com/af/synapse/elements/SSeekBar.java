@@ -270,6 +270,7 @@ public class SSeekBar extends BaseElement
 
             plusButton.setImageResource(R.drawable.navigation_next_item);
             plusButton.setBackground(null);
+            plusButton.setAlpha((float)0.5);
             LayoutParams pbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
             pbl.addRule(RelativeLayout.ALIGN_TOP, sbl_id);
             pbl.addRule(RelativeLayout.ALIGN_BOTTOM, sbl_id);
@@ -278,6 +279,7 @@ public class SSeekBar extends BaseElement
 
             minusButton.setImageResource(R.drawable.navigation_previous_item);
             minusButton.setBackground(null);
+            minusButton.setAlpha((float) 0.5);
             LayoutParams mbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
             mbl.addRule(RelativeLayout.ALIGN_TOP, sbl_id);
             mbl.addRule(RelativeLayout.ALIGN_BOTTOM, sbl_id);

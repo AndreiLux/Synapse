@@ -199,6 +199,7 @@ public class SOptionList extends BaseElement
 
             nextButton.setImageResource(R.drawable.navigation_next_item);
             nextButton.setBackground(null);
+            nextButton.setAlpha((float)0.5);
             LayoutParams nbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
             nbl.addRule(RelativeLayout.ALIGN_TOP, spl_id);
             nbl.addRule(RelativeLayout.ALIGN_BOTTOM, spl_id);
@@ -208,6 +209,7 @@ public class SOptionList extends BaseElement
 
             previousButton.setImageResource(R.drawable.navigation_previous_item);
             previousButton.setBackground(null);
+            previousButton.setAlpha((float)0.5);
             LayoutParams pbl = new LayoutParams(buttonWidth, LayoutParams.WRAP_CONTENT);
             pbl.addRule(RelativeLayout.ALIGN_TOP, spl_id);
             pbl.addRule(RelativeLayout.ALIGN_BOTTOM, spl_id);
