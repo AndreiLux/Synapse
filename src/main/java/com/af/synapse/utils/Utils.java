@@ -39,8 +39,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Created by Andrei on 27/08/13.
@@ -246,8 +248,10 @@ class SuperShell {
 
     private static final int MAX_ROOT_TIMEOUT_MS = 120000;
     private static final String callback = "/shellCallback/";
+    private static final int callbackLength = callback.length();
 
     private static String actionPath = null;
+    Pattern pattern = Pattern.compile("[\n\r]+");
 
     public final AtomicInteger lock = new AtomicInteger(0);
     public final CountDownLatch rootLatch = new CountDownLatch(1);
@@ -290,7 +294,7 @@ class SuperShell {
             while (true) {
                 try {
                     /* Throws exception if not terminated */
-                    int exitValue = this.rp.exitValue();
+                    this.rp.exitValue();
                     throw new RootFailureException("Root permission revoked.");
                 } catch (IllegalThreadStateException ignored) {}
 
@@ -334,13 +338,11 @@ class SuperShell {
 
     public synchronized String runCommand(String command, boolean bigOutput)
             throws RunCommandFailedException, RootFailureException {
-        String line;
-        StringBuilder sb = null;
-        String out = "";
+        int i;
 
         try {
             /* Throws exception if not terminated */
-            int exitValue = rp.exitValue();
+            rp.exitValue();
 
             Utils.shells.remove(this);
             SuperShell newShell = new SuperShell();
@@ -359,29 +361,20 @@ class SuperShell {
             throw new RootFailureException(e.getMessage());
         }
 
-        if (bigOutput)
-            sb = new StringBuilder(out);
+        StringBuilder sb = new StringBuilder("");
 
         try {
-            boolean finished = false;
-
             co.write(command + "\necho " + callback + "\n");
             co.flush();
 
-            while (!finished) {
-                if (ci.ready()) {
-                    if ((line = ci.readLine()) == null)
-                        finished = true;
-                    else {
-                        if (line.equals(callback)) {
-                            finished = true;
-                        } else
-                        if (bigOutput)
-                            sb.append(line);
-                        else
-                            out += line;
-                    }
-                } else flushError();
+            char[] buffer = new char[bigOutput ? 8192 : 32];
+            while (true) {
+                i = is.read(buffer);
+                sb.append(buffer, 0, i);
+                if ((i = sb.indexOf(callback)) > -1) {
+                    sb.delete(i, i + callbackLength);
+                    break;
+                }
             }
 
             flushError();
@@ -389,10 +382,7 @@ class SuperShell {
             throw new RunCommandFailedException(ex.getMessage());
         }
 
-        if (bigOutput)
-            out = sb.toString();
-
-        return out;
+        return pattern.matcher(sb.toString()).replaceAll("");
     }
 
     public void destroy() {
