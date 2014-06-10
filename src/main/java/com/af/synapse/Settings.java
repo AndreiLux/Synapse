@@ -110,6 +110,7 @@ public class Settings extends PreferenceActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        wallpaper = null;
         Utils.settingsActivity = null;
     }
 
