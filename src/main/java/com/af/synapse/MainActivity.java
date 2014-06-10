@@ -9,6 +9,7 @@
 
 package com.af.synapse;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -168,8 +169,11 @@ public class MainActivity extends FragmentActivity {
                                                   R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
         mDrawerToggle.syncState();
 
         ActionValueUpdater.refreshButtons(true);
@@ -178,7 +182,7 @@ public class MainActivity extends FragmentActivity {
             f.onElementsMainStart();
 
         setContentView(v);
-        getActionBar().show();
+        actionBar.show();
         Utils.appStarted = true;
 
         setPaddingDimensions();
@@ -197,14 +201,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void setPaddingDimensions() {
-        bottomPadding = 0;
         int resourceId;
-
-        if (Utils.hasSoftKeys(this.getWindowManager())) {
-            resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0)
-                bottomPadding += getResources().getDimensionPixelSize(resourceId);
-        }
 
         topPadding = 0;
         resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -225,14 +222,23 @@ public class MainActivity extends FragmentActivity {
         if (v != null)
             v.setPadding(0, topPadding, 0, 0);
 
-        if (!Utils.appStarted || bottomPadding == 0)
-            return;
+        if (Utils.appStarted && Utils.hasSoftKeys(getWindowManager())) {
+            bottomPadding = 0;
 
-        for (TabSectionFragment f : fragments) {
-            if (f != null && f.fragmentView != null)
-                f.fragmentView
-                        .findViewById(R.id.section_container_linear_layout)
-                        .setPadding(0, 0, 0, bottomPadding);
+            resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0)
+                bottomPadding += getResources().getDimensionPixelSize(resourceId);
+
+
+            if (bottomPadding == 0)
+                return;
+
+            for (TabSectionFragment f : fragments) {
+                if (f != null && f.fragmentView != null)
+                    f.fragmentView
+                            .findViewById(R.id.section_container_linear_layout)
+                            .setPadding(0, 0, 0, bottomPadding);
+            }
         }
     }
 
