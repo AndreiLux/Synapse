@@ -9,10 +9,12 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +32,8 @@ import com.af.synapse.lib.ActionValueNotifierClient;
 import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
+import com.af.synapse.lib.ElementSelector;
+import com.af.synapse.lib.Selectable;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 
@@ -46,9 +50,16 @@ import java.util.concurrent.CountDownLatch;
  * Created by Andrei on 12/09/13.
  */
 public class SOptionList extends BaseElement
-                         implements AdapterView.OnItemSelectedListener, ActionValueNotifierClient,
-                         ActionValueClient, ActivityListener, View.OnClickListener {
+                         implements AdapterView.OnItemSelectedListener,
+                                    View.OnClickListener,
+                                    ActionValueNotifierClient,
+                                    ActionValueClient,
+                                    ActivityListener,
+                                    Selectable
+{
     private View elementView = null;
+    private FrameLayout selectorFrame;
+
     private Spinner spinner;
     private ImageButton previousButton;
     private ImageButton nextButton;
@@ -226,7 +237,25 @@ public class SOptionList extends BaseElement
             v.addView(nextButton);
             v.addView(spinner);
 
-            elementView = v;
+            v.setOnLongClickListener(this);
+            spinner.setOnLongClickListener(this);
+
+            LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+            elementFrame.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+            selectorFrame = new FrameLayout(Utils.mainActivity);
+            LayoutParams sfl = new LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
+            int margin = (int) (Utils.density + 0.5f);
+            sfl.setMargins(0, margin, 0, margin);
+            selectorFrame.setLayoutParams(sfl);
+
+            selectorFrame.setBackgroundColor(Color.DKGRAY);
+            selectorFrame.setVisibility(View.GONE);
+
+            elementFrame.addView(selectorFrame);
+            elementFrame.addView(v);
+
+            elementView = elementFrame;
         }
 
         if (Utils.useInflater)
@@ -306,6 +335,46 @@ public class SOptionList extends BaseElement
 
         if (view == previousButton && i < (items.size() - 1))
             spinner.setSelection(i + 1);
+    }
+
+    /**
+     *  Selectable methods
+     */
+
+    private boolean selectable = false;
+
+    public void setSelectable(boolean flag){
+        selectable = flag;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (!selectable)
+            return false;
+
+        if (isSelected())
+            deselect();
+        else
+            select();
+
+        return true;
+    }
+
+    @Override
+    public void select() {
+        selectorFrame.setVisibility(View.VISIBLE);
+        ElementSelector.addElement(this);
+    }
+
+    @Override
+    public void deselect() {
+        selectorFrame.setVisibility(View.GONE);
+        ElementSelector.removeElement(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectorFrame.getVisibility() == View.VISIBLE;
     }
 
     /**
