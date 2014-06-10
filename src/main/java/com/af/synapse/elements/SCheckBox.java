@@ -9,11 +9,14 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
@@ -25,6 +28,8 @@ import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
+import com.af.synapse.lib.ElementSelector;
+import com.af.synapse.lib.Selectable;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
@@ -38,10 +43,13 @@ import java.util.ArrayDeque;
  */
 public class SCheckBox extends BaseElement
                        implements CompoundButton.OnCheckedChangeListener,
-                                  ActionValueNotifierClient, ActivityListener
-
+                                  ActionValueNotifierClient,
+                                  ActivityListener,
+                                  Selectable
 {
     private View elementView = null;
+    private FrameLayout selectorFrame;
+
     private CheckBox checkBox;
     private String command;
     private Runnable resumeTask = null;
@@ -109,6 +117,26 @@ public class SCheckBox extends BaseElement
 
         checkBox = (CheckBox) v.findViewById(R.id.SCheckBox);
 
+        v.setOnLongClickListener(this);
+        checkBox.setOnLongClickListener(this);
+
+        LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+        elementFrame.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        selectorFrame = new FrameLayout(Utils.mainActivity);
+        LayoutParams sfl = new LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
+        int margin = (int) (Utils.density + 0.5f);
+        sfl.setMargins(0, margin, 0, margin);
+        selectorFrame.setLayoutParams(sfl);
+
+        selectorFrame.setBackgroundColor(Color.DKGRAY);
+        selectorFrame.setVisibility(View.GONE);
+
+        elementFrame.addView(selectorFrame);
+        elementFrame.addView(v);
+
+        elementView = elementFrame;
+
         /**
          *  Nesting another element's view in our own for title and description.
          */
@@ -134,9 +162,7 @@ public class SCheckBox extends BaseElement
         checkBox.setOnCheckedChangeListener(this);
         checkBox.setChecked(lastLive);
 
-        elementView = v;
-
-        return v;
+        return elementView;
     }
 
     private void valueCheck() {
@@ -168,6 +194,46 @@ public class SCheckBox extends BaseElement
             valueCheck();
             ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
         }
+    }
+
+    /**
+     *  Selectable methods
+     */
+
+    private boolean selectable = false;
+
+    public void setSelectable(boolean flag){
+        selectable = flag;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (!selectable)
+            return false;
+
+        if (isSelected())
+            deselect();
+        else
+            select();
+
+        return true;
+    }
+
+    @Override
+    public void select() {
+        selectorFrame.setVisibility(View.VISIBLE);
+        ElementSelector.addElement(this);
+    }
+
+    @Override
+    public void deselect() {
+        selectorFrame.setVisibility(View.GONE);
+        ElementSelector.removeElement(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectorFrame.getVisibility() == View.VISIBLE;
     }
 
     /**
