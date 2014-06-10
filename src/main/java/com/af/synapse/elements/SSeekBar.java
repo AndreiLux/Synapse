@@ -9,11 +9,15 @@
 
 package com.af.synapse.elements;
 
+import android.graphics.Color;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
@@ -28,6 +32,8 @@ import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
 import com.af.synapse.R;
+import com.af.synapse.lib.ElementSelector;
+import com.af.synapse.lib.Selectable;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.af.synapse.view.SmartSeeker;
@@ -45,11 +51,17 @@ import java.util.TreeMap;
  * Created by Andrei on 31/08/13.
  */
 public class SSeekBar extends BaseElement
-                      implements SeekBar.OnSeekBarChangeListener, View.OnClickListener,
-                                 ActionValueNotifierClient, ActivityListener
+                      implements SeekBar.OnSeekBarChangeListener,
+                                 View.OnClickListener,
+                                 ActionValueNotifierClient,
+                                 ActivityListener,
+                                 Selectable
 {
     private View elementView = null;
     private SmartSeeker seekBar;
+
+    private FrameLayout selectorFrame;
+
     private ImageButton minusButton;
     private ImageButton plusButton;
 
@@ -319,7 +331,23 @@ public class SSeekBar extends BaseElement
             v.addView(defaultLabel);
             v.addView(storedLabel);
 
-            elementView = v;
+            v.setOnLongClickListener(this);
+
+            LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+            elementFrame.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+            selectorFrame = new FrameLayout(Utils.mainActivity);
+            LinearLayout.LayoutParams sfl = new LinearLayout.LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
+            int margin = (int) (Utils.density + 0.5f);
+            sfl.setMargins(0, margin, 0, margin);
+            selectorFrame.setLayoutParams(sfl);
+
+            selectorFrame.setBackgroundColor(Color.DKGRAY);
+            selectorFrame.setVisibility(View.GONE);
+
+            elementFrame.addView(selectorFrame);
+            elementFrame.addView(v);
+            elementView = elementFrame;
         }
 
         /**
@@ -382,7 +410,7 @@ public class SSeekBar extends BaseElement
 
         setSeek(initialLive);
 
-        return v;
+        return elementView;
     }
 
     private void valueCheck() {
@@ -409,8 +437,7 @@ public class SSeekBar extends BaseElement
     }
 
     private void setSeek(String value) {
-        int val = Integer.valueOf(value);
-        lastSeek = val;
+        lastSeek = Integer.valueOf(value);
         Synapse.handler.post(seekTask);
     }
 
@@ -450,6 +477,46 @@ public class SSeekBar extends BaseElement
 
         if (view == plusButton && lastProgress < maxSeek)
             seekBar.incrementProgressBy(1);
+    }
+
+    /**
+     *  Selectable methods
+     */
+
+    private boolean selectable = false;
+
+    public void setSelectable(boolean flag){
+        selectable = flag;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (!selectable)
+            return false;
+
+        if (isSelected())
+            deselect();
+        else
+            select();
+
+        return false;
+    }
+
+    @Override
+    public void select() {
+        selectorFrame.setVisibility(View.VISIBLE);
+        ElementSelector.addElement(this);
+    }
+
+    @Override
+    public void deselect() {
+        selectorFrame.setVisibility(View.GONE);
+        ElementSelector.removeElement(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectorFrame.getVisibility() == View.VISIBLE;
     }
 
     /**
