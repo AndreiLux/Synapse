@@ -92,6 +92,7 @@ public class MainActivity extends FragmentActivity {
         Utils.density = getResources().getDisplayMetrics().density;
         Utils.imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        Synapse.openExecutor();
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         Settings.setWallpaper(this);
 

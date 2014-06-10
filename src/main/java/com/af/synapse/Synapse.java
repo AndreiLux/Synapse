@@ -32,7 +32,7 @@ public class Synapse extends Application {
     public static ThreadPoolExecutor executor;
     public static BlockingQueue<Runnable> threadWorkQueue;
 
-    public static int NR_CORES =  Runtime.getRuntime().availableProcessors();
+    public static int NR_CORES;
 
     public enum environmentState {
         VALID_ENVIRONMENT,
@@ -49,10 +49,6 @@ public class Synapse extends Application {
 
         Synapse.context = getApplicationContext();
         Synapse.handler = new Handler(Looper.getMainLooper());
-        threadWorkQueue = new LinkedBlockingQueue<Runnable>();
-        Synapse.executor = new ThreadPoolExecutor(NR_CORES, NR_CORES,
-                                                  0L, TimeUnit.MILLISECONDS,
-                                                  threadWorkQueue);
         Utils.initiateDatabase();
 
         assert context.getResources().getConfiguration().locale != null;
@@ -69,6 +65,19 @@ public class Synapse extends Application {
 
         if (currentEnvironmentState == environmentState.VALID_ENVIRONMENT)
             Utils.loadSections();
+    }
+
+    public static void openExecutor() {
+        if (executor != null)
+            return;
+
+        NR_CORES = Runtime.getRuntime().availableProcessors();
+        threadWorkQueue = new LinkedBlockingQueue<Runnable>();
+        executor = new ThreadPoolExecutor(NR_CORES, NR_CORES, 0L, TimeUnit.MILLISECONDS, threadWorkQueue);
+    }
+
+    public static void closeExecutor() {
+        executor.shutdown();
     }
 
     public static Context getAppContext() {
