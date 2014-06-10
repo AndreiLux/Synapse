@@ -189,7 +189,6 @@ public class SmartSeeker extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        getParent().requestDisallowInterceptTouchEvent(true);
         float x = event.getX();
         float y = event.getY();
 
@@ -201,17 +200,22 @@ public class SmartSeeker extends View {
                  *
                  *  Let through whole height touches which surround the pointer.
                  */
-                float topBoundary = ((getHeight() * 0.5f) - (thumbHalfHeight / 2));
-                float bottomBoundary = ((getHeight() * 0.5f) + (thumbHalfHeight / 2));
+                float topBoundary = ((getHeight() * 0.5f) - (thumbHalfHeight * 2));
+                float bottomBoundary = ((getHeight() * 0.5f) + (thumbHalfHeight * 2));
 
-                if ((y > topBoundary && y < bottomBoundary) ||
-                        (x > (seekerPointerPosition - thumbHalfWidth) &&
-                         x < (seekerPointerPosition + thumbHalfWidth))    ){
+                if ((y > topBoundary && y < bottomBoundary) &&
+                        (x > (seekerPointerPosition - thumbHalfWidth * 2) &&
+                         x < (seekerPointerPosition + thumbHalfWidth * 2))){
                     isMovingSeeker = true;
                     invalidate();
                 } else
                     return false;
             case MotionEvent.ACTION_MOVE:
+                if (isMovingSeeker)
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                else
+                    return false;
+
                 /*  Normalize x coordinates to the bar dimensions */
                 x -= thumbHalfWidth;
 
