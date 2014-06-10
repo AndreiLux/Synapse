@@ -45,11 +45,11 @@ public class ActionValueNotifierHandler {
         }
     }
 
-    public static void register(ActionValueNotifierClient client) {
+    public static synchronized void register(ActionValueNotifierClient client) {
         clients.put(client.getId(), client);
     }
 
-    public static void remove(ActionValueNotifierClient client) {
+    public static synchronized void remove(ActionValueNotifierClient client) {
         clients.remove(client);
     }
 
