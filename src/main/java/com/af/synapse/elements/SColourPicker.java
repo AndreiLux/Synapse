@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -22,6 +24,8 @@ import com.af.synapse.lib.ActionValueNotifierClient;
 import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
+import com.af.synapse.lib.ElementSelector;
+import com.af.synapse.lib.Selectable;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.Utils;
 import com.larswerkman.colorpicker.ColorPicker;
@@ -38,10 +42,15 @@ import java.util.concurrent.CountDownLatch;
  * Created by Andrei on 15/09/13.
  */
 public class SColourPicker extends BaseElement
-                           implements ActionValueNotifierClient, ActivityListener, View.OnClickListener,
-                                      ColorPicker.OnColorChangedListener
+                           implements View.OnClickListener,
+                                      ColorPicker.OnColorChangedListener,
+                                      ActionValueNotifierClient,
+                                      ActivityListener,
+                                      Selectable
 {
     private View elementView = null;
+    private FrameLayout selectorFrame;
+
     private static ColourController controller = null;
     private Button colourButton;
     private final String command;
@@ -105,7 +114,26 @@ public class SColourPicker extends BaseElement
         View v = LayoutInflater.from(Utils.mainActivity)
                                         .inflate(R.layout.template_colour_element, this.layout, false);
         assert v != null;
-        elementView = v;
+
+
+        v.setOnLongClickListener(this);
+
+        LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+        elementFrame.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        selectorFrame = new FrameLayout(Utils.mainActivity);
+        LayoutParams sfl = new LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
+        int margin = (int) (Utils.density + 0.5f);
+        sfl.setMargins(0, margin, 0, margin);
+        selectorFrame.setLayoutParams(sfl);
+
+        selectorFrame.setBackgroundColor(Color.DKGRAY);
+        selectorFrame.setVisibility(View.GONE);
+
+        elementFrame.addView(selectorFrame);
+        elementFrame.addView(v);
+
+        elementView = elementFrame;
 
         /**
          *  Nesting another element's view in our own for title and description.
@@ -124,6 +152,7 @@ public class SColourPicker extends BaseElement
 
         colourButton = (Button) v.findViewById(R.id.SColourPicker_colourButton);
         colourButton.setOnClickListener(this);
+        colourButton.setOnLongClickListener(this);
         colourButton.setBackgroundColor(original);
 
         getLiveValue();
@@ -137,7 +166,7 @@ public class SColourPicker extends BaseElement
 
         try { latch.await(); } catch (InterruptedException ignored) {}
 
-        return v;
+        return elementView;
     }
 
     private void valueCheck() {
@@ -176,6 +205,46 @@ public class SColourPicker extends BaseElement
             controller.setControl(lastChosen, original, this.title);
             controller.show();
         }
+    }
+
+    /**
+     *  Selectable methods
+     */
+
+    private boolean selectable = false;
+
+    public void setSelectable(boolean flag){
+        selectable = flag;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (!selectable)
+            return false;
+
+        if (isSelected())
+            deselect();
+        else
+            select();
+
+        return true;
+    }
+
+    @Override
+    public void select() {
+        selectorFrame.setVisibility(View.VISIBLE);
+        ElementSelector.addElement(this);
+    }
+
+    @Override
+    public void deselect() {
+        selectorFrame.setVisibility(View.GONE);
+        ElementSelector.removeElement(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectorFrame.getVisibility() == View.VISIBLE;
     }
 
     /**
