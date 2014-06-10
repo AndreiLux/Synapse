@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.af.synapse.MainActivity;
@@ -32,6 +34,8 @@ import com.af.synapse.lib.ActionValueNotifierClient;
 import com.af.synapse.lib.ActionValueNotifierHandler;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
+import com.af.synapse.lib.ElementSelector;
+import com.af.synapse.lib.Selectable;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.Utils;
@@ -44,9 +48,14 @@ import java.util.ArrayDeque;
  * Created by Andrei on 07/03/14.
  */
 public class SGeneric extends BaseElement
-        implements ActionValueNotifierClient, ActivityListener,
-                   TextView.OnEditorActionListener, View.OnClickListener {
+                      implements TextView.OnEditorActionListener,
+                                 View.OnClickListener,
+                                 ActionValueNotifierClient,
+                                 ActivityListener,
+                                 Selectable
+{
     private LinearLayout elementView = null;
+    private FrameLayout selectorFrame;
     private TextView textView;
     private static EditText editText;
     private static int tv_id = View.generateViewId();
@@ -112,6 +121,7 @@ public class SGeneric extends BaseElement
             return elementView;
 
         LinearLayout v = new LinearLayout(Utils.mainActivity);
+        v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         v.setOrientation(LinearLayout.VERTICAL);
         elementView = v;
 
@@ -119,18 +129,13 @@ public class SGeneric extends BaseElement
          *  Nesting another element's view in our own for title and description.
          */
 
-        LinearLayout descriptionFrame;
-        if (Utils.useInflater)
-            descriptionFrame = (LinearLayout) v.findViewById(R.id.SGeneric_descriptionFrame);
-        else {
-            descriptionFrame = new LinearLayout(Utils.mainActivity);
-            LayoutParams dfl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            descriptionFrame.setOrientation(LinearLayout.VERTICAL);
-            final int leftMargin = (int) (2 * Utils.density + 0.5f);
-            dfl.setMargins(leftMargin, 0, 0, 0);
-            descriptionFrame.setLayoutParams(dfl);
-            ((LinearLayout)elementView).addView(descriptionFrame);
-        }
+        LinearLayout descriptionFrame = new LinearLayout(Utils.mainActivity);
+        LayoutParams dfl = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        descriptionFrame.setOrientation(LinearLayout.VERTICAL);
+        final int leftMargin = (int) (2 * Utils.density + 0.5f);
+        dfl.setMargins(leftMargin, 0, 0, 0);
+        descriptionFrame.setLayoutParams(dfl);
+        elementView.addView(descriptionFrame);
 
         if (titleObj != null) {
             TextView titleView = (TextView)titleObj.getView();
@@ -149,6 +154,26 @@ public class SGeneric extends BaseElement
         textView.setId(tv_id);
         elementView.addView(textView);
 
+        v.setOnLongClickListener(this);
+        textView.setOnLongClickListener(this);
+
+        LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+        elementFrame.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        selectorFrame = new FrameLayout(Utils.mainActivity);
+        LayoutParams sfl = new LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
+        int margin = (int) (Utils.density + 0.5f);
+        sfl.setMargins(0, margin, 0, margin);
+        selectorFrame.setLayoutParams(sfl);
+
+        selectorFrame.setBackgroundColor(Color.DKGRAY);
+        selectorFrame.setVisibility(View.GONE);
+
+        elementFrame.addView(selectorFrame);
+        elementFrame.addView(v);
+
+        elementView = elementFrame;
+
         String initialLive = getLiveValue();
         if (getStoredValue() == null) {
             Utils.db.setValue(command, initialLive);
@@ -165,8 +190,7 @@ public class SGeneric extends BaseElement
 
         valueCheck();
 
-        elementView = v;
-        return v;
+        return elementView;
     }
 
     private void valueCheck() {
@@ -247,6 +271,46 @@ public class SGeneric extends BaseElement
         editText.requestFocus();
         editText.setSelection(0, editText.getText().length());
         Utils.imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    }
+
+    /**
+     *  Selectable methods
+     */
+
+    private boolean selectable = false;
+
+    public void setSelectable(boolean flag){
+        selectable = flag;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (!selectable)
+            return false;
+
+        if (isSelected())
+            deselect();
+        else
+            select();
+
+        return true;
+    }
+
+    @Override
+    public void select() {
+        selectorFrame.setVisibility(View.VISIBLE);
+        ElementSelector.addElement(this);
+    }
+
+    @Override
+    public void deselect() {
+        selectorFrame.setVisibility(View.GONE);
+        ElementSelector.removeElement(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectorFrame.getVisibility() == View.VISIBLE;
     }
 
     /**
