@@ -49,6 +49,7 @@ import com.af.synapse.lib.BootService;
 import com.af.synapse.lib.ActionValueClient;
 import com.af.synapse.lib.ActionValueUpdater;
 import com.af.synapse.lib.ActivityListener;
+import com.af.synapse.lib.ElementSelector;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
 import com.af.synapse.utils.NamedRunnable;
@@ -76,7 +77,7 @@ public class MainActivity extends FragmentActivity {
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
-    private static ViewPager mViewPager;
+    public static ViewPager mViewPager;
 
     public static TabSectionFragment[] fragments = null;
     private static AtomicInteger fragmentsDone = new AtomicInteger(0);
@@ -286,13 +287,8 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_cancel:
                 ActionValueUpdater.cancelElements();
                 break;
-            case R.id.action_section_default:
-                if (mViewPager != null)
-                    ActionValueUpdater.resetSectionDefault(mViewPager.getCurrentItem());
-                break;
-            case R.id.action_global_default:
-                for (int i=0; i < Utils.configSections.size(); i++)
-                    ActionValueUpdater.resetSectionDefault(i);
+            case R.id.action_select_multi:
+                startActionMode(ElementSelector.callback);
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(this, Settings.class);
@@ -427,7 +423,7 @@ public class MainActivity extends FragmentActivity {
         private int sectionNumber;
 
         public View fragmentView = null;
-        private ArrayList<BaseElement> fragmentElements = new ArrayList<BaseElement>();
+        public ArrayList<BaseElement> fragmentElements = new ArrayList<BaseElement>();
 
         public TabSectionFragment() {
             this.setRetainInstance(true);

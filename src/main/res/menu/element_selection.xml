@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_reset"
+        android:title="@string/action_reset"
+        android:icon="@drawable/ic_action_undo"
+        android:showAsAction="always"
+        android:visible="true" />
+
+    <item android:id="@+id/action_section_select_all"
+        android:title="@string/action_section_select_all"
+        android:showAsAction="collapseActionView" />
+
+    <item android:id="@+id/action_global_select_all"
+        android:title="@string/action_global_select_all"
+        android:showAsAction="collapseActionView" />
+</menu>

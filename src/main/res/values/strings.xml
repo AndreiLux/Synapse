@@ -18,15 +18,19 @@
 
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
-    <string name="action_section_default">Reset section</string>
-    <string name="action_global_default">Reset globally</string>
+    <string name="action_select">Select</string>
+
     <string name="action_settings">Settings</string>
+
+    <string name="action_reset">Reset to defaults</string>
+    <string name="action_section_select_all">Select all in section</string>
+    <string name="action_global_select_all">Select all globally</string>
 
     <string name="boot_service_complete">Synapse boot completed</string>
     <string name="boot_service_cancel">Synapse boot canceled</string>
 
     <string name="popup_failed_boot_title">Boot settings canceled</string>
-    <string name="popup_failed_boot_message">The last applied settings have not been deemed stable due to a possible crash or reboot of the device.\n\nSettings are deemed stable 2 minutes after they\'re applied at boot, or 20 seconds after applying them manually.\n\nPress cancel to reset to the last saved settings.</string>
+    <string name="popup_failed_boot_message">The last applied settings have not been deemed stable due to a possible crash or reboot of the device.\n\nSettings are deemed stable 2 minutes after they\'re applied at boot.\n\nPress cancel to reset to the last saved settings.</string>
     <string name="popup_failed_boot_ack">Understood</string>
 
     <string name="drawer_open">Open navigation</string>
@@ -41,7 +45,6 @@
     <string name="preference_list_theme_option_title">Application theme</string>
     <string name="preference_list_theme_option_summary">Changes the looks of the application</string>
     <string name="preference_list_theme_option_dialog_title">Choose a theme:</string>
-
     <string-array name="preference_array_theme_option_labels">
         <item>Holo Black</item>
         <item>Holo Dark</item>

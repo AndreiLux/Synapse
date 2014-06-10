@@ -11,15 +11,14 @@
         android:showAsAction="never"
         android:visible="false" />
 
-    <item android:id="@+id/action_section_default"
-        android:title="@string/action_section_default"
-        android:showAsAction="collapseActionView" />
-
-    <item android:id="@+id/action_global_default"
-        android:title="@string/action_global_default"
-        android:showAsAction="collapseActionView" />
+    <item android:id="@+id/action_select_multi"
+        android:title="@string/action_select"
+        android:icon="@drawable/ic_action_select_all"
+        android:showAsAction="always"
+        android:visible="true" />
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_settings"
         android:showAsAction="collapseActionView" />
 </menu>

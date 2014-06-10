@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by Andrei on 04/09/13.
  */
 public class ActionValueUpdater {
-    private static ArrayList<ArrayList<ActionValueClient>> perpetuals = new ArrayList<ArrayList<ActionValueClient>>();
+    public static ArrayList<ArrayList<ActionValueClient>> perpetuals = new ArrayList<ArrayList<ActionValueClient>>();
     private static ArrayList<ActionValueClient> registrees = new ArrayList<ActionValueClient>();
     private static MenuItem applyButton;
     private static MenuItem cancelButton;
