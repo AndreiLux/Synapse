@@ -55,6 +55,7 @@ public class SGeneric extends BaseElement
                                  Selectable
 {
     private LinearLayout elementView = null;
+    private LinearLayout elementFrame = null;
     private FrameLayout selectorFrame;
     private TextView textView;
     private static EditText editText;
@@ -157,8 +158,9 @@ public class SGeneric extends BaseElement
         v.setOnLongClickListener(this);
         textView.setOnLongClickListener(this);
 
-        LinearLayout elementFrame = new LinearLayout(Utils.mainActivity);
+        elementFrame = new LinearLayout(Utils.mainActivity);
         elementFrame.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        elementFrame.setOrientation(LinearLayout.VERTICAL);
 
         selectorFrame = new FrameLayout(Utils.mainActivity);
         LayoutParams sfl = new LayoutParams((int) (15 * Utils.density + 0.5f), LayoutParams.MATCH_PARENT);
@@ -228,7 +230,7 @@ public class SGeneric extends BaseElement
 
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);
-            elementView.removeView(editText);
+            elementFrame.removeView(editText);
             valueCheck();
             ActionValueNotifierHandler.propagate(this, ActionValueEvent.SET);
         }
@@ -265,7 +267,7 @@ public class SGeneric extends BaseElement
             ((LinearLayout)editText.getParent()).removeView(editText);
         }
 
-        elementView.addView(editText);
+        elementFrame.addView(editText);
         editText.setOnEditorActionListener(this);
         editText.setText(lastEdit.toString());
         editText.requestFocus();
