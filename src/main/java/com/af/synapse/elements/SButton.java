@@ -9,10 +9,12 @@
 
 package com.af.synapse.elements;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.af.synapse.MainActivity;
@@ -66,13 +68,18 @@ public class SButton extends BaseElement implements View.OnClickListener,
 
     @Override
     public void onClick(View view) {
+        Toast t;
         try {
             String result = Utils.runCommand(command);
-            Toast.makeText(Utils.mainActivity, result, Toast.LENGTH_LONG).show();
+            t = Toast.makeText(Utils.mainActivity, result, Toast.LENGTH_LONG);
             ActionValueNotifierHandler.propagate(this, ActionValueEvent.APPLY);
         } catch (Exception e) {
-            Toast.makeText(Utils.mainActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+            t = Toast.makeText(Utils.mainActivity, e.getMessage(), Toast.LENGTH_LONG);
         }
+
+        ((TextView)((LinearLayout)t.getView()).getChildAt(0))
+            .setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        t.show();
     }
 
     /**
