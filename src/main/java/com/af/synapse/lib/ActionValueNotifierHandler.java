@@ -53,7 +53,9 @@ public class ActionValueNotifierHandler {
         clients.remove(client);
     }
 
-    private static void subExtract(ActionValueNotifierClient client, JSONObject notification) {
+    private static void subExtract(ActionValueNotifierClient client,
+                                   JSONObject notification,
+                                   boolean notify) {
         if (notification.containsKey("on") &&
             notification.containsKey("do") &&
             notification.containsKey("to")) {
@@ -92,26 +94,18 @@ public class ActionValueNotifierHandler {
                     // Single response of custom action
                     response = doo.toString();
                 }
-            else if (doo instanceof JSONArray)
-                if (((JSONArray) doo).size() == 1)
-                    // Repeat single response, but encapsulated alone in an array
+            else if (doo instanceof JSONArray) {
+                // Multiple responses, may be standard event or custom actions
+                response = new ArrayList<Object>();
+                for (Object o : (JSONArray) doo)
                     try {
-                        response = ActionValueEvent.valueOf((String) doo);
+                        // Add the next Event
+                        ((ArrayList<Object>)response).add(ActionValueEvent.valueOf((String) o));
                     } catch (IllegalArgumentException ignored) {
-                        response = doo.toString();
+                        // Add the next action
+                        ((ArrayList<Object>)response).add(o.toString());
                     }
-                else {
-                    // Multiple responses, may be standard event or custom actions
-                    response = new ArrayList<Object>();
-                    for (Object o : (JSONArray) doo)
-                        try {
-                            // Add the next Event
-                            ((ArrayList<Object>)response).add(ActionValueEvent.valueOf((String) o));
-                        } catch (IllegalArgumentException ignored) {
-                            // Add the next action
-                            ((ArrayList<Object>)response).add(o.toString());
-                        }
-                }
+            }
 
             if (event instanceof Object[])
                 for (Object e : (Object[]) event)
@@ -119,13 +113,29 @@ public class ActionValueNotifierHandler {
                     // for each target with the response chain for current event.
                     if (target instanceof Object[]) {
                         for (Object t : (Object[]) target)
-                            notifyTo(client, (String) t, (ActionValueEvent) e, response);
+                            if (notify)
+                                notifyTo(client, (String) t, (ActionValueEvent) e, response);
+                            else
+                                listenTo(client, (String) t, (ActionValueEvent) e, response);
                     } else
                         // Otherwise create a single notifier object only on the current event
-                        notifyTo(client, (String) target, (ActionValueEvent) e, response);
+                        if (notify)
+                            notifyTo(client, (String) target, (ActionValueEvent) e, response);
+                        else
+                            listenTo(client, (String) target, (ActionValueEvent) e, response);
             else
-                // Single event, single target
-                notifyTo(client, (String) target, (ActionValueEvent) event, response);
+                if (target instanceof Object[]) {
+                    for (Object t : (Object[]) target)
+                        if (notify)
+                            notifyTo(client, (String) t, (ActionValueEvent) event, response);
+                        else
+                            listenTo(client, (String) t, (ActionValueEvent) event, response);
+                } else
+                    // Single event, single target
+                    if (notify)
+                        notifyTo(client, (String) target, (ActionValueEvent) event, response);
+                    else
+                        listenTo(client, (String) target, (ActionValueEvent) event, response);
         }
     }
 
@@ -137,9 +147,19 @@ public class ActionValueNotifierHandler {
 
             if (notification instanceof JSONArray)
                 for (Object sub : (JSONArray) notification)
-                    subExtract(client, (JSONObject) sub);
+                    subExtract(client, (JSONObject) sub, true);
             else
-                subExtract(client, (JSONObject) notification);
+                subExtract(client, (JSONObject) notification, true);
+        }
+
+        if (element.containsKey("listen")) {
+            Object notification = element.get("listen");
+
+            if (notification instanceof JSONArray)
+                for (Object sub : (JSONArray) notification)
+                    subExtract(client, (JSONObject) sub, false);
+            else
+                subExtract(client, (JSONObject) notification, false);
         }
     }
 
