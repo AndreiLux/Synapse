@@ -291,14 +291,13 @@ public class STreeDescriptor extends BaseElement implements ActionValueNotifierC
 
         for (STreeDescriptor b : this.children)
             b.collapse();
+
+        this.children.clear();
     }
 
     public void rebuild() {
         buildHierarchy();
         getView();
-
-        for (STreeDescriptor b : this.children)
-            b.rebuild();
     }
 
     public ArrayList<String> getFlatActionTreeList() {
