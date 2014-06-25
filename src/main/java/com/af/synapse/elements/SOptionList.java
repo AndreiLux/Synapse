@@ -136,7 +136,10 @@ public class SOptionList extends BaseElement
             @Override
             public void run() {
                 try {
+                    boolean tmp = onItemSelectedIgnored;
+                    onItemSelectedIgnored = false;
                     refreshValue();
+                    onItemSelectedIgnored = tmp;
                 } catch (ElementFailureException e) {
                     Utils.createElementErrorView(e);
                 }
@@ -301,6 +304,7 @@ public class SOptionList extends BaseElement
         adapter.setDropDownViewResource(R.layout.template_optionlist_list_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(items.indexOf(lastLive));
+        valueCheck();
 
         return elementView;
     }
