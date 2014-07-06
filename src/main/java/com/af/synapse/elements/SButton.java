@@ -77,8 +77,10 @@ public class SButton extends BaseElement implements View.OnClickListener,
             t = Toast.makeText(Utils.mainActivity, e.getMessage(), Toast.LENGTH_LONG);
         }
 
-        ((TextView)((LinearLayout)t.getView()).getChildAt(0))
-            .setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        Object firstItem = ((LinearLayout)t.getView()).getChildAt(0);
+        if (firstItem instanceof TextView)
+            ((TextView)firstItem).setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+
         t.show();
     }
 
