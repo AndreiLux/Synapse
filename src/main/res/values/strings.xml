@@ -38,7 +38,9 @@
 
     <string name="preference_category_boot_title">Boot service</string>
     <string name="preference_bool_boot_master_title">Apply on boot</string>
-    <string name="preference_bool_boot_master_summary">Master switch for the boot service. This does not control the underlying boot-stability flag that may be triggered on a crash.</string>
+    <string name="preference_bool_boot_master_summary">Master switch for the boot service.</string>
+    <string name="preference_bool_boot_probation_title">Stability check</string>
+    <string name="preference_bool_boot_probation_summary">Revert all changes if the device crashes or is powered off within 2 minutes after boot.</string>
 
     <string name="preference_category_theme_title">Theme</string>
 

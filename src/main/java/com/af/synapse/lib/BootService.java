@@ -63,8 +63,13 @@ public class BootService extends Service {
             return START_NOT_STICKY;
         }
 
-        setBootFlag(false);
-        Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(true));
+        final boolean useProbationPeriod = PreferenceManager.getDefaultSharedPreferences(Synapse.getAppContext())
+                .getBoolean(Settings.PREF_PROBATION, true);
+
+        if(useProbationPeriod) {
+            setBootFlag(false);
+            Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(true));
+        }
 
         for (Object section : Utils.configSections) {
             JSONArray sectionElements = (JSONArray)((JSONObject)section).get("elements");
@@ -104,12 +109,17 @@ public class BootService extends Service {
         }
 
         Toast.makeText(Synapse.getAppContext(), R.string.boot_service_complete, Toast.LENGTH_LONG).show();
-        setBootFlag(BOOT_STABILITY_DELAY, this);
-        return START_NOT_STICKY;
-    }
 
-    public static void setBootFlag(int delaySeconds) {
-        setBootFlag(delaySeconds, null);
+        if(useProbationPeriod) {
+            setBootFlag(BOOT_STABILITY_DELAY, this);
+        } else {
+            L.i("Synapse settings automatically treated as stable due to user preference.");
+            setBootFlag(true);
+            Utils.db.setValue(Utils.CONFIG_CONTEXT, BOOT_PENDING, String.valueOf(false));
+            stopSelf2();
+        }
+
+        return START_NOT_STICKY;
     }
 
     public static void setBootFlag(int delaySeconds, final BootService callingService) {

@@ -10,6 +10,13 @@
             android:title="@string/preference_bool_boot_master_title"
             android:summary="@string/preference_bool_boot_master_summary"
             android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="preference_bool_boot_probation"
+            android:title="@string/preference_bool_boot_probation_title"
+            android:summary="@string/preference_bool_boot_probation_summary"
+            android:defaultValue="true"
+            android:dependency="preference_bool_boot_master"/>
     </PreferenceCategory>
 
     <PreferenceCategory
