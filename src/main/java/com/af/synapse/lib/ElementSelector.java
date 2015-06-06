@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Created by Andrei on 15/05/14.
  */
 public class ElementSelector {
-    private static ArrayList<Selectable> selection = new ArrayList<>();
+    private static ArrayList<Selectable> selection = new ArrayList<Selectable>();
 
     public static ActionMode.Callback callback = new ActionMode.Callback() {
         @Override

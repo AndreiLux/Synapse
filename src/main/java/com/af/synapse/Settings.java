@@ -94,13 +94,10 @@ public class Settings extends PreferenceActivity {
             .registerOnSharedPreferenceChangeListener(
                 new SharedPreferences.OnSharedPreferenceChangeListener() {
                     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                        switch (key) {
-                            case PREF_THEME: {
-                                theme = null;
-                                setWallpaper(Utils.mainActivity);
-                                setWallpaper(Utils.settingsActivity);
-                                break;
-                            }
+                        if (key == PREF_THEME) {
+                            theme = null;
+                            setWallpaper(Utils.mainActivity);
+                            setWallpaper(Utils.settingsActivity);
                         }
                     }
                 }
