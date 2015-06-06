@@ -448,6 +448,10 @@ public class MainActivity extends FragmentActivity {
                 String type = Utils.getEnclosure(elm);
                 JSONObject parameters = (JSONObject) elm.get(type);
 
+                if (parameters.containsKey("condition") && !((String)parameters.get("condition")).trim().equals("1")) {
+                    continue;
+                }
+
                 BaseElement elementObj = null;
 
                 try {
