@@ -30,5 +30,11 @@
             android:entryValues="@array/preference_array_theme_option_values"
             android:dialogTitle="@string/preference_list_theme_option_dialog_title"
             android:defaultValue="HOLO_BLACK"/>
+
+        <CheckBoxPreference
+            android:key="preference_bool_hide_descriptions"
+            android:title="@string/preference_bool_hide_descriptions_title"
+            android:summary="@string/preference_bool_hide_descriptions_summary"
+            android:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

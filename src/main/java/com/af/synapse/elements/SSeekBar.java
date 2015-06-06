@@ -70,7 +70,6 @@ public class SSeekBar extends BaseElement
     private TextView storedLabel;
 
     private STitleBar titleObj = null;
-    private SDescription descriptionObj = null;
 
     private static int dfl_id = View.generateViewId();
     private static int sbl_id = View.generateViewId();
@@ -188,12 +187,6 @@ public class SSeekBar extends BaseElement
 
         if (element.containsKey("weight"))
             this.weight = (Double) element.get("weight");
-
-        /**
-         *  Add a description element inside our own with the same JSON object
-         */
-        if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout, fragment);

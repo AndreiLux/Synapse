@@ -68,9 +68,7 @@ public class SPane extends BaseElement {
             layout.addView(v);
         }
 
-        if (elm.containsKey("description")) {
-            BaseElement descriptionText = BaseElement.createObject("SDescription", elm, layout, fragment);
-            layout.addView(descriptionText.getView());
-        }
+        if (descriptionObj != null)
+            layout.addView(descriptionObj.getView());
     }
 }
