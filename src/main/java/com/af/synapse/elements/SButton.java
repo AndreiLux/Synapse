@@ -12,6 +12,7 @@ package com.af.synapse.elements;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,9 +78,12 @@ public class SButton extends BaseElement implements View.OnClickListener,
             t = Toast.makeText(Utils.mainActivity, e.getMessage(), Toast.LENGTH_LONG);
         }
 
-        Object firstItem = ((LinearLayout)t.getView()).getChildAt(0);
-        if (firstItem instanceof TextView)
-            ((TextView)firstItem).setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        if (t.getView() instanceof ViewGroup) {
+            Object tv = ((ViewGroup) t.getView()).getChildAt(0);
+
+            if (tv instanceof TextView)
+                ((TextView) tv).setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        }
 
         t.show();
     }
