@@ -187,7 +187,11 @@ public class SSeekBar extends BaseElement
             this.unit = (String) element.get("unit");
 
         if (element.containsKey("weight"))
-            this.weight = (Double) element.get("weight");
+            if (element.get("weight") instanceof Integer)
+                this.weight = ((Integer) element.get("weight")).doubleValue();
+            else
+                this.weight = (Double) element.get("weight");
+
 
         /**
          *  Add a description element inside our own with the same JSON object
