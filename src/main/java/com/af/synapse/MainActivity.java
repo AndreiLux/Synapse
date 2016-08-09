@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -117,6 +118,9 @@ public class MainActivity extends FragmentActivity {
         setPaddingDimensions();
         setContentView(R.layout.activity_loading);
 
+        if (!Utils.appStarted)
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         super.onCreate(fragments == null ? null : savedInstanceState);
 
         if (fragments == null) {
@@ -188,6 +192,9 @@ public class MainActivity extends FragmentActivity {
 
         setPaddingDimensions();
         L.i("Interface creation finished in " + (System.nanoTime() - startTime) + "ns");
+
+        if (Utils.appStarted)
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
         if (!BootService.getBootFlag() && !BootService.getBootFlagPending()) {
             new AlertDialog.Builder(this)
