@@ -67,7 +67,6 @@ public class SGeneric extends BaseElement
     private String inputType = null;
 
     private STitleBar titleObj = null;
-    private SDescription descriptionObj = null;
 
     private Object original = null;
     private Object stored = false;
@@ -96,8 +95,6 @@ public class SGeneric extends BaseElement
         /**
          *  Add a description element inside our own with the same JSON object
          */
-        if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout, fragment);

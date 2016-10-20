@@ -445,8 +445,20 @@ public class MainActivity extends FragmentActivity {
 
             for (Object sectionElement : sectionElements) {
                 JSONObject elm = (JSONObject) sectionElement;
-                String type = Utils.getEnclosure(elm);
-                JSONObject parameters = (JSONObject) elm.get(type);
+                String type;
+                JSONObject parameters;
+
+                if (elm.containsKey("class")) {
+                    type = (String) elm.get("class");
+                    parameters = elm;
+                } else {
+                    type = Utils.getEnclosure(elm);
+                    parameters = (JSONObject) elm.get(type);
+                }
+
+                if (parameters.containsKey("condition") && !((String)parameters.get("condition")).trim().equals("1")) {
+                    continue;
+                }
 
                 BaseElement elementObj = null;
 

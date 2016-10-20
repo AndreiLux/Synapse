@@ -22,6 +22,7 @@ public class Settings extends PreferenceActivity {
     public final static String PREF_THEME   = "preference_list_theme_option";
     public final static String PREF_BOOT    = "preference_bool_boot_master";
     public final static String PREF_PROBATION    = "preference_bool_boot_probation";
+    public final static String PREF_HIDE_DESC    = "preference_bool_hide_descriptions";
 
     public enum Theme {
         HOLO_BLACK,
@@ -94,13 +95,10 @@ public class Settings extends PreferenceActivity {
             .registerOnSharedPreferenceChangeListener(
                 new SharedPreferences.OnSharedPreferenceChangeListener() {
                     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                        switch (key) {
-                            case PREF_THEME: {
-                                theme = null;
-                                setWallpaper(Utils.mainActivity);
-                                setWallpaper(Utils.settingsActivity);
-                                break;
-                            }
+                        if (key == PREF_THEME) {
+                            theme = null;
+                            setWallpaper(Utils.mainActivity);
+                            setWallpaper(Utils.settingsActivity);
                         }
                     }
                 }

@@ -65,7 +65,6 @@ public class SOptionList extends BaseElement
     private ImageButton nextButton;
 
     private STitleBar titleObj = null;
-    private SDescription descriptionObj = null;
 
     private static int dfl_id = View.generateViewId();
     private static int spl_id = View.generateViewId();
@@ -122,12 +121,6 @@ public class SOptionList extends BaseElement
 
         if (this.original != null && !items.contains(original))
             throw new IllegalArgumentException("Default value not contained in given values");
-
-        /**
-         *  Add a description element inside our own with the same JSON object
-         */
-        if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout, fragment);

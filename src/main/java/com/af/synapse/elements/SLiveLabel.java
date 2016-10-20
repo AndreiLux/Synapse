@@ -33,7 +33,6 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
     private View elementView = null;
 
     private STitleBar titleObj = null;
-    private SDescription descriptionObj = null;
 
     private TextView liveLabel;
 
@@ -73,12 +72,6 @@ public class SLiveLabel extends BaseElement implements ActivityListener {
                 }
             }
         };
-
-        /**
-         *  Add a description element inside our own with the same JSON object
-         */
-        if (element.containsKey("description"))
-            descriptionObj = new SDescription(element, layout, fragment);
 
         if (element.containsKey("title"))
             titleObj = new STitleBar(element, layout, fragment);

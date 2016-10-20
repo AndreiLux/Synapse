@@ -9,10 +9,12 @@
 
 package com.af.synapse.elements;
 
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.af.synapse.MainActivity;
+import com.af.synapse.Settings;
 import com.af.synapse.Synapse;
 import com.af.synapse.utils.ElementFailureException;
 import com.af.synapse.utils.L;
@@ -26,11 +28,19 @@ import java.lang.reflect.InvocationTargetException;
  * Created by Andrei on 30/08/13.
  */
 public class BaseElement extends ElementSkeleton {
+    protected SDescription descriptionObj = null;
+
     public BaseElement(JSONObject element, LinearLayout layout,
                        MainActivity.TabSectionFragment fragment) {
         this.element = element;
         this.layout = layout;
         this.fragment = fragment;
+
+        if (!(this instanceof SDescription) && element.containsKey("description") &&
+                !PreferenceManager.getDefaultSharedPreferences(Synapse.getAppContext())
+                .getBoolean(Settings.PREF_HIDE_DESC, false))
+            descriptionObj = new SDescription(element, layout, fragment);
+
     }
 
     public static BaseElement createObject(String type, JSONObject element, LinearLayout layout,
