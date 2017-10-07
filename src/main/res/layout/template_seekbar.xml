@@ -14,15 +14,15 @@
         android:layout_alignParentTop="false"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/SSeekBar_descriptionFrame"
-        android:layout_toLeftOf="@+id/SSeekBar_plusButton"
-        android:layout_toRightOf="@+id/SSeekBar_minusButton" />
+        android:layout_toStartOf="@+id/SSeekBar_plusButton"
+        android:layout_toEndOf="@+id/SSeekBar_minusButton" />
 
     <ImageButton
         android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
-        android:text="&lt;"
+        android:text="@string/lt"
         android:id="@+id/SSeekBar_minusButton"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:singleLine="true"
         android:textColor="@android:color/secondary_text_dark"
         android:layout_alignTop="@+id/SSeekBar_seekBar"
@@ -33,14 +33,14 @@
     <ImageButton
         android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
-        android:text="&gt;"
+        android:text="@string/gt"
         android:id="@+id/SSeekBar_plusButton"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textColor="@android:color/secondary_text_dark"
         android:layout_alignTop="@+id/SSeekBar_seekBar"
         android:layout_alignBottom="@+id/SSeekBar_seekBar"
         android:background="@null"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:src="@drawable/navigation_next_item" />
 
     <TextView
@@ -60,7 +60,7 @@
         android:id="@+id/SSeekBar_defaultLabel"
         android:visibility="gone"
         android:layout_below="@+id/SSeekBar_seekBar"
-        android:layout_toRightOf="@+id/SSeekBar_minusButton" />
+        android:layout_toEndOf="@+id/SSeekBar_minusButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
         android:text="@string/label_stored_value"
         android:id="@+id/SSeekBar_storedLabel"
         android:layout_below="@+id/SSeekBar_seekBar"
-        android:layout_toLeftOf="@+id/SSeekBar_plusButton"
+        android:layout_toStartOf="@+id/SSeekBar_plusButton"
         android:visibility="gone" />
 
     <LinearLayout
@@ -79,7 +79,7 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentTop="true"
         android:id="@+id/SSeekBar_descriptionFrame"
-        android:layout_alignParentRight="false"
-        android:layout_marginLeft="@dimen/descriptionFrame_left_margin"></LinearLayout>
+        android:layout_alignParentEnd="false"
+        android:layout_marginStart="@dimen/descriptionFrame_left_margin" />
 
 </RelativeLayout>

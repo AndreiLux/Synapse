@@ -10,16 +10,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/SColourPicker_descriptionFrame"
         android:gravity="center_vertical"
-        android:layout_toLeftOf="@+id/SColourPicker_colourButton"
+        android:layout_toStartOf="@+id/SColourPicker_colourButton"
         android:layout_alignTop="@+id/SColourPicker_colourButton"
         android:layout_alignBottom="@+id/SColourPicker_colourButton" />
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:id="@+id/frameLayout"
-        android:paddingRight="@dimen/descriptionFrame_left_margin"
+        android:paddingEnd="@dimen/descriptionFrame_left_margin"
         android:paddingTop="@dimen/descriptionFrame_left_margin">
 
     </FrameLayout>

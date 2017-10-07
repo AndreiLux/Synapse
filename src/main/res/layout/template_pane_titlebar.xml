@@ -3,11 +3,11 @@
     android:id="@+id/SPane_text"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="Dummy title text"
+    android:text="@string/placeholder"
     android:textStyle="bold"
     android:textColor="#ffffff"
-    android:paddingLeft="3dp"
+    android:paddingStart="3dp"
     android:background="@drawable/holo_gradient_dark_0"
     android:textIsSelectable="false"
     android:paddingBottom="1dp"
-    android:textSize="15dp" />
+    android:textSize="15sp" />

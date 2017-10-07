@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\morga\\Synapse\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v19\\values-v19.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\values-v19\\styles.xml",
+                    "from": {
+                        "startLines": "1,4",
+                        "startColumns": "4,4",
+                        "startOffsets": "17,94",
+                        "endLines": "2,12",
+                        "endColumns": "12,12",
+                        "endOffsets": "86,651"
+                    },
+                    "to": {
+                        "startLines": "2,4",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,128",
+                        "endLines": "3,12",
+                        "endColumns": "12,12",
+                        "endOffsets": "123,677"
+                    }
+                }
+            ]
+        }
+    ]
+}

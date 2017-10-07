@@ -17,6 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
         android:id="@+id/SCheckBox_descriptionFrame"
-        android:layout_marginLeft="@dimen/descriptionFrame_left_margin"></LinearLayout>
+        android:layout_marginStart="@dimen/descriptionFrame_left_margin" />
 
 </LinearLayout>

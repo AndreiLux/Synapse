@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/SOptionList_descriptionFrame"
         android:layout_gravity="center_horizontal|top"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/descriptionFrame_left_margin">
+        android:layout_marginStart="@dimen/descriptionFrame_left_margin">
 
     </LinearLayout>
 
@@ -20,14 +20,14 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
-        android:text="&lt;"
+        android:text="@string/lt"
         android:id="@+id/SOptionList_previousButton"
         android:layout_below="@+id/SOptionList_descriptionFrame"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignBottom="@+id/SOptionList_spinner"
         android:background="@null"
         android:textColor="@android:color/secondary_text_dark"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:src="@drawable/navigation_previous_item" />
 
     <Spinner
@@ -37,21 +37,21 @@
         android:layout_gravity="center_horizontal|top"
         android:layout_below="@+id/SOptionList_descriptionFrame"
         android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@+id/SOptionList_previousButton"
-        android:layout_toLeftOf="@+id/SOptionList_nextButton" />
+        android:layout_toEndOf="@+id/SOptionList_previousButton"
+        android:layout_toStartOf="@+id/SOptionList_nextButton" />
 
     <ImageButton
         style="?android:attr/buttonStyleSmall"
         android:layout_width="@dimen/stepButtons_width"
         android:layout_height="wrap_content"
-        android:text="&gt;"
+        android:text="@string/gt"
         android:id="@+id/SOptionList_nextButton"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/SOptionList_descriptionFrame"
         android:layout_alignBottom="@+id/SOptionList_spinner"
         android:background="@null"
         android:textColor="@android:color/secondary_text_dark"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:src="@drawable/navigation_next_item" />
 
     <LinearLayout
