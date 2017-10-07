@@ -3,7 +3,14 @@ manifest
 ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:2:1-53:12
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:2:1-53:12
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:2:1-53:12
+MERGED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:17:1-28:12
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:17:1-28:12
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-fragment-26.1.0.aar\38505a7fd5555b132221d61fd4d855b2\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-core-utils-26.1.0.aar\7f2813437c02727ea75b8a87d0e3c594\AndroidManifest.xml:17:1-31:12
@@ -28,8 +35,22 @@ uses-sdk
 ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:7:5-9:41
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:7:5-9:41
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:21:5-23:54
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:21:5-23:63
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:21:5-23:63
 MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-fragment-26.1.0.aar\38505a7fd5555b132221d61fd4d855b2\AndroidManifest.xml:21:5-23:60
@@ -45,7 +66,7 @@ MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\morga\.gradle\caches
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:7:5-9:41
 INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:7:5-9:41
 	tools:overrideLibrary
-		ADDED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:23:9-51
+		ADDED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:23:9-59
 	android:targetSdkVersion
 		ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:9:9-38
 		INJECTED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml
@@ -68,8 +89,22 @@ ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:17:5-18:62
 		ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:18:9-59
 application
 ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:21:5-52:19
+MERGED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:22:5-26:19
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:22:5-26:19
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-fragment-26.1.0.aar\38505a7fd5555b132221d61fd4d855b2\AndroidManifest.xml:25:5-29:19
@@ -133,7 +168,21 @@ ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:48:9-51:20
 	android:name
 		ADDED from C:\Users\morga\Synapse\src\main\AndroidManifest.xml:49:13-37
 meta-data#android.support.VERSION
-ADDED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:26:9-28:38
+ADDED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\bf213ff71434133aa9f9f08e33e92607\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:cardview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\cardview-v7-26.1.0.aar\756c037421fdb74b55d398d327f67995\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:transition:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\transition-26.1.0.aar\68c2cc3f72b1844e28605192af1e0e93\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\ba0b8e7fadfc15a963d724ec084a1420\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.1.0.aar\b5b65e244d27f385a803bfff1e68cb98\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-26.1.0.aar\e694853175a76eddb4b51fe5cd72a19d\AndroidManifest.xml:23:9-25:38
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:26:9-28:38
 MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-media-compat-26.1.0.aar\c894dc2acfad36daea53cd26a1d54c0d\AndroidManifest.xml:26:9-28:38
 MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-fragment-26.1.0.aar\38505a7fd5555b132221d61fd4d855b2\AndroidManifest.xml:26:9-28:38
@@ -145,9 +194,9 @@ MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\morga\.gradle\
 MERGED from [com.android.support:support-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-compat-26.1.0.aar\e4a22adca7d4f8de8f1dd8957fdf33c9\AndroidManifest.xml:26:9-28:38
 MERGED from [com.android.support:support-compat:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-compat-26.1.0.aar\e4a22adca7d4f8de8f1dd8957fdf33c9\AndroidManifest.xml:26:9-28:38
 	android:value
-		ADDED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:28:13-35
+		ADDED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:28:13-35
 	android:name
-		ADDED from [com.android.support:support-v4:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\e172c20706a0d746157ed45de6f56450\AndroidManifest.xml:27:13-51
+		ADDED from [com.android.support:design:26.1.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\design-26.1.0.aar\ebc78967163dead272832c210002d2bf\AndroidManifest.xml:27:13-51
 meta-data#android.arch.lifecycle.VERSION
 ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\morga\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\358263f0075635d167e2dc8821499a15\AndroidManifest.xml:25:9-27:47
 	android:value

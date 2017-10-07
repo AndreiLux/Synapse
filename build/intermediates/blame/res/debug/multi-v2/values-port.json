@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\morga\\Synapse\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\values-port\\values-port.xml",
+                    "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\bf213ff71434133aa9f9f08e33e92607\\res\\values-port\\values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
