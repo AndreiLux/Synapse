@@ -1002,21 +1002,6 @@
             ]
         },
         {
-            "outputFile": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\values-de_values-de.arsc.flat",
-            "map": [
-                {
-                    "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\values-de\\values-de.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    }
-                }
-            ]
-        },
-        {
             "outputFile": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\values-v19_values-v19.arsc.flat",
             "map": [
                 {
@@ -1036,6 +1021,21 @@
                         "endLines": "3,12",
                         "endColumns": "12,12",
                         "endOffsets": "123,677"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\values-de_values-de.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\values-de\\values-de.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
                     }
                 }
             ]

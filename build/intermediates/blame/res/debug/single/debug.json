@@ -1,15 +1,15 @@
 [
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_navigation_collapse.png.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\navigation_collapse.png"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout-v21_notification_template_custom_big.xml.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\layout-v21\\notification_template_custom_big.xml"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable_notification_bg.xml.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable\\notification_bg.xml"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_navigation_collapse.png.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\navigation_collapse.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_navigation_expand.png.flat",
@@ -28,16 +28,16 @@
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-hdpi-v4\\notification_bg_normal.9.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_section_container.xml.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\section_container.xml"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_navigation_previous_item.png.flat",
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-xxhdpi\\navigation_previous_item.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_notification_bg_low_pressed.9.png.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-mdpi-v4\\notification_bg_low_pressed.9.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_section_container.xml.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\section_container.xml"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_template_colour_element.xml.flat",
@@ -68,12 +68,12 @@
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-xhdpi-v4\\notification_bg_normal.9.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_colour_controller.xml.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\colour_controller.xml"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_notification_bg_normal_pressed.9.png.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_colour_controller.xml.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\colour_controller.xml"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_notification_template_part_time.xml.flat",
@@ -124,12 +124,12 @@
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\navigation_accept.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_navigation_next_item.png.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\navigation_next_item.png"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_low_pressed.9.png.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_navigation_next_item.png.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\navigation_next_item.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_navigation_next_item.png.flat",
@@ -144,12 +144,12 @@
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\activity_loading.xml"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable_black_gradient_270.xml.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable\\black_gradient_270.xml"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_navigation_cancel.png.flat",
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-xxhdpi\\navigation_cancel.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable_black_gradient_270.xml.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable\\black_gradient_270.xml"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
@@ -192,12 +192,12 @@
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-xxhdpi\\ic_action_select_all.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_normal_holo.png.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_normal_holo.png"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_navigation_cancel.png.flat",
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-hdpi\\navigation_cancel.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_normal_holo.png.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_normal_holo.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_scrubber_control_disabled_holo.png.flat",
@@ -304,12 +304,12 @@
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-hdpi\\scrubber_control_disabled_holo.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_template_description.xml.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\template_description.xml"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_scrubber_control_focused_holo.png.flat",
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-xhdpi\\scrubber_control_focused_holo.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\layout_template_description.xml.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\layout\\template_description.xml"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable_notification_icon_background.xml.flat",
@@ -364,12 +364,12 @@
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\c894dc2acfad36daea53cd26a1d54c0d\\res\\layout\\notification_template_media.xml"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_pressed_holo.png.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_pressed_holo.png"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_navigation_expand.png.flat",
         "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-xxhdpi\\navigation_expand.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_pressed_holo.png.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_pressed_holo.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_navigation_collapse.png.flat",
@@ -452,12 +452,12 @@
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-mdpi-v4\\notification_bg_normal.9.png"
     },
     {
-        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_disabled_holo.png.flat",
-        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_disabled_holo.png"
-    },
-    {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_notify_panel_notification_icon_bg.png.flat",
         "source": "C:\\Users\\morga\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\e4a22adca7d4f8de8f1dd8957fdf33c9\\res\\drawable-mdpi-v4\\notify_panel_notification_icon_bg.png"
+    },
+    {
+        "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_scrubber_control_disabled_holo.png.flat",
+        "source": "C:\\Users\\morga\\Synapse\\src\\main\\res\\drawable-mdpi\\scrubber_control_disabled_holo.png"
     },
     {
         "merged": "C:\\Users\\morga\\Synapse\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_ic_action_undo.png.flat",
