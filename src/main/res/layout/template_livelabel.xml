@@ -11,19 +11,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
         android:id="@+id/SLiveLabel_descriptionFrame"
-        android:layout_marginLeft="@dimen/descriptionFrame_left_margin"/>
+        android:layout_marginStart="@dimen/descriptionFrame_left_margin"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="SLiveLabel_default"
+        android:text="@string/slivelabel_default"
         android:id="@+id/SLiveLabel_textView"
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/secondary_text_dark"
         android:paddingBottom="@dimen/livelabel_vertical_padding"
         android:paddingTop="@dimen/livelabel_vertical_padding"
-        android:paddingRight="@dimen/descriptionFrame_left_margin"
+        android:paddingEnd="@dimen/descriptionFrame_left_margin"
         android:maxLines="10"
         android:gravity="center_horizontal" />
 

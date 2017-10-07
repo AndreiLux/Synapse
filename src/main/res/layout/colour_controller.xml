@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:paddingBottom="16dp">
@@ -19,8 +20,8 @@
             class="com.larswerkman.colorpicker.ColorPicker"
             android:id="@+id/SColourPicker_picker"
             android:layout_gravity="center"
-            android:layout_toRightOf="@+id/SColourPicker_hueMinus"
-            android:layout_toLeftOf="@+id/SColourPicker_huePlus"
+            android:layout_toEndOf="@+id/SColourPicker_hueMinus"
+            android:layout_toStartOf="@+id/SColourPicker_huePlus"
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@+id/SColourPicker_hueDescription" />
 
@@ -30,8 +31,8 @@
             class="com.larswerkman.colorpicker.SaturationBar"
             android:id="@+id/SColourPicker_saturationBar"
             android:layout_below="@+id/SColourPicker_saturationDescription"
-            android:layout_toRightOf="@+id/SColourPicker_valueMinus"
-            android:layout_toLeftOf="@+id/SColourPicker_valuePlus"
+            android:layout_toEndOf="@+id/SColourPicker_valueMinus"
+            android:layout_toStartOf="@+id/SColourPicker_valuePlus"
             android:layout_centerHorizontal="true" />
 
         <view
@@ -39,8 +40,8 @@
             android:layout_height="wrap_content"
             class="com.larswerkman.colorpicker.ValueBar"
             android:id="@+id/SColourPicker_valueBar"
-            android:layout_toRightOf="@+id/SColourPicker_saturationMinus"
-            android:layout_toLeftOf="@+id/SColourPicker_saturationPlus"
+            android:layout_toEndOf="@+id/SColourPicker_saturationMinus"
+            android:layout_toStartOf="@+id/SColourPicker_saturationPlus"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/SColourPicker_valueDescription" />
 
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/SColourPicker_saturationPlus"
             android:layout_alignBottom="@+id/SColourPicker_saturationBar"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/SColourPicker_saturationBar"
             android:src="@drawable/navigation_next_item"
             android:background="@null" />
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/SColourPicker_saturationMinus"
             android:src="@drawable/navigation_previous_item"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/SColourPicker_saturationBar"
             android:layout_alignBottom="@+id/SColourPicker_saturationBar"
             android:background="@null" />
@@ -70,7 +71,7 @@
             android:id="@+id/SColourPicker_valuePlus"
             android:src="@drawable/navigation_next_item"
             android:layout_alignBottom="@+id/SColourPicker_valueBar"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/SColourPicker_valueBar"
             android:background="@null" />
 
@@ -80,7 +81,7 @@
             android:id="@+id/SColourPicker_valueMinus"
             android:src="@drawable/navigation_previous_item"
             android:layout_alignBottom="@+id/SColourPicker_valueBar"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/SColourPicker_valueBar"
             android:background="@null" />
 
@@ -88,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="RGB representation"
+            android:text="@string/rgb_representation"
             android:id="@+id/SColourPicker_hexDescription"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
@@ -98,28 +99,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Saturation"
+            android:text="@string/saturation"
             android:id="@+id/SColourPicker_saturationDescription"
             android:gravity="center"
             android:layout_below="@+id/SColourPicker_picker"
-            android:layout_toRightOf="@+id/SColourPicker_saturationMinus" />
+            android:layout_toEndOf="@+id/SColourPicker_saturationMinus" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Value"
+            android:text="@string/value"
             android:id="@+id/SColourPicker_valueDescription"
             android:gravity="center"
             android:layout_below="@+id/SColourPicker_saturationBar"
-            android:layout_toRightOf="@+id/SColourPicker_valueMinus" />
+            android:layout_toEndOf="@+id/SColourPicker_valueMinus" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/SColourPicker_cancelButton"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:background="@null"
             android:src="@drawable/navigation_cancel"
             android:layout_marginBottom="12dp" />
@@ -128,11 +129,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Hue"
+            android:text="@string/hue"
             android:id="@+id/SColourPicker_hueDescription"
             android:gravity="center"
             android:layout_below="@+id/SColourPicker_cancelButton"
-            android:layout_toRightOf="@+id/SColourPicker_hueMinus" />
+            android:layout_toEndOf="@+id/SColourPicker_hueMinus" />
 
         <ImageButton
             android:layout_width="@dimen/stepButtons_width"
@@ -142,7 +143,7 @@
             android:background="@null"
             android:layout_alignBottom="@+id/SColourPicker_picker"
             android:layout_alignTop="@+id/SColourPicker_picker"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentEnd="true" />
 
         <ImageButton
             android:layout_width="@dimen/stepButtons_width"
@@ -152,43 +153,43 @@
             android:background="@null"
             android:layout_alignTop="@+id/SColourPicker_picker"
             android:layout_alignBottom="@+id/SColourPicker_picker"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="defaultHue°"
+            android:text="@string/defaulthue"
             android:id="@+id/SColourPicker_hueValue"
             android:layout_alignTop="@+id/SColourPicker_hueDescription"
-            android:layout_alignRight="@+id/SColourPicker_picker" />
+            android:layout_alignEnd="@+id/SColourPicker_picker" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="defaultSat"
+            android:text="@string/defaultsat"
             android:id="@+id/SColourPicker_saturationValue"
             android:layout_below="@+id/SColourPicker_picker"
-            android:layout_alignRight="@+id/SColourPicker_picker" />
+            android:layout_alignEnd="@+id/SColourPicker_picker" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="defaultValue"
+            android:text="@string/defaultvalue"
             android:id="@+id/SColourPicker_valueValue"
             android:layout_below="@+id/SColourPicker_saturationBar"
-            android:layout_toLeftOf="@+id/SColourPicker_saturationPlus" />
+            android:layout_toStartOf="@+id/SColourPicker_saturationPlus" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Colour label"
+            android:text="@string/colour_label"
             android:id="@+id/SColourPicker_controllerLabel"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentStart="true" />
 
         <GridLayout
             android:layout_width="wrap_content"
@@ -204,13 +205,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/SColourPicker_rPlus"
                 android:layout_alignTop="@+id/SColourPicker_gPlus"
-                android:layout_alignLeft="@+id/SColourPicker_hexR"
+                android:layout_alignStart="@+id/SColourPicker_hexR"
                 android:src="@drawable/navigation_collapse"
                 android:background="@null"
-                android:layout_alignRight="@+id/SColourPicker_hexR"
+                android:layout_alignEnd="@+id/SColourPicker_hexR"
                 android:layout_row="0"
                 android:layout_column="0"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -220,11 +222,12 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/navigation_collapse"
                 android:background="@null"
-                android:layout_alignLeft="@+id/SColourPicker_hexG"
-                android:layout_alignRight="@+id/SColourPicker_hexG"
+                android:layout_alignStart="@+id/SColourPicker_hexG"
+                android:layout_alignEnd="@+id/SColourPicker_hexG"
                 android:layout_row="0"
                 android:layout_column="2"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <EditText
                 android:layout_width="52dp"
@@ -232,29 +235,30 @@
                 android:id="@+id/SColourPicker_hexB"
                 android:editable="true"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:text="BB"
+                android:textSize="20sp"
+                android:text="@string/bb"
                 android:layout_alignTop="@+id/SColourPicker_hexG"
-                android:layout_toRightOf="@+id/SColourPicker_hexG"
+                android:layout_toEndOf="@+id/SColourPicker_hexG"
                 android:digits="2"
                 android:layout_alignBottom="@+id/SColourPicker_hexG"
-                android:layout_alignParentRight="false"
+                android:layout_alignParentEnd="false"
                 android:layout_row="1"
-                android:layout_column="3" />
+                android:layout_column="3"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <EditText
                 android:layout_width="52dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/SColourPicker_hexG"
-                android:editable="true"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:text="GG"
+                android:textSize="20sp"
+                android:text="@string/gg"
                 android:digits="2"
                 android:layout_below="@+id/SColourPicker_gPlus"
                 android:layout_centerHorizontal="true"
                 android:layout_row="1"
-                android:layout_column="2" />
+                android:layout_column="2"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -263,12 +267,13 @@
                 android:src="@drawable/navigation_collapse"
                 android:background="@null"
                 android:layout_alignTop="@+id/SColourPicker_gPlus"
-                android:layout_alignRight="@+id/SColourPicker_hexB"
-                android:layout_alignLeft="@+id/SColourPicker_hexB"
+                android:layout_alignEnd="@+id/SColourPicker_hexB"
+                android:layout_alignStart="@+id/SColourPicker_hexB"
                 android:layout_row="0"
                 android:layout_column="3"
                 android:adjustViewBounds="false"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <EditText
                 android:layout_width="52dp"
@@ -276,42 +281,45 @@
                 android:id="@+id/SColourPicker_hexR"
                 android:editable="true"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:text="RR"
+                android:textSize="20sp"
+                android:text="@string/rr"
                 android:layout_alignTop="@+id/SColourPicker_hexG"
-                android:layout_toLeftOf="@+id/SColourPicker_hexG"
+                android:layout_toStartOf="@+id/SColourPicker_hexG"
                 android:digits="2"
                 android:layout_alignBottom="@+id/SColourPicker_hexG"
                 android:layout_alignParentBottom="false"
-                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
                 android:layout_row="1"
-                android:layout_column="0" />
+                android:layout_column="0"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/SColourPicker_bMinus"
                 android:layout_below="@+id/SColourPicker_hexB"
-                android:layout_alignRight="@+id/SColourPicker_hexB"
+                android:layout_alignEnd="@+id/SColourPicker_hexB"
                 android:background="@null"
                 android:src="@drawable/navigation_expand"
-                android:layout_alignLeft="@+id/SColourPicker_hexB"
+                android:layout_alignStart="@+id/SColourPicker_hexB"
                 android:layout_row="2"
                 android:layout_column="3"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/SColourPicker_rMinus"
                 android:layout_below="@+id/SColourPicker_hexR"
-                android:layout_alignLeft="@+id/SColourPicker_hexR"
+                android:layout_alignStart="@+id/SColourPicker_hexR"
                 android:background="@null"
                 android:src="@drawable/navigation_expand"
-                android:layout_alignRight="@+id/SColourPicker_hexR"
+                android:layout_alignEnd="@+id/SColourPicker_hexR"
                 android:layout_row="2"
                 android:layout_column="0"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -320,12 +328,13 @@
                 android:layout_below="@+id/SColourPicker_hexG"
                 android:background="@null"
                 android:src="@drawable/navigation_expand"
-                android:layout_alignLeft="@+id/SColourPicker_hexG"
-                android:layout_alignRight="@+id/SColourPicker_hexG"
+                android:layout_alignStart="@+id/SColourPicker_hexG"
+                android:layout_alignEnd="@+id/SColourPicker_hexG"
                 android:layout_centerHorizontal="true"
                 android:layout_row="2"
                 android:layout_column="2"
-                android:layout_gravity="fill_horizontal|center_horizontal" />
+                android:layout_gravity="fill_horizontal|center_horizontal"
+                tools:ignore="ObsoleteLayoutParam" />
 
         </GridLayout>
 
@@ -333,13 +342,13 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(Load default)"
+            android:text="@string/load_default"
             android:id="@+id/SColourPicker_defaultButton"
             android:background="@null"
             android:textColor="@android:color/secondary_text_dark"
             android:layout_alignBottom="@+id/SColourPicker_controllerLabel"
-            android:layout_toRightOf="@+id/SColourPicker_controllerLabel"
-            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/SColourPicker_controllerLabel"
+            android:layout_marginStart="4dp"
             android:paddingTop="2dp" />
 
     </RelativeLayout>
