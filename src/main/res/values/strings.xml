@@ -64,9 +64,6 @@
     <string name="lt"><![CDATA[<]]></string>
     <string name="gt"><![CDATA[>]]></string>
     <string name="default_item">Default item</string>
-    <string name="default_item">Default item</string>
-    <string name="lt"><![CDATA[<]]></string>
-    <string name="gt"><![CDATA[>]]></string>
     <string-array name="preference_array_theme_option_labels">
         <item>Holo Black</item>
         <item>Holo Dark</item>
